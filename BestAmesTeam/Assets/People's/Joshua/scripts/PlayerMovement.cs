@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
@@ -41,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
 
     void Start()
     {
-
+        Cursor.lockState = CursorLockMode.Locked;
         Collider = GetComponent<CapsuleCollider>();
         rb = GetComponent<Rigidbody>();
 
@@ -105,7 +106,7 @@ public class PlayerMovement : MonoBehaviour
         lookInput = context.ReadValue<Vector2>();
     }
 
-    public void Update()
+    void FixedUpdate()
     {
         if (rb == null) return;
 
