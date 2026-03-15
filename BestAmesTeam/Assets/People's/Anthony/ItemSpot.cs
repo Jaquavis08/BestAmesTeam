@@ -4,6 +4,7 @@ public class ItemSpot : MonoBehaviour
 {
     public ItemData item;
     public int itemCount = 4;
+    public int maxStock = 10;
 
     public Transform standPoint;
 
@@ -24,5 +25,23 @@ public class ItemSpot : MonoBehaviour
         }
 
         return takenItem;
+    }
+
+    public void Restock(ItemBox box)
+    {
+        if (item == null)
+        {
+            item = box.itemType;
+        }
+
+        if (box.itemType != item) return;
+
+        if (itemCount >= maxStock) return;
+
+        if (box.TakeItem())
+        {
+            itemCount++;
+            Debug.Log("Shelf restocked. Stock: " + itemCount);
+        }
     }
 }
