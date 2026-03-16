@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class CheckoutManager : MonoBehaviour
@@ -45,6 +46,7 @@ public class CheckoutManager : MonoBehaviour
             Debug.Log(currentNPC.name + " is checking out...");
 
             yield return new WaitForSeconds(5f);
+            EditorApplication.Beep();
 
             currentNPC.CompleteCheckout();
 
