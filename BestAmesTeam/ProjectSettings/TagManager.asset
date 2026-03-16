@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - floor
+  - NPC
   layers:
   - Default
   - TransparentFX
@@ -12,9 +13,9 @@ TagManager:
   - floor
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Player
+  - NPC
+  - HeldItem
   - 
   - 
   - 
