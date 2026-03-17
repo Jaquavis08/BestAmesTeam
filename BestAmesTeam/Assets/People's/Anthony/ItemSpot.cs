@@ -10,6 +10,11 @@ public class ItemSpot : MonoBehaviour
 
     public bool occupied => item != null && itemCount > 0;
 
+    void Start()
+    {
+        ValidateShelfItems();
+    }
+
     public ItemData TakeItem()
     {
         if (!occupied) return null;
@@ -24,6 +29,7 @@ public class ItemSpot : MonoBehaviour
             itemCount = 0;
         }
 
+        ValidateShelfItems();
         return takenItem;
     }
 
@@ -34,6 +40,8 @@ public class ItemSpot : MonoBehaviour
             item = box.itemType;
         }
 
+        ValidateShelfItems();
+
         if (box.itemType != item) return;
 
         if (itemCount >= maxStock) return;
@@ -42,6 +50,47 @@ public class ItemSpot : MonoBehaviour
         {
             itemCount++;
             Debug.Log("Shelf restocked. Stock: " + itemCount);
+        }
+    }
+
+    public void ValidateShelfItems()
+    {
+        Transform parent = this.gameObject != null ? this.transform : transform;
+
+        // Clear existing spawned items
+        for (int i = parent.childCount - 1; i >= 0; i--)
+        {
+            GameObject child = parent.GetChild(i).gameObject;
+
+            if(child.name != "StandPoint")
+            {
+                if (Application.isPlaying)
+                {
+                    Destroy(child);
+                }
+                else
+                {
+                    DestroyImmediate(child);
+                }
+            }
+        }
+
+        if (item == null || itemCount <= 0) return;
+
+        GameObject prefab = item.prefab;
+        if (prefab == null) return;
+
+        float spacing = 0.25f;
+        float totalWidth = (itemCount - 1) * spacing;
+        Vector3 startOffset = new Vector3(-totalWidth * 0.5f, 0f, 0f);
+
+        for (int i = 0; i < itemCount; i++)
+        {
+            GameObject instance = Object.Instantiate(prefab, parent);
+            instance.transform.localPosition = startOffset + new Vector3(i * spacing, 0f, 0f);
+            instance.transform.localRotation = Quaternion.identity;
+            instance.transform.localScale = prefab.transform.localScale;
+            instance.name = $"{prefab.name}_{i}";
         }
     }
 }

@@ -41,9 +41,11 @@ public class Shelf : MonoBehaviour
     {
         foreach (ItemSpot spot in spots)
         {
+            print(spot);
             if (spot.occupied)
                 return true;
         }
+        print("No items found on shelf: " + name);
         return false;
     }
 }
