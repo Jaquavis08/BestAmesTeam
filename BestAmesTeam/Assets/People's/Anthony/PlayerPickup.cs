@@ -12,7 +12,7 @@ public class PlayerPickup : MonoBehaviour
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
         Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
 
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.Mouse0))
         {
             TryInteract(ray);
         }
@@ -55,6 +55,11 @@ public class PlayerPickup : MonoBehaviour
                     Destroy(heldBox.gameObject);
                     heldBox = null;
                 }
+            }
+
+            if (hit.collider.GetComponent<Computer>())
+            {
+                Computer.instance.UsePC();
             }
         }
     }

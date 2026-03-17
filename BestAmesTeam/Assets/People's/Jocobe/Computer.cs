@@ -1,42 +1,50 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Computer : MonoBehaviour
 {
+    public static Computer instance;
+
     public float interactDistance = 3f;
-    ItemBox computer;
 
-    void Update()
+    public GameObject computerUI;
+
+    public void Awake()
     {
-        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.red);
-
-        if (Input.GetKeyDown(KeyCode.Mouse1))
+        if (instance != null && instance != this)
         {
-            TryInteract(ray);
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            instance = this;
         }
     }
 
-    void TryInteract(Ray ray)
+    private void Update()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, out hit, interactDistance))
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
+            computerUI.SetActive(false);
+            Cursor.lockState = CursorLockMode.Locked;
 
-            Debug.Log("Ray hit: " + hit.collider.name);
-
-            if (hit.collider.GetComponent<ItemBox>() && computer == null)
-            {
-                PickupBox(hit.collider.GetComponent<ItemBox>());
-                return;
-            }
         }
     }
 
-    void PickupBox(ItemBox box)
+    public void UsePC()
     {
+        computerUI.SetActive(true);
+        print("Using computer");
+        if (computerUI == null)
+        {
+            Debug.LogWarning("Placeholdercomputerui: computerUI reference is missing.");
+            return;
+        }
 
+        //Time.timeScale = computerUI.activeSelf ? 1f : 0f; // Pause game when UI is active
+        Cursor.lockState = CursorLockMode.None;
+
+        //bool isActive = computerUI.activeSelf;
+        //computerUI.SetActive(!isActive);
     }
 
 }
