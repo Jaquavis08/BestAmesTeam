@@ -22,7 +22,9 @@ public class NPCController : MonoBehaviour
 
     void Start()
     {
-        agent.avoidancePriority = Random.Range(20, 80);
+        agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        agent.avoidancePriority = Random.Range(30, 90);
+        agent.radius = 0.3f;
         agent.autoRepath = true;
 
         maxItems = Random.Range(1, 6);
