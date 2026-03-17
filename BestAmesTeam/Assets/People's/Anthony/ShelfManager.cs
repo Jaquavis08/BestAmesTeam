@@ -5,11 +5,18 @@ public class ShelfManager : MonoBehaviour
 {
     public static ShelfManager Instance;
 
+    public Transform shelvesParent;
+
     public List<Shelf> shelves = new List<Shelf>();
 
     void Awake()
     {
         Instance = this;
+    }
+
+    public void Start()
+    {
+        shelves.AddRange(shelvesParent.GetComponentsInChildren<Shelf>());
     }
 
     public Shelf GetRandomShelfWithItems()
@@ -19,7 +26,10 @@ public class ShelfManager : MonoBehaviour
         foreach (Shelf shelf in shelves)
         {
             if (shelf.HasAnyItems())
+            {
+                print("Shelf has items");
                 shelvesWithItems.Add(shelf);
+            }
         }
 
         if (shelvesWithItems.Count == 0)
