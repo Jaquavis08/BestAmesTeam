@@ -4617,17 +4617,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1551345073}
   m_CullTransparentMesh: 1
---- !u!114 &1634519675 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5195041092465999016, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-  m_PrefabInstance: {fileID: 128877807500156959}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e30d39a879657ec48bea28e5a5f68af9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1650646956
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5921,17 +5910,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2083748478}
   m_CullTransparentMesh: 1
---- !u!114 &2116866225 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8910136480484909687, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-  m_PrefabInstance: {fileID: 128877807500156959}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e30d39a879657ec48bea28e5a5f68af9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &128877807500156959
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5943,26 +5921,6 @@ PrefabInstance:
     - target: {fileID: 1872107809274176394, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
       propertyPath: m_Name
       value: Shelve
-      objectReference: {fileID: 0}
-    - target: {fileID: 4261448143652936095, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-      propertyPath: spots.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4261448143652936095, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-      propertyPath: 'spots.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2116866225}
-    - target: {fileID: 4261448143652936095, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-      propertyPath: 'spots.Array.data[1]'
-      value: 
-      objectReference: {fileID: 1634519675}
-    - target: {fileID: 4277417090090623157, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7713103781807075058, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8533808549834834403, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
       propertyPath: m_LocalPosition.x
