@@ -332,7 +332,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 19b863394d4e34645b9f9b0703819fbb, type: 2}
-  itemCount: 4
+  itemCount: 10
   maxStock: 10
   standPoint: {fileID: 1351952585}
 --- !u!65 &266413722
@@ -722,6 +722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d988e185b722bec44ab387ccc913ab6d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shelf: {fileID: 1411143104}
   spot1: {fileID: 766966698}
   spot2: {fileID: 266413721}
 --- !u!1 &575188608
@@ -909,7 +910,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 19b863394d4e34645b9f9b0703819fbb, type: 2}
-  itemCount: 4
+  itemCount: 10
   maxStock: 10
   standPoint: {fileID: 443157925}
 --- !u!65 &766966699
