@@ -25,14 +25,15 @@ public class Computer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             computerUI.SetActive(false);
-            Cursor.lockState = CursorLockMode.Locked;
-
+            //PlayerMovement.Instance.cursorLock = true;
         }
     }
 
     public void UsePC()
     {
+        PlayerMovement.Instance.cursorLock = false;
         computerUI.SetActive(true);
+        PlayerMovement.Instance.cursorLock = false;
         print("Using computer");
         if (computerUI == null)
         {
@@ -41,7 +42,7 @@ public class Computer : MonoBehaviour
         }
 
         //Time.timeScale = computerUI.activeSelf ? 1f : 0f; // Pause game when UI is active
-        Cursor.lockState = CursorLockMode.None;
+        
 
         //bool isActive = computerUI.activeSelf;
         //computerUI.SetActive(!isActive);
