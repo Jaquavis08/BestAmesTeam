@@ -1,182 +1,129 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
+    [SerializeField] Transform playerCamera;
+    [SerializeField][Range(0.0f, 0.5f)] float mouseSmoothTime = 0.03f;
+    [SerializeField] bool cursorLock = true;
+    [SerializeField] float mouseSensitivity = 3.5f;
+    [SerializeField] float speed = 6.0f;
+    [SerializeField] [Range(0.0f, 0.5f)] float moveSmoothTime = 0.3f;
+    [SerializeField] float gravity = -30f;
+    [SerializeField] Transform groundCheck;
+    [SerializeField] LayerMask ground;
 
+    public float jumpHeight = 6f;
+    float velocityY;
+    bool isGrounded;
 
-    [SerializeField] private Transform playerCamera;
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float sprintSpeed = 10f;
-    [SerializeField] private float jumpheight = 2f;
-    [SerializeField] private float gravity = -9.8f;
- 
+    float cameraCap;
+    Vector2 currentMouseDelta;
+    Vector2 currentMouseDeltaVelocity;
 
-    // Camera control settings
-    [SerializeField] private float lookSensitivity = 100f;
-    [SerializeField] private bool invertY = false;
-
-
-
-
-    private Rigidbody rb;
-    private Vector2 moveInput;
-    private Vector3 velocity;
-    private bool isSprinting;
-    public CapsuleCollider Collider;
-
-    private bool isCrouching = false;
-
-    // Look input state
-    private Vector2 lookInput;
-    private float cameraPitch = 0f;
-    [SerializeField] private float mouseSmoothTime = 0.06f;
-    private float targetCameraPitch = 0f;
-    private float cameraPitchVelocity = 0f;
-
-    private float currentYaw = 0f;
-    private float targetYaw = 0f;
-    private float yawVelocity = 0f;
-
-    public bool canJump = false;
+    CharacterController controller;
+    Vector2 currentDir;
+    Vector2 currentDirVelocity;
+    Vector3 velocity;
 
     void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
-        Collider = GetComponent<CapsuleCollider>();
-        rb = GetComponent<Rigidbody>();
+        controller = GetComponent<CharacterController>();
 
-        if (rb == null)
+        if (cursorLock)
         {
-            Debug.LogError("Rigidbody component missing on player.");
-            enabled = false;
-            return;
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
         }
-        if (playerCamera != null)
-        {
-            cameraPitch = playerCamera.localEulerAngles.x;
-            if (cameraPitch > 180f) cameraPitch -= 360f;
-            targetCameraPitch = cameraPitch;
-        }
-
-        // initialize yaw tracking
-        currentYaw = transform.eulerAngles.y;
-        targetYaw = currentYaw;
     }
 
-    public void OnMove(InputAction.CallbackContext context)
+    private void Update()
     {
-        if (enabled == false)
-            return;
-
-        moveInput = context.ReadValue<Vector2>();
+        UpdateMouse();
+        UpdateMovement();
     }
 
-
-
-    public void OnJump(InputAction.CallbackContext context)
+    private void UpdateMovement()
     {
-        if (enabled == false)
-            return;
+        Vector2 targetMouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
 
-        if (rb == null) return;
-        // simple ground check using collider/bounds
-        bool grounded = false;
-        if (Collider != null && canJump)
-        {
-            Vector3 origin = transform.position + Vector3.up * (Collider.height * 0.5f);
-            grounded = Physics.CheckSphere(origin - Vector3.up * (Collider.height * 0.5f + 0.01f), 0.1f);
-        }
-        else
-        {
-            grounded = Physics.CheckSphere(transform.position + Vector3.down * 0.1f, 0.1f);
-        }
+        currentMouseDelta = Vector2.SmoothDamp(currentMouseDelta, targetMouseDelta, ref currentMouseDeltaVelocity, mouseSmoothTime);
 
-        // only trigger jump on button press start to avoid repeated triggers
-        if (context.started && grounded)
-        {
-            velocity.y = Mathf.Sqrt(jumpheight * -2f * gravity);
-        }
+        cameraCap -= currentMouseDelta.y * mouseSensitivity;
+
+        cameraCap = Mathf.Clamp(cameraCap, -90.0f, 90.0f);
+
+        playerCamera.localEulerAngles = Vector3.right * cameraCap;
+
+        transform.Rotate(Vector3.up * currentMouseDelta.x * mouseSensitivity);
     }
-    public void OnLook(InputAction.CallbackContext context)
+
+    private void UpdateMouse()
     {
-        if (enabled == false)
-            return;
+        isGrounded = Physics.CheckSphere(groundCheck.position, 0.2f, ground);
 
-        lookInput = context.ReadValue<Vector2>();
-    }
+        Vector2 targetDir = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        targetDir.Normalize();
 
-    void FixedUpdate()
-    {
-        if (rb == null) return;
+        currentDir = Vector2.SmoothDamp(currentDir, targetDir, ref currentDirVelocity, moveSmoothTime);
 
-        // accumulate target pitch and yaw from look input
-        targetYaw += lookInput.x * lookSensitivity * Time.deltaTime;
-        float mouseY = lookInput.y * lookSensitivity * Time.deltaTime * (invertY ? 1f : -1f);
-        targetCameraPitch += mouseY;
-        targetCameraPitch = Mathf.Clamp(targetCameraPitch, -89f, 89f);
+        velocityY += gravity * 2f * Time.deltaTime;
 
-        // smooth current yaw and pitch toward targets
-        currentYaw = Mathf.SmoothDampAngle(currentYaw, targetYaw, ref yawVelocity, mouseSmoothTime);
-        cameraPitch = Mathf.SmoothDamp(cameraPitch, targetCameraPitch, ref cameraPitchVelocity, mouseSmoothTime);
+        Vector3 velocity = (transform.forward * currentDir.y + transform.right * currentDir.x) * speed + Vector3.up * velocityY;
 
-        // apply rotations
-        if (playerCamera != null)
+        controller.Move(velocity * Time.deltaTime);
+
+        if (isGrounded && Input.GetButtonDown("Jump"))
         {
-            playerCamera.localEulerAngles = new Vector3(cameraPitch, 0f, 0f);
-        }
-        transform.eulerAngles = new Vector3(transform.eulerAngles.x, currentYaw, transform.eulerAngles.z);
-
-
-        // Build movement direction based on camera
-        Vector3 forward = playerCamera != null ? playerCamera.forward : transform.forward;
-        Vector3 right = playerCamera != null ? playerCamera.right : transform.right;
-        forward.y = 0f; right.y = 0f;
-        forward.Normalize(); right.Normalize();
-
-        Vector3 moveDirection = forward * moveInput.y + right * moveInput.x;
-
-        float usedSpeed = isSprinting ? sprintSpeed : speed;
-        Vector3 horizontalVelocity = moveDirection * usedSpeed;
-
-        // Ground check using capsule collider
-        bool grounded = false;
-        if (Collider != null)
-        {
-            Vector3 origin = transform.position + Vector3.up * (Collider.height * 0.5f);
-            grounded = Physics.CheckSphere(origin - Vector3.up * (Collider.height * 0.5f + 0.01f), 0.1f);
-        }
-        else
-        {
-            grounded = Physics.CheckSphere(transform.position + Vector3.down * 0.1f, 0.1f);
+            velocityY = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
 
-        // If on the ground and falling, snap to a small negative velocity to keep contact
-        if (grounded && velocity.y < 0f)
+        if (isGrounded! && controller.velocity.y < -1f)
         {
-            velocity.y = -2f;
-        }
-
-        // apply gravity
-        velocity.y += gravity * Time.deltaTime;
-
-        Vector3 finalMotion = (horizontalVelocity + Vector3.up * velocity.y) * Time.deltaTime;
-
-        // move using Rigidbody
-        rb.MovePosition(rb.position + finalMotion);
-    }
-    public void OnCollisionStay(Collision other)
-    {
-        if (other.gameObject.CompareTag("floor"))
-        {
-            canJump = true;
+            velocityY = -8f;
         }
     }
-    public void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject.CompareTag("floor"))
-        {
-            canJump = false;
-        }
-    }
+
+    //public void OnMove(InputAction.CallbackContext context)
+    //{
+    //    if (enabled == false)
+    //        return;
+
+    //    moveInput = context.ReadValue<Vector2>();
+    //}
+
+
+
+    //public void OnJump(InputAction.CallbackContext context)
+    //{
+    //    if (enabled == false)
+    //        return;
+
+    //    if (rb == null) return;
+    //    // simple ground check using collider/bounds
+    //    bool grounded = false;
+    //    if (Collider != null && canJump)
+    //    {
+    //        Vector3 origin = transform.position + Vector3.up * (Collider.height * 0.5f);
+    //        grounded = Physics.CheckSphere(origin - Vector3.up * (Collider.height * 0.5f + 0.01f), 0.1f);
+    //    }
+    //    else
+    //    {
+    //        grounded = Physics.CheckSphere(transform.position + Vector3.down * 0.1f, 0.1f);
+    //    }
+
+    //    // only trigger jump on button press start to avoid repeated triggers
+    //    if (context.started && grounded)
+    //    {
+    //        velocity.y = Mathf.Sqrt(jumpheight * -2f * gravity);
+    //    }
+    //}
+    //public void OnLook(InputAction.CallbackContext context)
+    //{
+    //    if (enabled == false)
+    //        return;
+
+    //    lookInput = context.ReadValue<Vector2>();
+    //}
 }
