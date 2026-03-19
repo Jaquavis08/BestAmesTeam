@@ -29,6 +29,18 @@ public class PlayerMovement : MonoBehaviour
     Vector2 currentDirVelocity;
     Vector3 velocity;
 
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
+
     void Start()
     {
         controller = GetComponent<CharacterController>();
@@ -47,13 +59,13 @@ public class PlayerMovement : MonoBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
             UpdateMouse();
+            UpdateMovement();
         }
         else
         {
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
         }
-        UpdateMovement();
     }
 
     private void UpdateMovement()
