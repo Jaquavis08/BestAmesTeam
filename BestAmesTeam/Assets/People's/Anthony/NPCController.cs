@@ -185,6 +185,7 @@ public class NPCController : MonoBehaviour
         PrintCart();
 
         cart.Clear();
+        
 
         if (CheckoutManager.Instance.exitPoint != null)
         {
@@ -222,6 +223,7 @@ public class NPCController : MonoBehaviour
         foreach (var entry in cart)
         {
             Debug.Log(entry.item.itemName + " x" + entry.quantity);
+            Currency.Instance.amount += (int)entry.item.price * entry.quantity;
         }
     }
 }
