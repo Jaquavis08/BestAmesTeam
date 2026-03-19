@@ -16,6 +16,11 @@ public class PlayerPickup : MonoBehaviour
         {
             TryInteract(ray);
         }
+
+        if (Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            DropBox();
+        }
     }
 
     void TryInteract(Ray ray)
@@ -78,5 +83,16 @@ public class PlayerPickup : MonoBehaviour
         box.GetComponent<Collider>().enabled = false;
 
         Debug.Log("Picked up box");
+    }
+
+    void DropBox()
+    {
+        if (heldBox == null) return;
+        heldBox.transform.SetParent(null);
+        Rigidbody rb = heldBox.GetComponent<Rigidbody>();
+        if (rb) rb.isKinematic = false;
+        heldBox.GetComponent<Collider>().enabled = true;
+        heldBox = null;
+        Debug.Log("Dropped box");
     }
 }
