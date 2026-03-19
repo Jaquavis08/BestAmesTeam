@@ -4,26 +4,31 @@ using UnityEngine.UI;
 
 public class Currency : MonoBehaviour
 {
-    public int amount = 100;
+    public static Currency Instance;
+    public int amount = 1000;
     public TextMeshProUGUI currencyText;
     
 
-    void Start()
+    private void Awake()
     {
-       currencyText = GetComponent<TextMeshProUGUI>();
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
     }
 
     void Update()
     {
         if (currencyText == null)
-           currencyText = GetComponent<TextMeshProUGUI>();
-        
-
-       
-
+           Debug.LogWarning("No TextMeshProUGUI component found on the Currency GameObject.");
 
         // Display formatted currency
         currencyText.text = $" $ {amount}";
-       
     }
 }

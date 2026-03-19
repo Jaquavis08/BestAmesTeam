@@ -2009,7 +2009,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cca05e4cbb11a59469d33662fc81ee49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  amount: 99
+  amount: 100
   currencyText: {fileID: 340421438}
 --- !u!1 &344088419
 GameObject:
