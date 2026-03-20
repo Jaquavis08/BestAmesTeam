@@ -254,7 +254,7 @@ public class HomelessMan : MonoBehaviour
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
                 {
                     float distanceToExit = Vector3.Distance(transform.position, exitPoint.position);
-                    if (distanceToExit <= 1f)
+                    if (distanceToExit <= 0.1f)
                     {
                         Destroy(gameObject);
                     }
@@ -293,7 +293,9 @@ public class HomelessMan : MonoBehaviour
         {
             try
             {
-                item = thiefTargetSpot.TakeItem();
+                NPCController.Instance.maxItems = Random.Range(1, 6);
+                NPCController.Instance.ChooseItem();
+                
             }
             catch
             {

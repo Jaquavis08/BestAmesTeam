@@ -9,6 +9,8 @@ public class NPCController : MonoBehaviour
 
     ItemSpot targetSpot;
 
+    public static NPCController Instance;
+
     public List<CartItem> cart = new List<CartItem>();
 
     public int maxItems;
@@ -45,7 +47,7 @@ public class NPCController : MonoBehaviour
         CheckIfExited();
     }
 
-    void ChooseItem()
+    public void ChooseItem()
     {
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
 
