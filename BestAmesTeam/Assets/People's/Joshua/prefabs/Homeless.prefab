@@ -146,16 +146,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cff92b91514158479f695fa99ba5752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshSurface: {fileID: 7790915113001841182, guid: 7c9ff63194d78ca4e84c6a6a21ff4883, type: 3}
-  Shelf: {fileID: 6629634237263354410, guid: ee22793237fefbd4a913bcb265e72171, type: 3}
+  navMeshSurface: {fileID: 1557996222782629472, guid: 766933b4dc4874f4fbed47523eb18bec, type: 3}
+  Shelf: {fileID: 3100040980733641465, guid: 01c882ab418a4c8488ae3d2cf166d0a2, type: 3}
   isInteracting: 0
   isSleeper: 0
   isBegger: 0
   isTheif: 0
   agent: {fileID: 9182797065367387616}
   player: {fileID: 5516760649300538513}
-  exitPoint: {fileID: 3408528108172203287, guid: 2cc6749465a8dc04d8d7bfd24a077d68, type: 3}
+  exitPoint: {fileID: 302067814163818241, guid: f31de89e8b77c8046b9adcc7bfb14b0e, type: 3}
   interactionDistance: 2
-  shopCenter: {fileID: 8496897026145125455, guid: 2ee3a1d246c09004ba8e65cf255c24f3, type: 3}
-  shopRadius: 50
+  shopCenter: {fileID: 2264094838117394960, guid: bd2d5c055d060c1418ed40a05fb4e222, type: 3}
+  shopRadius: 8
   isPaid: 0
