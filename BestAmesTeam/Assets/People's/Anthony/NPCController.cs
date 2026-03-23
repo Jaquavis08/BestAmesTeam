@@ -9,8 +9,6 @@ public class NPCController : MonoBehaviour
 
     ItemSpot targetSpot;
 
-    public static NPCController Instance;
-
     public List<CartItem> cart = new List<CartItem>();
 
     public int maxItems;
@@ -30,11 +28,16 @@ public class NPCController : MonoBehaviour
         agent.autoRepath = true;
 
         maxItems = Random.Range(1, 6);
-        ChooseItem();
+        if (!gameObject.GetComponent<HomelessMan>())
+        {
+            ChooseItem();
+        }
+        
     }
 
     void Update()
     {
+
         if (targetSpot != null && !isBrowsing)
         {
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
@@ -44,17 +47,31 @@ public class NPCController : MonoBehaviour
             }
         }
 
-        CheckIfExited();
+        if (!gameObject.GetComponent<HomelessMan>())
+        {
+            CheckIfExited();
+        }
     }
 
     public void ChooseItem()
     {
+        if (!gameObject.GetComponent<HomelessMan>().isTheif)
+        {
+            return;
+        }
+
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
 
 
         if (shelf == null)
         {
             Debug.LogError("No shelf found!");
+
+            if (gameObject.GetComponent<HomelessMan>() != null)
+            {
+                gameObject.GetComponent<HomelessMan>().getType();
+                return;
+            }
 
             if (itemsCollected == 0)
             {
@@ -115,7 +132,7 @@ public class NPCController : MonoBehaviour
         ChooseItem();
     }
 
-    void AddItemToCart(ItemData item)
+    public void AddItemToCart(ItemData item)
     {
         CartItem existing = cart.Find(c => c.item == item);
 
