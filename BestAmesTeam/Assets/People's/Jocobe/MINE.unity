@@ -376,6 +376,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
+--- !u!4 &142248913 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2106933195762162267, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
+  m_PrefabInstance: {fileID: 142248912}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &241967701
 GameObject:
   m_ObjectHideFlags: 0
@@ -2895,6 +2900,11 @@ Transform:
   - {fileID: 284853602}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1064626563 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7799374935476011559, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
+  m_PrefabInstance: {fileID: 291530983799110075}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1080491790
 GameObject:
   m_ObjectHideFlags: 0
@@ -3895,7 +3905,7 @@ GameObject:
   - component: {fileID: 1351421501}
   - component: {fileID: 1351421500}
   - component: {fileID: 1351421499}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6354,6 +6364,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2264885133553923898, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2264885133553923898, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2264885133553923898, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 153.5
       objectReference: {fileID: 0}
@@ -6361,6 +6379,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -31.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2841065142824081857, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
+      propertyPath: boxUI
+      value: 
+      objectReference: {fileID: 1064626563}
+    - target: {fileID: 2841065142824081857, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
+      propertyPath: HoldPoint
+      value: 
+      objectReference: {fileID: 142248913}
+    - target: {fileID: 2841065142824081857, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
+      propertyPath: RestockUI
+      value: 
+      objectReference: {fileID: 1997055664}
     - target: {fileID: 3126037552185089569, guid: 41946687997b0c1409b4f046b10eedf2, type: 3}
       propertyPath: m_Pivot.x
       value: 0

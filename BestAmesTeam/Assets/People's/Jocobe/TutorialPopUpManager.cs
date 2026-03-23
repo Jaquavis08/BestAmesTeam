@@ -5,39 +5,56 @@ using UnityEngine.UIElements;
 
 public class TutorialPopUpManager : MonoBehaviour
 {
-    //ItemBox tutorials;
-    //public float interactDistance = 3f;
+    public float interactDistance = 3f;
+    public Transform HoldPoint;
 
+    public GameObject boxUI;
+    public GameObject RestockUI;
 
-    //void TryInteract(Ray ray)
-    //{
-    //    RaycastHit hit;
+    private void Update()
+    {
+        Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f));
+        Debug.DrawRay(ray.origin, ray.direction * interactDistance, Color.black);
+        TryInteract(ray);
+    }
 
-    //    if (Physics.Raycast(ray, out hit, interactDistance))
-    //    {
+    void TryInteract(Ray ray)
+    {
+        RaycastHit hit;
 
-    //        Debug.Log("Ray hit: " + hit.collider.name);
+        if (Physics.Raycast(ray, out hit, interactDistance))
+        {
 
-    //        if (hit.collider.GetComponent<ItemBox>() && tutorials == null)
-    //        {
-    //            PickupBox(hit.collider.GetComponent<ItemBox>());
-    //            return;
-    //        }
-    //    }
-    //}
+            Debug.Log("Ray hit: " + hit.collider.name);
 
-    //void Tutorial(ItemBox box)
-    //{
-    //    box.transform.SetParent(holdPoint);
-    //    box.transform.localPosition = Vector3.zero;
-    //    box.transform.localRotation = Quaternion.identity;
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("HeldItem"))
+            {
+                boxUI.SetActive(true);
+            }
+            else
+            {
+                boxUI.SetActive(false);
+            }
 
-    //    Rigidbody rb = box.GetComponent<Rigidbody>();
-    //    if (rb) rb.isKinematic = true;
+            if (hit.collider.gameObject.GetComponent<Shelf>() && HoldPoint.childCount > 0)
+            {
+                RestockUI.SetActive(true);
+            }
+            else
+            {
+                RestockUI.SetActive(false);
+            }
+        }
+        else
+        {
+            DisableUI();
+        }
+    }
 
-    //    box.GetComponent<Collider>().enabled = false;
-
-    //    Debug.Log("Picked up box");
-    //}
+    void DisableUI()
+    {
+        boxUI.SetActive(false);
+        RestockUI.SetActive(false);
+    }
 
 }
