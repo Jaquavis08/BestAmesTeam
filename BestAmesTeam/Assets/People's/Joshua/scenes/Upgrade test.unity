@@ -1576,6 +1576,23 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 1968339426048806467, guid: a7683e697c979a4478368571f0ca9777, type: 3}
   m_PrefabInstance: {fileID: 893708162}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &542174541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542174534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a44f0bf8457554ea6b544b8b4a036f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  cart: []
+  maxItems: 0
+  itemsCollected: 0
+  npcSpawner: {fileID: 0}
 --- !u!1 &637838788
 GameObject:
   m_ObjectHideFlags: 0
@@ -1871,6 +1888,10 @@ PrefabInstance:
       propertyPath: isTheif
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 258829843139180466, guid: a7683e697c979a4478368571f0ca9777, type: 3}
+      propertyPath: maxItems
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 1968339426048806467, guid: a7683e697c979a4478368571f0ca9777, type: 3}
       propertyPath: m_Name
       value: Homeless
@@ -1918,7 +1939,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1968339426048806467, guid: a7683e697c979a4478368571f0ca9777, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 542174541}
   m_SourcePrefab: {fileID: 100100000, guid: a7683e697c979a4478368571f0ca9777, type: 3}
 --- !u!1 &912007205
 GameObject:

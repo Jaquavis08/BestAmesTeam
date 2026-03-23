@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 361173036493770472}
   - component: {fileID: 5444604469858458388}
   - component: {fileID: 3770197316687558743}
+  - component: {fileID: 611575688784502478}
   m_Layer: 0
   m_Name: Homeless
   m_TagString: NPC
@@ -148,6 +149,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshSurface: {fileID: 0}
   Shelf: {fileID: 0}
+  cart: []
+  isBrowsing: 0
   isInteracting: 0
   isSleeper: 0
   isBegger: 0
@@ -159,3 +162,20 @@ MonoBehaviour:
   shopCenter: {fileID: 0}
   shopRadius: 50
   isPaid: 0
+--- !u!114 &611575688784502478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821590790796001774}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a44f0bf8457554ea6b544b8b4a036f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 0}
+  cart: []
+  maxItems: 0
+  itemsCollected: 0
+  npcSpawner: {fileID: 0}

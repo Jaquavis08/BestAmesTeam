@@ -1,6 +1,7 @@
 using System.Collections;
-using UnityEngine;
+using System.Collections.Generic;
 using Unity.AI.Navigation;
+using UnityEngine;
 using UnityEngine.AI;
 
 public class HomelessMan : MonoBehaviour
@@ -8,7 +9,11 @@ public class HomelessMan : MonoBehaviour
     public NavMeshSurface navMeshSurface;
 
     public GameObject Shelf;
+    ItemSpot targetSpot;
 
+    public List<CartItem> cart = new List<CartItem>();
+
+    public bool isBrowsing = false;
     public bool isInteracting = false;
 
     public bool isSleeper = false;
@@ -23,20 +28,19 @@ public class HomelessMan : MonoBehaviour
     [Tooltip("Distance at which the homeless man will stop following and attempt interaction")]
     public float interactionDistance = 2f;
 
-   
     [Tooltip("Optional transform used as the center of the shop area. If null, this object position is used.")]
     public Transform shopCenter;
     [Tooltip("Radius around the shop center where sleepers can choose a resting point.")]
     public float shopRadius = 8f;
 
-   
     public bool isPaid = false;
 
+    // sleeper state
     Vector3 sleeperTarget;
     bool sleeperHasTarget = false;
     bool sleeperAtTarget = false;
 
-    
+    // thief state
     ItemSpot thiefTargetSpot;
     bool thiefHasTarget = false;
     bool thiefInteracting = false;
@@ -44,20 +48,12 @@ public class HomelessMan : MonoBehaviour
 
     void Start()
     {
-        // Choose a role at random on startup: 0 = sleeper, 1 = begger, 2 = theif
-        int choice = Random.Range(0, 3);
-        isSleeper = (choice == 0);
-        isBegger = (choice == 1);
-        isTheif = (choice == 2);
+        getType();
 
-      
         isInteracting = false;
 
-  
         if (agent == null)
-        {
             agent = GetComponent<NavMeshAgent>();
-        }
 
         // Try to find player by tag if not assigned
         if (player == null)
@@ -68,41 +64,48 @@ public class HomelessMan : MonoBehaviour
         }
 
         if (navMeshSurface != null)
-        {
             navMeshSurface.BuildNavMesh();
-        }
 
-        // If sleeper, immediately choose a point to go to
         if (isSleeper)
-        {
             ChooseSleeperDestination();
-        }
 
-        // If thief, immediately try to pick a shelf target
         if (isTheif)
-        {
             PickThiefShelfTarget();
+    }
+    
+    public void getType()
+    {
+        // Choose a role at random on startup: 0 = sleeper, 1 = begger, 2 = theif
+        int choice = Random.Range(0, 3);
+
+        isSleeper = false;
+        isBegger = false;
+        isTheif = false;
+
+        switch(choice)
+        {
+            case 1:
+                isSleeper = true;
+                break;
+            case 2:
+                isBegger = true;
+                break;
+            case 3:
+                isTheif = true;
+                break;
         }
     }
 
     void Update()
     {
-       
         if (isBegger)
-        {
             HandleBeggerBehavior();
-        }
 
-       
         if (isTheif)
-        {
             HandleThiefBehavior();
-        }
 
         if (isSleeper)
-        {
             HandleSleeperBehavior();
-        }
     }
 
     void HandleBeggerBehavior()
@@ -111,11 +114,9 @@ public class HomelessMan : MonoBehaviour
 
         if (!isPaid)
         {
-           
             agent.isStopped = false;
             agent.SetDestination(player.position);
 
-           
             float dist = Vector3.Distance(transform.position, player.position);
             if (dist <= interactionDistance && !isInteracting)
             {
@@ -125,20 +126,16 @@ public class HomelessMan : MonoBehaviour
         }
         else
         {
-           
             if (exitPoint != null)
             {
                 agent.isStopped = false;
                 agent.SetDestination(exitPoint.position);
 
-                
                 if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
                 {
                     float distanceToExit = Vector3.Distance(transform.position, exitPoint.position);
                     if (distanceToExit <= 1f)
-                    {
                         Destroy(gameObject);
-                    }
                 }
             }
             else
@@ -152,7 +149,6 @@ public class HomelessMan : MonoBehaviour
     {
         if (agent == null) return;
 
-      
         if (player == null)
         {
             var playerGo = GameObject.FindWithTag("Player");
@@ -160,13 +156,9 @@ public class HomelessMan : MonoBehaviour
                 player = playerGo.transform;
         }
 
-        
         if (!sleeperHasTarget)
-        {
             ChooseSleeperDestination();
-        }
 
-       
         if (sleeperHasTarget && !sleeperAtTarget)
         {
             agent.isStopped = false;
@@ -174,21 +166,19 @@ public class HomelessMan : MonoBehaviour
 
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
-                
                 sleeperAtTarget = true;
                 agent.isStopped = true;
             }
         }
         else if (sleeperAtTarget)
         {
-            
             if (player != null && !isInteracting)
             {
                 float dist = Vector3.Distance(transform.position, player.position);
                 if (dist <= interactionDistance)
                 {
                     isInteracting = true;
-                    
+                    // TODO: trigger sleeper-specific interaction/animation
                 }
             }
         }
@@ -196,47 +186,63 @@ public class HomelessMan : MonoBehaviour
 
     void PickThiefShelfTarget()
     {
-        // Try to get a random shelf and a spot on it (reuse ShelfManager pattern used by NPCController)
-        Shelf shelf = null;
-        try
+        // safe access to ShelfManager
+        if (ShelfManager.Instance == null)
         {
-            shelf = ShelfManager.Instance.GetRandomShelfWithItems();
+            BeginLeaving();
+            return;
         }
-        catch
-        {
-            shelf = null;
-        }
+
+        Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
 
         if (shelf == null)
         {
-            // No shelf found — just leave
             BeginLeaving();
             return;
         }
 
-        thiefTargetSpot = shelf.GetRandomSpotWithItem();
-        if (thiefTargetSpot == null)
+        ItemSpot spot = shelf.GetRandomSpotWithItem();
+        if (spot == null)
         {
-            // no spot, leave
+            // no items on this shelf -> leave
             BeginLeaving();
             return;
         }
 
+        thiefTargetSpot = spot;
         thiefHasTarget = true;
-        thiefInteracting = false;
 
-       
         Vector3 offset = new Vector3(
             Random.Range(-0.3f, 0.3f),
             0f,
             Random.Range(-0.3f, 0.3f)
         );
 
-        if (agent != null)
+        Collider[] hits = Physics.OverlapSphere(spot.standPoint.position, 0.6f);
+        bool crowded = false;
+        foreach (Collider hit in hits)
         {
-            agent.isStopped = false;
-            agent.SetDestination(thiefTargetSpot.standPoint.position + offset);
+            if (hit.CompareTag("NPC"))
+            {
+                crowded = true;
+                break;
+            }
         }
+
+        if (!crowded && agent != null)
+        {
+            agent.SetDestination(spot.standPoint.position + offset);
+        }
+        else
+        {
+            StartCoroutine(WaitThenPickAnotherShelf());
+        }
+    }
+
+    IEnumerator WaitThenPickAnotherShelf()
+    {
+        yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
+        PickThiefShelfTarget();
     }
 
     void HandleThiefBehavior()
@@ -245,7 +251,6 @@ public class HomelessMan : MonoBehaviour
 
         if (isLeaving)
         {
-           
             if (exitPoint != null)
             {
                 agent.isStopped = false;
@@ -255,27 +260,22 @@ public class HomelessMan : MonoBehaviour
                 {
                     float distanceToExit = Vector3.Distance(transform.position, exitPoint.position);
                     if (distanceToExit <= 0.1f)
-                    {
                         Destroy(gameObject);
-                    }
                 }
             }
             return;
         }
 
-       
         if (!thiefHasTarget)
         {
             PickThiefShelfTarget();
             return;
         }
 
-        
         if (thiefHasTarget && !thiefInteracting)
         {
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
-                
                 StartCoroutine(InteractWithShelfAndLeaveRoutine());
             }
         }
@@ -287,36 +287,39 @@ public class HomelessMan : MonoBehaviour
         thiefInteracting = true;
         isInteracting = true;
 
-        // Attempt to take an item if API exists (ItemSpot.TakeItem)
-        object item = null;
-        if (thiefTargetSpot != null)
-        {
-            try
-            {
-                
+        yield return new WaitForSeconds(Random.Range(0.5f, 1.2f));
 
-            }
-            catch
-            {
-                item = null;
-            }
-        }
-
-        // If there was no item available, leave immediately
-        if (item == null)
+        if (thiefTargetSpot == null)
         {
-            isInteracting = false;
             thiefInteracting = false;
+            isInteracting = false;
             BeginLeaving();
             yield break;
         }
 
-        // Item was taken - optionally log, then simulate interaction delay and leave
-        Debug.Log(name + " took " + (item.GetType().GetProperty("itemName")?.GetValue(item) ?? "an item") + " from shelf " + thiefTargetSpot?.name);
+        // Try to take a single item. If none, leave immediately.
+        //ItemData grabbedItem = targetSpot.TakeItem();
 
+        //if (NPCController.Instance.itemsCollected < NPCController.Instance.maxItems)
+        //{
+        //    NPCController.Instance.ChooseItem();
+        //}
+
+        if(gameObject.GetComponent<NPCController>().itemsCollected < gameObject.GetComponent<NPCController>().maxItems)
+        {
+            gameObject.GetComponent<NPCController>().ChooseItem();
+        }
+        else
+        {
+            BeginLeaving();
+        }
+
+        //Debug.Log($"{gameObject.name} took {grabbedItem.itemName} from {thiefTargetSpot.name}");
+
+        // simulate interaction time then leave
         yield return new WaitForSeconds(Random.Range(0.8f, 1.6f));
 
-        // done interacting: begin leaving
+        thiefInteracting = false;
         isInteracting = false;
         BeginLeaving();
     }
@@ -339,15 +342,17 @@ public class HomelessMan : MonoBehaviour
             }
         }
 
-        if (agent != null && exitPoint != null)
+        if (agent != null)
         {
-            agent.isStopped = false;
-            agent.SetDestination(exitPoint.position);
-        }
-        else if (agent != null && exitPoint == null)
-        {
-            
-            StartCoroutine(LeaveAfterDelayFallback());
+            if (exitPoint != null)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(exitPoint.position);
+            }
+            else
+            {
+                StartCoroutine(LeaveAfterDelayFallback());
+            }
         }
     }
 
@@ -357,7 +362,7 @@ public class HomelessMan : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void ChooseSleeperDestination()
+    public void ChooseSleeperDestination()
     {
         Vector3 center = shopCenter != null ? shopCenter.position : transform.position;
         const int maxAttempts = 8;
@@ -368,7 +373,6 @@ public class HomelessMan : MonoBehaviour
             Vector3 candidate = center + randomLocal;
 
             NavMeshHit hit;
-            
             if (NavMesh.SamplePosition(candidate, out hit, 2f, NavMesh.AllAreas))
             {
                 sleeperTarget = hit.position;
@@ -383,7 +387,7 @@ public class HomelessMan : MonoBehaviour
             }
         }
 
-       
+        // Fallback
         sleeperTarget = center;
         sleeperHasTarget = true;
         sleeperAtTarget = false;
@@ -394,19 +398,14 @@ public class HomelessMan : MonoBehaviour
         }
     }
 
-  
     public void ReceivePayment()
     {
         isPaid = true;
         isInteracting = false;
 
-       
         if (agent != null)
-        {
             agent.isStopped = false;
-        }
 
-        
         if (exitPoint == null)
         {
             var exitGo = GameObject.FindWithTag("Exit");
@@ -415,17 +414,11 @@ public class HomelessMan : MonoBehaviour
         }
     }
 
-  
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position, interactionDistance);
 
-        Gizmos.color = Color.blue;
-       
-        Gizmos.color = Color.blue;
-
-       
         Gizmos.color = Color.cyan;
         Vector3 center = shopCenter != null ? shopCenter.position : transform.position;
         Gizmos.DrawWireSphere(center, shopRadius);
