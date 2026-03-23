@@ -293,9 +293,8 @@ public class HomelessMan : MonoBehaviour
         {
             try
             {
-                NPCController.Instance.maxItems = Random.Range(1, 6);
-                NPCController.Instance.ChooseItem();
                 
+
             }
             catch
             {

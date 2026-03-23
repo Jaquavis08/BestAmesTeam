@@ -139,7 +139,7 @@ public class NPCController : MonoBehaviour
         CheckoutManager.Instance.JoinQueue(this);
     }
 
-    IEnumerator GrabItemRoutine()
+    public IEnumerator GrabItemRoutine()
     {
         yield return new WaitForSeconds(Random.Range(1f, 2f));
 
