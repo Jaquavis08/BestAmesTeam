@@ -48,7 +48,7 @@ public class CheckoutManager : MonoBehaviour
             yield return new WaitForSeconds(5f);
             EditorApplication.Beep();
 
-            currentNPC.CompleteCheckout();
+            currentNPC.CompleteCheckout(true);
 
             checkoutQueue.Dequeue();
             Debug.Log("Complete, Queue remaining: " + checkoutQueue.Count);
