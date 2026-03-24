@@ -22,17 +22,21 @@ public class NPCController : MonoBehaviour
 
     void Start()
     {
+        if (agent == null)
+            agent = GetComponent<NavMeshAgent>();
+
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 90);
         agent.radius = 0.3f;
         agent.autoRepath = true;
 
+
         maxItems = Random.Range(1, 6);
-        if (!gameObject.GetComponent<HomelessMan>())
+        if (!gameObject.GetComponent<HomelessMan>() || gameObject.GetComponent<HomelessMan>().isTheif)
         {
             ChooseItem();
         }
-        
+
     }
 
     void Update()
@@ -43,22 +47,23 @@ public class NPCController : MonoBehaviour
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 isBrowsing = true;
+                print("NPC reached target spot: " + targetSpot.name);
                 StartCoroutine(GrabItemRoutine());
             }
         }
 
-        if (!gameObject.GetComponent<HomelessMan>())
-        {
-            CheckIfExited();
-        }
+
+         CheckIfExited();
     }
 
     public void ChooseItem()
     {
-        if (!gameObject.GetComponent<HomelessMan>().isTheif)
-        {
-            return;
-        }
+        //if (gameObject.GetComponent<HomelessMan>() && gameObject.GetComponent<HomelessMan>().isTheif)
+        //{
+        //    return;
+        //}
+
+        print("NPC is choosing an item...");
 
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
 
@@ -167,6 +172,7 @@ public class NPCController : MonoBehaviour
         }
 
         ItemData grabbedItem = targetSpot.TakeItem();
+        print("NPC grabbed item: " + (grabbedItem != null ? grabbedItem.itemName : "null"));
 
         if (grabbedItem != null)
         {
@@ -183,8 +189,16 @@ public class NPCController : MonoBehaviour
         }
         else
         {
-            GoToCheckout();
+            if (gameObject.GetComponent<HomelessMan>() != null)
+            {
+                CompleteCheckout(false);
+            }
+            else
+            {
+                GoToCheckout();
+            }
         }
+
 
         isBrowsing = false;
     }
@@ -197,14 +211,14 @@ public class NPCController : MonoBehaviour
         return !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
     }
 
-    public void CompleteCheckout()
+    public void CompleteCheckout(bool ispaying)
     {
         Debug.Log(name + " completed checkout");
 
-        PrintCart();
+        PrintCart(ispaying);
 
         cart.Clear();
-        
+
 
         if (CheckoutManager.Instance.exitPoint != null)
         {
@@ -235,14 +249,17 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    void PrintCart()
+    void PrintCart(bool ispaying)
     {
         Debug.Log("NPC CART");
 
         foreach (var entry in cart)
         {
             Debug.Log(entry.item.itemName + " x" + entry.quantity);
-            Currency.Instance.amount += (int)entry.item.price * entry.quantity;
+            if (ispaying)
+            {
+                Currency.Instance.amount += (int)entry.item.price * entry.quantity;
+            }
         }
     }
 }
