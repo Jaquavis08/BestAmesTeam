@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CarEnterExit : MonoBehaviour
@@ -20,25 +21,60 @@ public class CarEnterExit : MonoBehaviour
     public float exitCheckRadius = 0.5f;
     public LayerMask obstacleLayers;
 
+    public Transform exitPoint;
+    public BoxCollider Check;
+    public Transform CenterCheck;
+    public GameObject carPrefab;
+
+    [Header("Box Exclusions (for Check BoxCollider)")]
+    [Tooltip("Any collider on these layers will be ignored as blockers")]
+    public LayerMask excludedLayers;
+    [Tooltip("Any collider with any of these tags will be ignored")]
+    public string[] excludedTags;
+    [Tooltip("Specific GameObjects to ignore (colliders belonging to these will be ignored)")]
+    public GameObject[] excludedObjects;
+
+    // Internal tracking of blockers currently inside the Check trigger
+    private readonly HashSet<Collider> _blockingColliders = new HashSet<Collider>();
+
     private bool inCar = false;
 
     void Update()
     {
         if (Input.GetKeyDown(enterExitKey))
         {
-            if (!inCar && Vector3.Distance(player.transform.position, transform.position) < interactionDistance)
+            Debug.LogWarning(Vector3.Distance(player.transform.position, CenterCheck.position) < interactionDistance);
+            if (!inCar && Vector3.Distance(player.transform.position, CenterCheck.position) < interactionDistance)
             {
                 EnterCar();
             }
-            else
+            else if (inCar)
             {
                 TryExitCar();
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            if (inCar)
+            {
+                //transform.position = Vector3.zero;
+                //transform.position = new Vector3(CenterCheck.position.x + 1f, CenterCheck.position.y, CenterCheck.position.z);
+                //gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
+                
+            }
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        Instantiate(carPrefab, new Vector3(CenterCheck.position.x, CenterCheck.position.y +1f, CenterCheck.position.z), Quaternion.Euler(0, 0, 0));
     }
 
     void EnterCar()
     {
+        Debug.LogWarning("Entering car...");
         inCar = true;
         player.SetActive(false);
         carController.enabled = true;
@@ -52,18 +88,27 @@ public class CarEnterExit : MonoBehaviour
 
     void TryExitCar()
     {
+        // Print all names of GameObjects currently tracked as blocking colliders
+        PrintBlockingColliderNames();
+
+        Debug.LogWarning("Attempting to exit car...");
         // Use linearVelocity instead of the obsolete velocity property
         Vector3 currentLinear = carRb.linearVelocity;
         if (currentLinear.magnitude < exitSpeedThreshold)
         {
-            Vector3 exitPoint = transform.position + transform.right * 2f; // Exit to the right of the car
-            if (!Physics.CheckSphere(exitPoint, exitCheckRadius, obstacleLayers))
+            Vector3 pointExit = exitPoint.position;
+            Debug.LogFormat("Exit point: {0} {1} {2}", pointExit.x, pointExit.y, pointExit.z);
+
+            if (Check != null)
             {
-                ExitCar(exitPoint);
-            }
-            else
-            {
-                Debug.Log("Cannot exit here, obstacle detected!");
+                if (!IsExitBlocked())
+                {
+                    ExitCar(pointExit);
+                }
+                else
+                {
+                    Debug.Log("Cannot exit here, obstacle detected inside exit box!");
+                }
             }
         }
         else
@@ -100,5 +145,103 @@ public class CarEnterExit : MonoBehaviour
         // Swap cameras
         if (carCamera != null) carCamera.SetActive(false);
         if (playerCamera != null) playerCamera.SetActive(true);
+    }
+
+    // Helper to determine whether a collider should be ignored (excluded) as a blocker
+    private bool IsExcluded(Collider other)
+    {
+        if (other == null) return true;
+
+        // Ignore trigger colliders by default
+        if (other.isTrigger) return true;
+
+        GameObject go = other.gameObject;
+
+        // Excluded specific objects
+        if (excludedObjects != null)
+        {
+            for (int i = 0; i < excludedObjects.Length; i++)
+            {
+                if (excludedObjects[i] == go) return true;
+            }
+        }
+
+        // Excluded tags
+        if (excludedTags != null)
+        {
+            for (int i = 0; i < excludedTags.Length; i++)
+            {
+                string t = excludedTags[i];
+                if (!string.IsNullOrEmpty(t) && go.CompareTag(t)) return true;
+            }
+        }
+
+        // Excluded layers
+        if (excludedLayers != 0)
+        {
+            if (((1 << go.layer) & excludedLayers) != 0) return true;
+        }
+
+        return false; // not excluded -> counts as blocker
+    }
+
+    // Public query to determine if exit is currently blocked by any non-excluded collider inside the Check box
+    public bool IsExitBlocked()
+    {
+        // Clean up any destroyed or null colliders
+        _blockingColliders.RemoveWhere(c => c == null);
+        return _blockingColliders.Count > 0;
+    }
+
+    // Trigger callbacks to maintain the blocking set.
+    // Ensure the BoxCollider 'Check' on this GameObject has 'Is Trigger' = true and encompasses the exit area.
+    public void OnTriggerEnter(Collider other)
+    {
+        if (IsExcluded(other)) return;
+
+        _blockingColliders.Add(other);
+    }
+
+    public void OnTriggerStay(Collider other)
+    {
+        // Keep the collider tracked while it stays in the trigger if it's not excluded.
+        if (IsExcluded(other)) return;
+
+        if (!_blockingColliders.Contains(other))
+        {
+            _blockingColliders.Add(other);
+        }
+    }
+
+    public void OnTriggerExit(Collider other)
+    {
+        if (other == null) return;
+        _blockingColliders.Remove(other);
+    }
+
+    private void PrintBlockingColliderNames()
+    {
+        if (_blockingColliders == null || _blockingColliders.Count == 0)
+        {
+            Debug.Log("No blocking colliders.");
+            return;
+        }
+
+        var names = new List<string>(capacity: _blockingColliders.Count);
+        foreach (var col in _blockingColliders)
+        {
+            if (col == null) continue;
+            var go = col.gameObject;
+            names.Add(go != null ? go.name : "null");
+        }
+
+        if (names.Count == 0)
+        {
+            Debug.Log("No blocking colliders (all entries were null).");
+        }
+        else
+        {
+            Debug.Log("Blocking colliders: " + string.Join(", ", names));
+        }
     }
 }
