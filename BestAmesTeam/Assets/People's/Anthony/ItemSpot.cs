@@ -15,6 +15,15 @@ public class ItemSpot : MonoBehaviour
         ValidateShelfItems();
     }
 
+    private void Update()
+    {
+        if (transform.childCount - 1 < itemCount)
+        {
+            print("Shelf item count mismatch, validating...");
+            ValidateShelfItems();
+        }    
+    }
+
     public ItemData TakeItem()
     {
         if (!occupied) return null;

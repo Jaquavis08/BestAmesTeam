@@ -404,6 +404,8 @@ MonoBehaviour:
     _prefab: Assets/People's/Joshua/prefabs/shopcenter.prefab
   - _gameObject: {fileID: 542174534}
     _prefab: Assets/People's/Joshua/prefabs/Homeless.prefab
+  - _gameObject: {fileID: 1708076092}
+    _prefab: Assets/People's/Anthony/Box.prefab
   - _gameObject: {fileID: 1369929742}
     _prefab: Assets/People's/Anthony/NPC.prefab
 --- !u!4 &117677038
@@ -2186,6 +2188,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfc3e839a78a93b46b7b298d5bf2b182, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BoxPrefab: {fileID: 4091370455635239378, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+  ItemDictionary: {fileID: 11400000, guid: 1186dd06d7a27444ba71e8931fedf9b9, type: 2}
   shelvesParent: {fileID: 1332561263}
   shelves:
   - {fileID: 8533808547815346459}
@@ -3277,6 +3281,63 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3968215767256214959, guid: 736e5653a33211d4f83f21e67afc07d3, type: 3}
   m_PrefabInstance: {fileID: 2123380928}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1404089745
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 456.27
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 14.37
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 421.28
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4091370455635239378, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: m_Name
+      value: Box
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
 --- !u!1 &1426272955 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6435049023679216934, guid: f31de89e8b77c8046b9adcc7bfb14b0e, type: 3}
@@ -3900,6 +3961,11 @@ MonoBehaviour:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8533808549834834403, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
   m_PrefabInstance: {fileID: 1692228424}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1708076092 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4091370455635239378, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+  m_PrefabInstance: {fileID: 1404089745}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1726666606 stripped
 GameObject:
@@ -5728,7 +5794,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: SpawnPoint
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4817458459485376270, guid: 3ecb23a9c0aab224c907c079cda22f89, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
@@ -5962,5 +6029,6 @@ SceneRoots:
   - {fileID: 402978764}
   - {fileID: 5861203126799736871}
   - {fileID: 893708162}
+  - {fileID: 1404089745}
   - {fileID: 2123380928}
   - {fileID: 1448070833}
