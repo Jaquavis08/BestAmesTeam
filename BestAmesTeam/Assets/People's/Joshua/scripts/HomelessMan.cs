@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,8 @@ public class HomelessMan : MonoBehaviour
     public NavMeshSurface navMeshSurface;
 
     public GameObject Shelf;
+
+    public List<CartItem> cart = new List<CartItem>();
 
     public bool isBrowsing = false;
     public bool isInteracting = false;
@@ -42,6 +45,8 @@ public class HomelessMan : MonoBehaviour
     bool thiefHasTarget = false;
     bool thiefInteracting = false;
     bool isLeaving = false;
+
+    
 
     void Start()
     {
@@ -107,176 +112,12 @@ public class HomelessMan : MonoBehaviour
         {
             ThiefCaught();
         }
+        
     }
 
     void ThiefCaught()
     {
-        print("Thief caught! Attempting to return stolen items.");
-        if (gameObject.GetComponent<NPCController>().cart == null || gameObject.GetComponent<NPCController>().cart.Count == 0) return;
-        print("Running thief caught logic");
-
-        // Try to find a reasonable return transform on the target spot (prefer 'standPoint' if present)
-        Transform returnPoint = null;
-        if (thiefTargetSpot != null)
-        {
-            var spotType = thiefTargetSpot.GetType();
-            var fp = spotType.GetField("standPoint", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (fp != null)
-                returnPoint = fp.GetValue(thiefTargetSpot) as Transform;
-            else
-            {
-                var pp = spotType.GetProperty("standPoint", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (pp != null)
-                    returnPoint = pp.GetValue(thiefTargetSpot) as Transform;
-            }
-
-            if (returnPoint == null && thiefTargetSpot is Component comp)
-                returnPoint = comp.transform;
-        }
-
-        // Work on a copy so we can remove safely from the original list
-        var copy = gameObject.GetComponent<NPCController>().cart.ToArray();
-        foreach (var cartItem in copy)
-        {
-            if (cartItem == null)
-            {
-                gameObject.GetComponent<NPCController>().cart.Remove(cartItem);
-                continue;
-            }
-
-            // Try to extract a GameObject from the CartItem via common field/property names or by searching for GameObject/Component typed members
-            GameObject itemGo = null;
-            var ciType = cartItem.GetType();
-
-            // Common names first
-            string[] candidateNames = { "gameObject", "itemObject", "item", "obj", "gameObj" };
-            foreach (var name in candidateNames)
-            {
-                var f = ciType.GetField(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (f != null && typeof(UnityEngine.Object).IsAssignableFrom(f.FieldType))
-                {
-                    var val = f.GetValue(cartItem);
-                    if (val is GameObject g) { itemGo = g; break; }
-                    if (val is Component c) { itemGo = c.gameObject; break; }
-                }
-
-                var p = ciType.GetProperty(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (p != null && typeof(UnityEngine.Object).IsAssignableFrom(p.PropertyType))
-                {
-                    var val = p.GetValue(cartItem);
-                    if (val is GameObject g2) { itemGo = g2; break; }
-                    if (val is Component c2) { itemGo = c2.gameObject; break; }
-                }
-            }
-
-            // If not found, search any field/property of type GameObject or Component
-            if (itemGo == null)
-            {
-                foreach (var f in ciType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance))
-                {
-                    if (typeof(GameObject).IsAssignableFrom(f.FieldType))
-                    {
-                        itemGo = f.GetValue(cartItem) as GameObject;
-                        if (itemGo != null) break;
-                    }
-                    if (typeof(Component).IsAssignableFrom(f.FieldType))
-                    {
-                        var comp = f.GetValue(cartItem) as Component;
-                        if (comp != null) { itemGo = comp.gameObject; break; }
-                    }
-                }
-            }
-            if (itemGo == null)
-            {
-                foreach (var p in ciType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance))
-                {
-                    if (typeof(GameObject).IsAssignableFrom(p.PropertyType))
-                    {
-                        itemGo = p.GetValue(cartItem) as GameObject;
-                        if (itemGo != null) break;
-                    }
-                    if (typeof(Component).IsAssignableFrom(p.PropertyType))
-                    {
-                        var comp = p.GetValue(cartItem) as Component;
-                        if (comp != null) { itemGo = comp.gameObject; break; }
-                    }
-                }
-            }
-
-            // If the target spot exposes a method to accept returned items, try to call it
-            bool returnedViaMethod = false;
-            if (thiefTargetSpot != null)
-            {
-                string[] methodNames = { "PlaceItem", "ReturnItem", "AddItem", "ReceiveItem", "SetItem", "InsertItem" };
-                foreach (var mName in methodNames)
-                {
-                    var m = thiefTargetSpot.GetType().GetMethod(mName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    if (m == null) continue;
-
-                    var parms = m.GetParameters();
-                    try
-                    {
-                        if (parms.Length == 1)
-                        {
-                            var pt = parms[0].ParameterType;
-                            if (pt.IsInstanceOfType(cartItem))
-                            {
-                                m.Invoke(thiefTargetSpot, new object[] { cartItem });
-                                returnedViaMethod = true;
-                                break;
-                            }
-                            if (itemGo != null && pt.IsInstanceOfType(itemGo))
-                            {
-                                m.Invoke(thiefTargetSpot, new object[] { itemGo });
-                                returnedViaMethod = true;
-                                break;
-                            }
-                            // accept generic UnityEngine.Object
-                            if (itemGo != null && typeof(UnityEngine.Object).IsAssignableFrom(pt))
-                            {
-                                m.Invoke(thiefTargetSpot, new object[] { itemGo });
-                                returnedViaMethod = true;
-                                break;
-                            }
-                        }
-                        else if (parms.Length == 0)
-                        {
-                            m.Invoke(thiefTargetSpot, null);
-                            returnedViaMethod = true;
-                            break;
-                        }
-                    }
-                    catch { /* swallow reflection invocation errors to keep this robust */ }
-                }
-            }
-
-            // If no method returned the item, try placing the GameObject at the return point transform
-            if (!returnedViaMethod && itemGo != null && returnPoint != null)
-            {
-                try
-                {
-                    itemGo.transform.position = returnPoint.position;
-                    itemGo.transform.rotation = returnPoint.rotation;
-                    itemGo.transform.SetParent(returnPoint, true);
-                }
-                catch { }
-            }
-
-            gameObject.GetComponent<NPCController>().cart.Remove(cartItem);
-        }
-
-        // Reset thief state and make them leave
-        isTheif = false;
-        thiefHasTarget = false;
-        thiefInteracting = false;
-        isLeaving = true;
-
-        if (agent != null)
-        {
-            agent.isStopped = false;
-            if (exitPoint != null)
-                agent.SetDestination(exitPoint.position);
-        }
+       
     }
 
     void HandleBeggerBehavior()
