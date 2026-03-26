@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,6 +10,8 @@ public class HomelessMan : MonoBehaviour
     public NavMeshSurface navMeshSurface;
 
     public GameObject Shelf;
+
+    public List<CartItem> cart = new List<CartItem>();
 
     public bool isBrowsing = false;
     public bool isInteracting = false;
@@ -42,6 +45,8 @@ public class HomelessMan : MonoBehaviour
     bool thiefHasTarget = false;
     bool thiefInteracting = false;
     bool isLeaving = false;
+
+    
 
     void Start()
     {
@@ -108,15 +113,20 @@ public class HomelessMan : MonoBehaviour
             Debug.LogWarning("Simulating thief caught condition for testing.");
             ThiefCaught();
         }
+<<<<<<< HEAD
 
         if (isLeaving)
         {
             agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
         }
+=======
+        
+>>>>>>> 181467ad844b73212a4707ae2db6296ddeb7e308
     }
 
     void ThiefCaught()
     {
+<<<<<<< HEAD
         // Plan (pseudocode):
         // 1. Log start.
         // 2. Get NPCController and its cart; bail out if missing or empty.
@@ -361,6 +371,9 @@ public class HomelessMan : MonoBehaviour
 
         print("Running thief caught logic: created return boxes for items.");
         isLeaving = true;
+=======
+       
+>>>>>>> 181467ad844b73212a4707ae2db6296ddeb7e308
     }
 
     void HandleBeggerBehavior()
