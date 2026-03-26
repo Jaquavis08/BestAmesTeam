@@ -103,180 +103,264 @@ public class HomelessMan : MonoBehaviour
         if (isSleeper)
             HandleSleeperBehavior();
     
-        if (isTheif && gameObject.GetComponent<NPCController>().itemsCollected < 0 && Input.GetKeyDown(KeyCode.G))
+        if (isTheif && Input.GetKeyDown(KeyCode.G))
         {
+            Debug.LogWarning("Simulating thief caught condition for testing.");
             ThiefCaught();
+        }
+
+        if (isLeaving)
+        {
+            agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
         }
     }
 
     void ThiefCaught()
     {
+        // Plan (pseudocode):
+        // 1. Log start.
+        // 2. Get NPCController and its cart; bail out if missing or empty.
+        // 3. Build two dictionaries:
+        //    a) counts: maps item name -> total quantity
+        //    b) representative: maps item name -> representative GameObject prefab (if any)
+        //    For each entry in cart:
+        //      - If entry is CartItem, use ci.item.name (or "Unknown") for key and ci.quantity (min 1) for qty.
+        //        Attempt to discover a prefab/model GameObject on the item via common field/property names (safe reflect).
+        //      - Otherwise, try to resolve a human key: GameObject.name, or "name" prop via reflection, or entry.ToString()
+        //      - Accumulate counts.
+        // 4. If no counts, log and return.
+        // 5. Safely obtain ShelfManager box prefab and item dictionary if available.
+        // 6. For each distinct item in counts:
+        //      - Compute spawn position
+        //      - Instantiate boxPrefab if available, otherwise create a small cube fallback
+        //      - Get ItemBox component; if present assign itemType (if found) and itemCount; otherwise log warning
+        //      - Parent box to a sensible object
+        //      - If we have a representative GameObject, instantiate a child copy, strip physics/colliders/agents and scale/position it
+        //      - Create a simple TextMesh child showing the count and orient towards main camera
+        // 7. After creating all boxes, clear the NPC's cart once (outside the loop).
+        // 8. Mark thief as leaving and log completion.
+        //
+        // Implementation notes:
+        // - All external calls are guarded (ShelfManager, ItemDictionary, ItemBox).
+        // - Clear the cart once after processing to avoid losing data mid-processing (bug fix).
+        // - Defensive null-checking prevents exceptions that could cause "sometimes fails" behavior.
+
         print("Thief caught! Attempting to return stolen items.");
-        if (gameObject.GetComponent<NPCController>().cart == null || gameObject.GetComponent<NPCController>().cart.Count == 0) return;
-        print("Running thief caught logic");
 
-        // Try to find a reasonable return transform on the target spot (prefer 'standPoint' if present)
-        Transform returnPoint = null;
-        if (thiefTargetSpot != null)
+        var npc = gameObject.GetComponent<NPCController>();
+        if (npc == null)
         {
-            var spotType = thiefTargetSpot.GetType();
-            var fp = spotType.GetField("standPoint", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-            if (fp != null)
-                returnPoint = fp.GetValue(thiefTargetSpot) as Transform;
-            else
-            {
-                var pp = spotType.GetProperty("standPoint", System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (pp != null)
-                    returnPoint = pp.GetValue(thiefTargetSpot) as Transform;
-            }
-
-            if (returnPoint == null && thiefTargetSpot is Component comp)
-                returnPoint = comp.transform;
+            Debug.LogWarning("NPCController not found on thief.");
+            return;
         }
 
-        // Work on a copy so we can remove safely from the original list
-        var copy = gameObject.GetComponent<NPCController>().cart.ToArray();
-        foreach (var cartItem in copy)
+        var cart = npc.cart;
+        if (cart == null || cart.Count == 0)
         {
-            if (cartItem == null)
+            Debug.Log("Cart is null or empty, nothing to return.");
+            return;
+        }
+
+        var counts = new Dictionary<string, int>();
+        var representative = new Dictionary<string, GameObject>(System.StringComparer.Ordinal);
+
+        foreach (var entry in cart)
+        {
+            if (entry == null) continue;
+
+            // If the cart stores a CartItem structure
+            if (entry is CartItem ci)
             {
-                gameObject.GetComponent<NPCController>().cart.Remove(cartItem);
+                string key = ci.item != null ? (ci.item.name ?? "Unknown") : "Unknown";
+                int qty = Mathf.Max(1, ci.quantity);
+
+                if (!counts.ContainsKey(key))
+                    counts[key] = 0;
+
+                // Try to find a representative GameObject on the item (safe reflection)
+                if (!representative.ContainsKey(key) && ci.item != null)
+                {
+                    try
+                    {
+                        var t = ci.item.GetType();
+                        var field = t.GetField("prefab") ?? t.GetField("Prefab") ?? t.GetField("worldPrefab") ?? t.GetField("model") ?? t.GetField("Model");
+                        GameObject rep = null;
+                        if (field != null && typeof(GameObject).IsAssignableFrom(field.FieldType))
+                            rep = field.GetValue(ci.item) as GameObject;
+                        else
+                        {
+                            var prop = t.GetProperty("prefab") ?? t.GetProperty("Prefab") ?? t.GetProperty("worldPrefab") ?? t.GetProperty("model") ?? t.GetProperty("Model");
+                            if (prop != null && typeof(GameObject).IsAssignableFrom(prop.PropertyType))
+                                rep = prop.GetValue(ci.item, null) as GameObject;
+                        }
+
+                        if (rep != null)
+                            representative[key] = rep;
+                    }
+                    catch
+                    {
+                        // swallow reflection exceptions; representative simply won't be set
+                    }
+                }
+
+                counts[key] += qty;
                 continue;
             }
 
-            // Try to extract a GameObject from the CartItem via common field/property names or by searching for GameObject/Component typed members
-            GameObject itemGo = null;
-            var ciType = cartItem.GetType();
-
-            // Common names first
-            string[] candidateNames = { "gameObject", "itemObject", "item", "obj", "gameObj" };
-            foreach (var name in candidateNames)
+            // Generic fallback for non-CartItem entries
+            string fallbackKey = "Unknown";
+            try
             {
-                var f = ciType.GetField(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (f != null && typeof(UnityEngine.Object).IsAssignableFrom(f.FieldType))
-                {
-                    var val = f.GetValue(cartItem);
-                    if (val is GameObject g) { itemGo = g; break; }
-                    if (val is Component c) { itemGo = c.gameObject; break; }
-                }
-
-                var p = ciType.GetProperty(name, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                if (p != null && typeof(UnityEngine.Object).IsAssignableFrom(p.PropertyType))
-                {
-                    var val = p.GetValue(cartItem);
-                    if (val is GameObject g2) { itemGo = g2; break; }
-                    if (val is Component c2) { itemGo = c2.gameObject; break; }
-                }
+                // With this corrected version:
+                print("NIL");
+            }
+            catch
+            {
+                fallbackKey = entry.ToString() ?? "Unknown";
             }
 
-            // If not found, search any field/property of type GameObject or Component
-            if (itemGo == null)
-            {
-                foreach (var f in ciType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance))
-                {
-                    if (typeof(GameObject).IsAssignableFrom(f.FieldType))
-                    {
-                        itemGo = f.GetValue(cartItem) as GameObject;
-                        if (itemGo != null) break;
-                    }
-                    if (typeof(Component).IsAssignableFrom(f.FieldType))
-                    {
-                        var comp = f.GetValue(cartItem) as Component;
-                        if (comp != null) { itemGo = comp.gameObject; break; }
-                    }
-                }
-            }
-            if (itemGo == null)
-            {
-                foreach (var p in ciType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance))
-                {
-                    if (typeof(GameObject).IsAssignableFrom(p.PropertyType))
-                    {
-                        itemGo = p.GetValue(cartItem) as GameObject;
-                        if (itemGo != null) break;
-                    }
-                    if (typeof(Component).IsAssignableFrom(p.PropertyType))
-                    {
-                        var comp = p.GetValue(cartItem) as Component;
-                        if (comp != null) { itemGo = comp.gameObject; break; }
-                    }
-                }
-            }
+            if (!counts.ContainsKey(fallbackKey))
+                counts[fallbackKey] = 0;
 
-            // If the target spot exposes a method to accept returned items, try to call it
-            bool returnedViaMethod = false;
-            if (thiefTargetSpot != null)
-            {
-                string[] methodNames = { "PlaceItem", "ReturnItem", "AddItem", "ReceiveItem", "SetItem", "InsertItem" };
-                foreach (var mName in methodNames)
-                {
-                    var m = thiefTargetSpot.GetType().GetMethod(mName, System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                    if (m == null) continue;
+            counts[fallbackKey] += 1;
+        }
 
-                    var parms = m.GetParameters();
-                    try
-                    {
-                        if (parms.Length == 1)
-                        {
-                            var pt = parms[0].ParameterType;
-                            if (pt.IsInstanceOfType(cartItem))
-                            {
-                                m.Invoke(thiefTargetSpot, new object[] { cartItem });
-                                returnedViaMethod = true;
-                                break;
-                            }
-                            if (itemGo != null && pt.IsInstanceOfType(itemGo))
-                            {
-                                m.Invoke(thiefTargetSpot, new object[] { itemGo });
-                                returnedViaMethod = true;
-                                break;
-                            }
-                            // accept generic UnityEngine.Object
-                            if (itemGo != null && typeof(UnityEngine.Object).IsAssignableFrom(pt))
-                            {
-                                m.Invoke(thiefTargetSpot, new object[] { itemGo });
-                                returnedViaMethod = true;
-                                break;
-                            }
-                        }
-                        else if (parms.Length == 0)
-                        {
-                            m.Invoke(thiefTargetSpot, null);
-                            returnedViaMethod = true;
-                            break;
-                        }
-                    }
-                    catch { /* swallow reflection invocation errors to keep this robust */ }
-                }
-            }
+        if (counts.Count == 0)
+        {
+            Debug.Log("No items in cart to display.");
+            return;
+        }
 
-            // If no method returned the item, try placing the GameObject at the return point transform
-            if (!returnedViaMethod && itemGo != null && returnPoint != null)
+        // Safely get box prefab and item dictionary
+        GameObject boxPrefab = null;
+        var itemArray = (ShelfManager.Instance != null && ShelfManager.Instance.ItemDictionary != null)
+            ? ShelfManager.Instance.ItemDictionary.items
+            : null;
+
+        try { boxPrefab = ShelfManager.Instance?.BoxPrefab; } catch { boxPrefab = null; }
+
+        Vector3 basePos = transform.position;
+        int index = 0;
+        float spacing = 1.2f;
+        int total = counts.Count;
+
+        foreach (var kv in counts)
+        {
+            string itemKey = kv.Key;
+            int itemCount = kv.Value;
+            print($"{itemKey} -> {itemCount}");
+
+            Vector3 offset = transform.forward * 1.0f + transform.right * (index * spacing - (total - 1) * spacing / 2f);
+            Vector3 spawnPos = basePos + offset + Vector3.up * 1f;
+
+            GameObject box = null;
+            if (boxPrefab != null)
             {
                 try
                 {
-                    itemGo.transform.position = returnPoint.position;
-                    itemGo.transform.rotation = returnPoint.rotation;
-                    itemGo.transform.SetParent(returnPoint, true);
+                    box = GameObject.Instantiate(boxPrefab, spawnPos, Quaternion.identity);
                 }
-                catch { }
+                catch
+                {
+                    box = null;
+                }
             }
 
-            gameObject.GetComponent<NPCController>().cart.Remove(cartItem);
+            if (box == null)
+            {
+                box = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                box.transform.position = spawnPos;
+                box.transform.localScale = new Vector3(0.5f, 0.3f, 0.5f);
+                var col = box.GetComponent<Collider>();
+                if (col != null) GameObject.Destroy(col);
+            }
+
+            var itemBox = box.GetComponent<ItemBox>();
+            if (itemBox != null)
+            {
+                if (itemArray != null)
+                {
+                    try
+                    {
+                        itemBox.itemType = System.Array.Find(itemArray, i => i != null && i.name == itemKey);
+                    }
+                    catch
+                    {
+                        itemBox.itemType = null;
+                    }
+                }
+
+                itemBox.itemCount = itemCount;
+            }
+            else
+            {
+                Debug.LogWarning($"Returned box prefab missing ItemBox component for item '{itemKey}'.");
+            }
+
+            box.name = $"ReturnBox_{itemKey}";
+            
+
+            if (representative.TryGetValue(itemKey, out GameObject repGo) && repGo != null)
+            {
+                GameObject itemCopy = null;
+                try
+                {
+                    itemCopy = GameObject.Instantiate(repGo, box.transform);
+                }
+                catch
+                {
+                    itemCopy = null;
+                }
+
+                if (itemCopy != null)
+                {
+                    itemCopy.transform.localPosition = Vector3.zero;
+                    itemCopy.transform.localRotation = Quaternion.identity;
+                    itemCopy.transform.localScale = Vector3.one * 0.25f;
+
+                    foreach (var col in itemCopy.GetComponentsInChildren<Collider>())
+                        GameObject.Destroy(col);
+
+                    var agentComp = itemCopy.GetComponent<NavMeshAgent>();
+                    if (agentComp != null) GameObject.Destroy(agentComp);
+
+                    foreach (var rb in itemCopy.GetComponentsInChildren<Rigidbody>())
+                        GameObject.Destroy(rb);
+                }
+            }
+
+            GameObject textObj = new GameObject("CountText");
+            textObj.transform.SetParent(box.transform, false);
+            textObj.transform.localPosition = new Vector3(0f, 0.4f, 0f);
+            textObj.transform.localRotation = Quaternion.identity;
+
+            var textMesh = textObj.AddComponent<TextMesh>();
+            textMesh.text = itemCount.ToString();
+            textMesh.anchor = TextAnchor.MiddleCenter;
+            textMesh.alignment = TextAlignment.Center;
+            textMesh.characterSize = 0.12f;
+            textMesh.fontSize = 64;
+            textMesh.color = Color.black;
+
+            var cam = Camera.main;
+            if (cam != null)
+                textObj.transform.rotation = Quaternion.LookRotation(textObj.transform.position - cam.transform.position);
+
+            index++;
         }
 
-        // Reset thief state and make them leave
-        isTheif = false;
-        thiefHasTarget = false;
-        thiefInteracting = false;
-        isLeaving = true;
-
-        if (agent != null)
+        // Clear the cart once after processing to avoid losing data mid-processing (fixes intermittent missing returns)
+        try
         {
-            agent.isStopped = false;
-            if (exitPoint != null)
-                agent.SetDestination(exitPoint.position);
+            npc.cart.Clear();
         }
+        catch
+        {
+            // ignore failures clearing cart
+        }
+
+        print("Running thief caught logic: created return boxes for items.");
+        isLeaving = true;
     }
 
     void HandleBeggerBehavior()

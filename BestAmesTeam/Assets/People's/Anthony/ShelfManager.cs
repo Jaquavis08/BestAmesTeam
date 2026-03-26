@@ -5,6 +5,9 @@ public class ShelfManager : MonoBehaviour
 {
     public static ShelfManager Instance;
 
+    public GameObject BoxPrefab;
+    public ItemDictionary ItemDictionary;
+
     public Transform shelvesParent;
 
     public List<Shelf> shelves = new List<Shelf>();

@@ -217,7 +217,10 @@ public class NPCController : MonoBehaviour
 
         PrintCart(ispaying);
 
-        cart.Clear();
+        if (!gameObject.GetComponent<HomelessMan>())
+        {
+            cart.Clear();
+        }
 
 
         if (CheckoutManager.Instance.exitPoint != null)
