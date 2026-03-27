@@ -64,7 +64,7 @@ public class CarEnterExit : MonoBehaviour
         {
             if (!inCar)
             {
-                Vector3 target = new Vector3(CenterCheck.position.x, CenterCheck.position.y + 5f, CenterCheck.position.z);
+                Vector3 target = new Vector3(CenterCheck.position.x, CenterCheck.position.y + 2f, CenterCheck.position.z);
                 StartSmoothMoveTo(target, Quaternion.Euler(0, 0, 0));
             }
         }
@@ -73,7 +73,7 @@ public class CarEnterExit : MonoBehaviour
             if (inCar)
             {
                 transform.position = Vector3.zero;
-                transform.position = new Vector3(CenterCheck.position.x + 410f, CenterCheck.position.y + 15f, CenterCheck.position.z + 440f);
+                transform.position = new Vector3(CenterCheck.position.x + 410f, CenterCheck.position.y + 16f, CenterCheck.position.z + 440f);
                 gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 
             }
