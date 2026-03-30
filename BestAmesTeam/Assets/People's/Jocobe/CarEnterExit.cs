@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,6 +40,11 @@ public class CarEnterExit : MonoBehaviour
 
     private bool inCar = false;
 
+    [Header("Move/Teleport Settings")]
+    [Tooltip("Duration in seconds to smoothly move the object to the target instead of teleporting")]
+    public float moveDuration = 1.0f;
+    private Coroutine _moveCoroutine;
+
     void Update()
     {
         if (Input.GetKeyDown(enterExitKey))
@@ -56,20 +62,22 @@ public class CarEnterExit : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
+            if (!inCar)
+            {
+                Vector3 target = new Vector3(CenterCheck.position.x, CenterCheck.position.y + 2f, CenterCheck.position.z);
+                StartSmoothMoveTo(target, Quaternion.Euler(0, 0, 0));
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.G))
+        {
             if (inCar)
             {
-                //transform.position = Vector3.zero;
-                //transform.position = new Vector3(CenterCheck.position.x + 1f, CenterCheck.position.y, CenterCheck.position.z);
-                //gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
-                
-            }
-            Destroy(gameObject);
-        }
-    }
+                transform.position = Vector3.zero;
+                transform.position = new Vector3(CenterCheck.position.x + 410f, CenterCheck.position.y + 16f, CenterCheck.position.z + 440f);
+                gameObject.transform.rotation = Quaternion.Euler(0, 0, 0);
 
-    private void OnDestroy()
-    {
-        Instantiate(carPrefab, new Vector3(CenterCheck.position.x, CenterCheck.position.y +1f, CenterCheck.position.z), Quaternion.Euler(0, 0, 0));
+            }
+        }
     }
 
     void EnterCar()
@@ -243,5 +251,46 @@ public class CarEnterExit : MonoBehaviour
         {
             Debug.Log("Blocking colliders: " + string.Join(", ", names));
         }
+    }
+
+    // Starts a smooth move to the target position and rotation. Stops any existing move.
+    private void StartSmoothMoveTo(Vector3 targetPos, Quaternion targetRot)
+    {
+        if (_moveCoroutine != null)
+        {
+            StopCoroutine(_moveCoroutine);
+            _moveCoroutine = null;
+        }
+
+        _moveCoroutine = StartCoroutine(MoveToPosition(targetPos, targetRot, moveDuration));
+    }
+
+    // Smoothly move and rotate the object to the target over duration seconds.
+    private IEnumerator MoveToPosition(Vector3 targetPos, Quaternion targetRot, float duration)
+    {
+        Vector3 startPos = transform.position;
+        Quaternion startRot = transform.rotation;
+
+        if (duration <= 0f)
+        {
+            transform.position = targetPos;
+            transform.rotation = targetRot;
+            _moveCoroutine = null;
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = Mathf.SmoothStep(0f, 1f, elapsed / duration);
+            transform.position = Vector3.Lerp(startPos, targetPos, t);
+            transform.rotation = Quaternion.Slerp(startRot, targetRot, t);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPos;
+        transform.rotation = targetRot;
+        _moveCoroutine = null;
     }
 }
