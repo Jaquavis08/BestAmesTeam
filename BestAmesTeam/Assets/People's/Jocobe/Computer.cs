@@ -7,6 +7,7 @@ public class Computer : MonoBehaviour
     public float interactDistance = 3f;
 
     public GameObject computerUI;
+    public GameObject computerOffScreen;
 
     public void Awake()
     {
@@ -25,6 +26,7 @@ public class Computer : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             computerUI.SetActive(false);
+            computerOffScreen.SetActive(true);
             PlayerMovement.Instance.cursorLock = true;
         }
     }
@@ -32,6 +34,8 @@ public class Computer : MonoBehaviour
     public void UsePC()
     {
         computerUI.SetActive(true);
+        computerOffScreen.SetActive(false);
+
         PlayerMovement.Instance.cursorLock = false;
         print("Using computer");
         if (computerUI == null)

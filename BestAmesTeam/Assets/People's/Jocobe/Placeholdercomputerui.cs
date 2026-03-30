@@ -3,6 +3,7 @@ using UnityEngine;
 public class Placeholdercomputerui : MonoBehaviour
 {
     public GameObject computerUI;
+    public GameObject computerOffScreen;
 
     // Update is called once per frame
     void Update()
