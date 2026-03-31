@@ -1,3 +1,4 @@
+using AYellowpaper.SerializedCollections.Editor.Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,19 @@ public class CarEnterExit : MonoBehaviour
     public GameObject player;
     public Car carController;
     public Rigidbody carRb;
+    public ParticleSystem exhaustParticles;
+    public ParticleSystem offroadparticles;
+    public ParticleSystem offroadparticles2;
+
+    public bool isOffroad = false;
+
+    // Track dirt colliders separately to avoid flipping isOffroad incorrectly.
+    private readonly HashSet<Collider> _dirtColliders = new HashSet<Collider>();
+
+
+    [Header("Exhaust")]
+    [Tooltip("A GameObject you can attach exhaust visuals/particles to. Toggles on when entering the car.")]
+    public GameObject exhaustHolder;
 
     [Header("Settings")]
     public KeyCode enterExitKey = KeyCode.E;
@@ -23,20 +37,12 @@ public class CarEnterExit : MonoBehaviour
     public LayerMask obstacleLayers;
 
     public Transform exitPoint;
-    public BoxCollider Check;
+    public BoxCollider canExitCheck;
     public Transform CenterCheck;
+    public LayerMask exitCheckLayer;
     public GameObject carPrefab;
 
     [Header("Box Exclusions (for Check BoxCollider)")]
-    [Tooltip("Any collider on these layers will be ignored as blockers")]
-    public LayerMask excludedLayers;
-    [Tooltip("Any collider with any of these tags will be ignored")]
-    public string[] excludedTags;
-    [Tooltip("Specific GameObjects to ignore (colliders belonging to these will be ignored)")]
-    public GameObject[] excludedObjects;
-
-    // Internal tracking of blockers currently inside the Check trigger
-    private readonly HashSet<Collider> _blockingColliders = new HashSet<Collider>();
 
     private bool inCar = false;
 
@@ -45,16 +51,69 @@ public class CarEnterExit : MonoBehaviour
     public float moveDuration = 1.0f;
     private Coroutine _moveCoroutine;
 
+    private void Start()
+    {
+        // Ensure exhaust visuals reflect current inCar state at start
+        if (exhaustHolder != null)
+        {
+            exhaustHolder.SetActive(inCar);
+        }
+
+        if (exhaustParticles != null)
+        {
+            if (inCar)
+            {
+                if (!exhaustParticles.isPlaying) exhaustParticles.Play();
+            }
+            else
+            {
+                if (exhaustParticles.isPlaying) exhaustParticles.Stop();
+            }
+        }
+
+        // Ensure offroad particle initial states are consistent
+        if (offroadparticles != null && offroadparticles.isPlaying && !isOffroad) offroadparticles.Stop();
+        if (offroadparticles2 != null && offroadparticles2.isPlaying && !isOffroad) offroadparticles2.Stop();
+    }
+
     void Update()
     {
+        // Derive isOffroad from tracked dirt colliders to avoid toggling by unrelated colliders.
+        isOffroad = _dirtColliders.Count > 0;
+
+        // Safely play/stop offroad particle systems only when needed and when references exist.
+        if (offroadparticles != null)
+        {
+            if (isOffroad)
+            {
+                if (!offroadparticles.isPlaying) offroadparticles.Play();
+            }
+            else
+            {
+                if (offroadparticles.isPlaying) offroadparticles.Stop();
+            }
+        }
+
+        if (offroadparticles2 != null)
+        {
+            if (isOffroad)
+            {
+                if (!offroadparticles2.isPlaying) offroadparticles2.Play();
+            }
+            else
+            {
+                if (offroadparticles2.isPlaying) offroadparticles2.Stop();
+            }
+        }
+
         if (Input.GetKeyDown(enterExitKey))
         {
-            Debug.LogWarning(Vector3.Distance(player.transform.position, CenterCheck.position) < interactionDistance);
-            if (!inCar && Vector3.Distance(player.transform.position, CenterCheck.position) < interactionDistance)
+            
+            if (!inCar)
             {
                 EnterCar();
             }
-            else if (inCar)
+            else
             {
                 TryExitCar();
             }
@@ -92,13 +151,21 @@ public class CarEnterExit : MonoBehaviour
         // (Do not force-zero velocities here; leave physics active)
         carCamera.SetActive(true);
         playerCamera.SetActive(false);
+
+        // Turn on exhaust visuals / particles
+        if (exhaustHolder != null)
+        {
+            exhaustHolder.SetActive(true);
+        }
+
+        if (exhaustParticles != null)
+        {
+            if (!exhaustParticles.isPlaying) exhaustParticles.Play();
+        }
     }
 
     void TryExitCar()
     {
-        // Print all names of GameObjects currently tracked as blocking colliders
-        PrintBlockingColliderNames();
-
         Debug.LogWarning("Attempting to exit car...");
         // Use linearVelocity instead of the obsolete velocity property
         Vector3 currentLinear = carRb.linearVelocity;
@@ -107,7 +174,7 @@ public class CarEnterExit : MonoBehaviour
             Vector3 pointExit = exitPoint.position;
             Debug.LogFormat("Exit point: {0} {1} {2}", pointExit.x, pointExit.y, pointExit.z);
 
-            if (Check != null)
+            if (canExitCheck != null)
             {
                 if (!IsExitBlocked())
                 {
@@ -127,6 +194,7 @@ public class CarEnterExit : MonoBehaviour
 
     void ExitCar(Vector3 exitPoint)
     {
+        Debug.Log("oogabooga");
         inCar = false;
 
         // Small upward offset to reduce clipping into the ground
@@ -153,103 +221,64 @@ public class CarEnterExit : MonoBehaviour
         // Swap cameras
         if (carCamera != null) carCamera.SetActive(false);
         if (playerCamera != null) playerCamera.SetActive(true);
+
+        // Turn off exhaust visuals / particles
+        if (exhaustParticles != null)
+        {
+            if (exhaustParticles.isPlaying) exhaustParticles.Stop();
+        }
+
+        if (exhaustHolder != null)
+        {
+            exhaustHolder.SetActive(false);
+        }
     }
 
-    // Helper to determine whether a collider should be ignored (excluded) as a blocker
-    private bool IsExcluded(Collider other)
-    {
-        if (other == null) return true;
-
-        // Ignore trigger colliders by default
-        if (other.isTrigger) return true;
-
-        GameObject go = other.gameObject;
-
-        // Excluded specific objects
-        if (excludedObjects != null)
-        {
-            for (int i = 0; i < excludedObjects.Length; i++)
-            {
-                if (excludedObjects[i] == go) return true;
-            }
-        }
-
-        // Excluded tags
-        if (excludedTags != null)
-        {
-            for (int i = 0; i < excludedTags.Length; i++)
-            {
-                string t = excludedTags[i];
-                if (!string.IsNullOrEmpty(t) && go.CompareTag(t)) return true;
-            }
-        }
-
-        // Excluded layers
-        if (excludedLayers != 0)
-        {
-            if (((1 << go.layer) & excludedLayers) != 0) return true;
-        }
-
-        return false; // not excluded -> counts as blocker
-    }
 
     // Public query to determine if exit is currently blocked by any non-excluded collider inside the Check box
     public bool IsExitBlocked()
     {
-        // Clean up any destroyed or null colliders
-        _blockingColliders.RemoveWhere(c => c == null);
-        return _blockingColliders.Count > 0;
+        Collider[] hits = Physics.OverlapBox(canExitCheck.center, canExitCheck.size / 2, Quaternion.identity, exitCheckLayer);
+
+        return hits.Length == 0;
     }
 
     // Trigger callbacks to maintain the blocking set.
     // Ensure the BoxCollider 'Check' on this GameObject has 'Is Trigger' = true and encompasses the exit area.
+
     public void OnTriggerEnter(Collider other)
     {
-        if (IsExcluded(other)) return;
+        if (other == null) return;
 
-        _blockingColliders.Add(other);
+        // Track dirt colliders separately (even if they are trigger colliders)
+        if (other.gameObject.CompareTag("dirt"))
+        {
+            _dirtColliders.Add(other);
+        }
     }
 
     public void OnTriggerStay(Collider other)
     {
-        // Keep the collider tracked while it stays in the trigger if it's not excluded.
-        if (IsExcluded(other)) return;
+        if (other == null) return;
 
-        if (!_blockingColliders.Contains(other))
+        // Keep dirt tracking while it stays in the trigger
+        if (other.gameObject.CompareTag("dirt"))
         {
-            _blockingColliders.Add(other);
+            if (!_dirtColliders.Contains(other))
+            {
+                _dirtColliders.Add(other);
+            }
         }
     }
 
     public void OnTriggerExit(Collider other)
     {
         if (other == null) return;
-        _blockingColliders.Remove(other);
-    }
 
-    private void PrintBlockingColliderNames()
-    {
-        if (_blockingColliders == null || _blockingColliders.Count == 0)
+        // Remove from dirt tracking if it leaves
+        if (other.gameObject.CompareTag("dirt"))
         {
-            Debug.Log("No blocking colliders.");
-            return;
-        }
-
-        var names = new List<string>(capacity: _blockingColliders.Count);
-        foreach (var col in _blockingColliders)
-        {
-            if (col == null) continue;
-            var go = col.gameObject;
-            names.Add(go != null ? go.name : "null");
-        }
-
-        if (names.Count == 0)
-        {
-            Debug.Log("No blocking colliders (all entries were null).");
-        }
-        else
-        {
-            Debug.Log("Blocking colliders: " + string.Join(", ", names));
+            _dirtColliders.Remove(other);
         }
     }
 

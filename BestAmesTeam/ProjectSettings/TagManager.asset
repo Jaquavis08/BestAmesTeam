@@ -8,6 +8,7 @@ TagManager:
   - floor
   - NPC
   - Exit
+  - dirt
   layers:
   - Default
   - TransparentFX
