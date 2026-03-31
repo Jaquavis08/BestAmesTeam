@@ -10,6 +10,11 @@ public class TaskDisplayer : MonoBehaviour
     public TMP_Text TaskList;
     public List<Task> Tasks = new List<Task>();
 
+    public GameObject quotaTab;
+    public int currentQuotaMoneyCount;
+    public int currentQuotaForDay;
+
+
     private void Awake()
     {
         if (instance == null)
@@ -45,6 +50,13 @@ public class TaskDisplayer : MonoBehaviour
         var selected = candidates.FirstOrDefault(t => t.order == minOrder);
 
         TaskList.text = selected != null ? selected.task : string.Empty;
+
+
+        if (quotaTab.activeSelf)
+        {
+            quotaTab.transform.GetChild(1).GetComponent<TMP_Text>().text = $"Day: {Daycount.instance.day}/5";
+            quotaTab.transform.GetChild(0).GetComponent<TMP_Text>().text = $"Quota: ${currentQuotaMoneyCount}/${currentQuotaForDay}";
+        }
     }
 }
 
