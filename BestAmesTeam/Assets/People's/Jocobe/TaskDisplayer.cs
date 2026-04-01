@@ -58,6 +58,18 @@ public class TaskDisplayer : MonoBehaviour
             quotaTab.transform.GetChild(0).GetComponent<TMP_Text>().text = $"Quota: ${currentQuotaMoneyCount}/${currentQuotaForDay}";
         }
     }
+
+    public bool CheckForCompleteQuota()
+    {
+         return currentQuotaMoneyCount >= currentQuotaForDay;
+    }
+
+    public void GetQuotaFormula()
+    {
+        currentQuotaMoneyCount = 0;
+        print(300 * (Daycount.instance.day + 1) / (int)1.5);
+        currentQuotaForDay = 300 * (Daycount.instance.day + 1) / (int)1.5;
+    }
 }
 
 [System.Serializable]
