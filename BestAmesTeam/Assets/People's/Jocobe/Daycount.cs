@@ -1,5 +1,7 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Daycount : MonoBehaviour
 {
@@ -32,12 +34,32 @@ public class Daycount : MonoBehaviour
     }
     void Update()
     {
+        ProccesTime();
+    }
+
+    void ProccesTime()
+    {
         time += Time.deltaTime;
         if (time >= daylength)
         {
-            time = 0;
-            day++;
-            daycount.text = "Day: " + day;
+            if(TaskDisplayer.instance.CheckForCompleteQuota())
+            {
+                time = 0;
+                day++;
+                daycount.text = "Day: " + day;
+                TaskDisplayer.instance.GetQuotaFormula();
+            }
+            else
+            {
+                Death();
+            }
         }
+    }
+
+    void Death()
+    {
+        Console.Clear();
+        SceneManager.LoadScene("MINE 1");
+        print("You Died Had A Death");
     }
 }

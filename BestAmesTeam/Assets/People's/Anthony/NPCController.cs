@@ -261,7 +261,7 @@ public class NPCController : MonoBehaviour
             Debug.Log(entry.item.itemName + " x" + entry.quantity);
             if (ispaying)
             {
-                Currency.Instance.amount += (int)entry.item.price * entry.quantity;
+                Currency.Instance.AddCurrency((int)entry.item.price * entry.quantity);
             }
         }
     }

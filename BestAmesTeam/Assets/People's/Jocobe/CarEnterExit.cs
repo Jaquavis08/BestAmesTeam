@@ -35,7 +35,6 @@ public class CarEnterExit : MonoBehaviour
     [Header("Exit Settings")]
     public float exitCheckRadius = 0.5f;
     public LayerMask obstacleLayers;
-
     public Transform exitPoint;
     public BoxCollider canExitCheck;
     public Transform CenterCheck;
@@ -43,6 +42,13 @@ public class CarEnterExit : MonoBehaviour
     public GameObject carPrefab;
 
     [Header("Box Exclusions (for Check BoxCollider)")]
+    [Tooltip("Any collider on these layers will be ignored as blockers")]
+    public LayerMask excludedLayers;
+    [Tooltip("Any collider with any of these tags will be ignored")]
+    public string[] excludedTags;
+    [Tooltip("Specific GameObjects to ignore (colliders belonging to these will be ignored)")]
+    public GameObject[] excludedObjects;
+    private readonly HashSet<Collider> _blockingColliders = new HashSet<Collider>();
 
     private bool inCar = false;
 
@@ -50,6 +56,8 @@ public class CarEnterExit : MonoBehaviour
     [Tooltip("Duration in seconds to smoothly move the object to the target instead of teleporting")]
     public float moveDuration = 1.0f;
     private Coroutine _moveCoroutine;
+
+
 
     private void Start()
     {
@@ -112,9 +120,12 @@ public class CarEnterExit : MonoBehaviour
             if (!inCar)
             {
                 EnterCar();
+                return;
             }
-            else
+            
+            if (inCar)
             {
+                Debug.Log("Exit key pressed while in car, attempting to exit...");
                 TryExitCar();
             }
         }
@@ -163,7 +174,7 @@ public class CarEnterExit : MonoBehaviour
             if (!exhaustParticles.isPlaying) exhaustParticles.Play();
         }
     }
-
+       
     void TryExitCar()
     {
         Debug.LogWarning("Attempting to exit car...");
@@ -232,15 +243,74 @@ public class CarEnterExit : MonoBehaviour
         {
             exhaustHolder.SetActive(false);
         }
+        print("Exit successful, player should now be at: " + spawnPosition);
+    }
+
+    private bool IsExcluded(Collider other)
+    {
+        if (other == null) return true;
+
+        // Ignore trigger colliders by default
+        if (other.isTrigger) return true;
+
+        GameObject go = other.gameObject;
+
+        // Excluded specific objects
+        if (excludedObjects != null)
+        {
+            for (int i = 0; i < excludedObjects.Length; i++)
+            {
+                if (excludedObjects[i] == go) return true;
+            }
+        }
+
+        if (excludedTags != null)
+        {
+            for (int i = 0; i < excludedTags.Length; i++)
+            {
+                string t = excludedTags[i];
+                if (!string.IsNullOrEmpty(t) && go.CompareTag(t)) return true;
+            }
+        }
+
+        if (excludedLayers != 0)
+        {
+            if (((1 << go.layer) & excludedLayers) != 0) return true;
+        }
+
+        return false;
     }
 
 
     // Public query to determine if exit is currently blocked by any non-excluded collider inside the Check box
     public bool IsExitBlocked()
     {
-        Collider[] hits = Physics.OverlapBox(canExitCheck.center, canExitCheck.size / 2, Quaternion.identity, exitCheckLayer);
+        
+        // Ensure we have an exit point to raycast from.
+        if (exitPoint == null)
+        {
+            Debug.LogWarning("IsExitBlocked: exitPoint is null - treating as blocked.");
+            return true;
+        }
 
-        return hits.Length == 0;
+        // Setup ray origin slightly above the exit point to avoid self-collision.
+        Vector3 origin = exitPoint.position + Vector3.down * 0.1f;
+
+        // Use exitCheckRadius as the ray distance; ensure a sensible minimum.
+        float rayDistance = Mathf.Max(exitCheckRadius, 2.5f);
+
+        // Perform the raycast downwards using the configured layer mask.
+        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hitInfo, rayDistance, exitCheckLayer))
+        {
+            Debug.LogFormat("Ground detected below exit point: hit '{0}' at distance {1:F2}. Exit not blocked.",
+                hitInfo.collider != null ? hitInfo.collider.name : "unknown", hitInfo.distance);
+            return false; // Not blocked (ground present)
+        }
+        else
+        {
+            Debug.Log("No ground detected below exit point within distance. Treating exit as blocked.");
+            return true; // Blocked because there's no ground beneath the exit point
+        }
     }
 
     // Trigger callbacks to maintain the blocking set.
@@ -259,7 +329,12 @@ public class CarEnterExit : MonoBehaviour
 
     public void OnTriggerStay(Collider other)
     {
-        if (other == null) return;
+        if (IsExcluded(other)) return;
+
+        if (!_blockingColliders.Contains(other))
+        {
+            _blockingColliders.Add(other);
+        }
 
         // Keep dirt tracking while it stays in the trigger
         if (other.gameObject.CompareTag("dirt"))
@@ -274,6 +349,8 @@ public class CarEnterExit : MonoBehaviour
     public void OnTriggerExit(Collider other)
     {
         if (other == null) return;
+
+        _blockingColliders.Remove(other);
 
         // Remove from dirt tracking if it leaves
         if (other.gameObject.CompareTag("dirt"))
@@ -321,5 +398,50 @@ public class CarEnterExit : MonoBehaviour
         transform.position = targetPos;
         transform.rotation = targetRot;
         _moveCoroutine = null;
+    }
+
+    // Draw debug gizmos for the exit point raycast(s) and the check box.
+    private void OnDrawGizmos()
+    {
+        // Draw nothing if we don't have an exit point.
+        if (exitPoint == null) return;
+
+        // Ray origin (match IsExitBlocked logic)
+        Vector3 origin = exitPoint.position + Vector3.down * 0.1f;
+        Vector3 dir = Vector3.down;
+
+        // Ray distance (use same logic as IsExitBlocked, but keep a reasonable minimum for visualization)
+        float rayDistance = Mathf.Max(exitCheckRadius, 2.5f);
+
+        // Perform the same raycast used at runtime so the gizmo reflects actual hit result
+        bool didHit = Physics.Raycast(origin, dir, out RaycastHit hitInfo, rayDistance, exitCheckLayer);
+
+        // Ray color: green when it hits ground layer, red otherwise
+        Gizmos.color = didHit ? Color.green : Color.red;
+        Gizmos.DrawLine(origin, origin + dir * rayDistance);
+        Gizmos.DrawWireSphere(origin + dir * rayDistance, 0.05f); // end marker
+        Gizmos.DrawSphere(origin, 0.03f); // origin marker
+
+        if (didHit)
+        {
+            // Mark hit point and draw a small normal line
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(hitInfo.point, 0.05f);
+            Gizmos.DrawLine(hitInfo.point, hitInfo.point + hitInfo.normal * 0.25f);
+        }
+
+        // Also visualize the BoxCollider used to detect blockers (if assigned)
+        if (canExitCheck != null)
+        {
+            Vector3 worldCenter = canExitCheck.transform.TransformPoint(canExitCheck.center);
+            Vector3 worldSize = Vector3.Scale(canExitCheck.size, canExitCheck.transform.lossyScale);
+
+            Color fill = new Color(0f, 1f, 1f, 0.12f);
+            Gizmos.color = fill;
+            Gizmos.DrawCube(worldCenter, worldSize);
+
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireCube(worldCenter, worldSize);
+        }
     }
 }
