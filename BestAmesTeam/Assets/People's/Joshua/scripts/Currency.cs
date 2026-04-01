@@ -31,4 +31,16 @@ public class Currency : MonoBehaviour
         // Display formatted currency
         currencyText.text = $" $ {amount}";
     }
+
+    public void AddCurrency(int value)
+    {
+        amount += value;
+        TaskDisplayer.instance.currentQuotaMoneyCount += value;
+    }
+
+    public void RemoveCurrency(int value)
+    {
+        amount -= value;
+        TaskDisplayer.instance.currentQuotaMoneyCount -= value;
+    }
 }

@@ -5141,7 +5141,7 @@ MonoBehaviour:
   daycount: {fileID: 1614409161}
   day: 0
   time: 0
-  daylengthBase: 10
+  daylengthBase: 1
 --- !u!4 &945243339
 Transform:
   m_ObjectHideFlags: 0
