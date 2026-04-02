@@ -2,6 +2,20 @@ using UnityEngine;
 
 public class NPCSpawner : MonoBehaviour
 {
+    public static NPCSpawner Instance;
+
+     void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     [Header("Spawner Settings")]
     public GameObject npcPrefab;
     public Transform spawnPoint;
@@ -12,6 +26,8 @@ public class NPCSpawner : MonoBehaviour
 
     private int currentCustomers = 0;
 
+    public bool SpawningNPC = true;
+
     void Start()
     {
         InvokeRepeating(nameof(SpawnCustomer), 2f, spawnInterval);
@@ -19,7 +35,7 @@ public class NPCSpawner : MonoBehaviour
 
     void SpawnCustomer()
     {
-        if (currentCustomers >= maxCustomers) return;
+        if (currentCustomers >= maxCustomers || SpawningNPC == false) return;
         if (npcPrefab == null || spawnPoint == null)
         {
             Debug.LogWarning("NPC Prefab or Spawn Point not assigned.");

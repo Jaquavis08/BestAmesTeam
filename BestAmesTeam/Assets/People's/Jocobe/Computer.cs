@@ -5,6 +5,7 @@ public class Computer : MonoBehaviour
     public static Computer instance;
 
     public float interactDistance = 3f;
+    public bool IsComputerOn = false;
 
     public GameObject computerUI;
     public GameObject computerOffScreen;
