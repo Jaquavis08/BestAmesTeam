@@ -67,6 +67,10 @@ public class PlayerPickup : MonoBehaviour
                 Computer.instance.UsePC();
             }
         }
+        else if()
+        {
+
+        }
     }
 
     void PickupBox(ItemBox box)

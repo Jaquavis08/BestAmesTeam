@@ -71,10 +71,10 @@ public class TaskDisplayer : MonoBehaviour
     void UpdateQuotaUI()
     {
 
-        quotaTab.transform.GetChild(2).GetComponent<TMP_Text>().text =
+        quotaTab.transform.GetChild(1).GetComponent<TMP_Text>().text =
             $"Day: {Daycount.instance.day}/5";
 
-        quotaTab.transform.GetChild(1).GetComponent<TMP_Text>().text =
+        quotaTab.transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text =
             $"Quota: ${currentQuotaMoneyCount}/${currentQuotaForDay}";
 
         if (currentQuotaForDay > 0)
