@@ -258,10 +258,13 @@ public class NPCController : MonoBehaviour
 
         foreach (var entry in cart)
         {
-            Debug.Log(entry.item.itemName + " x" + entry.quantity);
-            if (ispaying)
+            if (entry.item != null && Currency.Instance != null)
             {
-                Currency.Instance.AddCurrency((int)entry.item.price * entry.quantity);
+                Debug.Log(entry.item.itemName + " x" + entry.quantity);
+                if (ispaying)
+                {
+                    Currency.Instance.AddCurrency((int)entry.item.price * entry.quantity);
+                }
             }
         }
     }

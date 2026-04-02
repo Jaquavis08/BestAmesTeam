@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TaskDisplayer : MonoBehaviour
 {
@@ -10,9 +12,13 @@ public class TaskDisplayer : MonoBehaviour
     public TMP_Text TaskList;
     public List<Task> Tasks = new List<Task>();
 
+    public GameObject MainPC;
+
     public GameObject quotaTab;
     public int currentQuotaMoneyCount;
     public int currentQuotaForDay;
+
+    public GameObject quotaValue;
 
 
     private void Awake()
@@ -34,8 +40,18 @@ public class TaskDisplayer : MonoBehaviour
             return;
         }
 
-        int currentDay = Daycount.instance.day;
+        if (quotaValue == null)
+        {
+            quotaValue = quotaTab.transform.GetChild(0).transform.GetChild(0).gameObject;
+        }
+        else
+        {
+            if (MainPC.activeSelf == true)
+                UpdateQuotaUI();
+        }
 
+
+        int currentDay = Daycount.instance.day;
         // Filter tasks for current day that are not completed
         var candidates = Tasks.Where(t => t.day == currentDay && t.completed == false).ToList();
 
@@ -50,13 +66,26 @@ public class TaskDisplayer : MonoBehaviour
         var selected = candidates.FirstOrDefault(t => t.order == minOrder);
 
         TaskList.text = selected != null ? selected.task : string.Empty;
+    }
 
+    void UpdateQuotaUI()
+    {
 
-        if (quotaTab.activeSelf)
+        quotaTab.transform.GetChild(2).GetComponent<TMP_Text>().text =
+            $"Day: {Daycount.instance.day}/5";
+
+        quotaTab.transform.GetChild(1).GetComponent<TMP_Text>().text =
+            $"Quota: ${currentQuotaMoneyCount}/${currentQuotaForDay}";
+
+        if (currentQuotaForDay > 0)
         {
-            quotaTab.transform.GetChild(1).GetComponent<TMP_Text>().text = $"Day: {Daycount.instance.day}/5";
-            quotaTab.transform.GetChild(0).GetComponent<TMP_Text>().text = $"Quota: ${currentQuotaMoneyCount}/${currentQuotaForDay}";
+            quotaValue.GetComponent<Image>().fillAmount = (float)currentQuotaMoneyCount / currentQuotaForDay;
         }
+        else
+        {
+            quotaValue.GetComponent<Image>().fillAmount = 0f;
+        }
+        print($"Updated Quota UI");
     }
 
     public bool CheckForCompleteQuota()
@@ -67,8 +96,10 @@ public class TaskDisplayer : MonoBehaviour
     public void GetQuotaFormula()
     {
         currentQuotaMoneyCount = 0;
-        print(300 * (Daycount.instance.day + 1) / (int)1.5);
-        currentQuotaForDay = 300 * (Daycount.instance.day + 1) / (int)1.5;
+        // FIXED formula (uses float properly)
+        currentQuotaForDay = Mathf.RoundToInt(300 * (Daycount.instance.day + 1) / 1.5f);
+
+        Debug.Log($"Quota: {currentQuotaForDay}");
     }
 }
 

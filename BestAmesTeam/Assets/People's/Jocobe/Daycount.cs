@@ -30,7 +30,6 @@ public class Daycount : MonoBehaviour
     {
         daycount.text = "Day: " + day;
         daylength = daylengthBase * 60f;
-        print(daylength);
     }
     void Update()
     {

@@ -36,6 +36,7 @@ public class Currency : MonoBehaviour
     {
         amount += value;
         TaskDisplayer.instance.currentQuotaMoneyCount += value;
+        print(TaskDisplayer.instance.currentQuotaMoneyCount);
     }
 
     public void RemoveCurrency(int value)
