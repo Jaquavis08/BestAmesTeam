@@ -6,6 +6,7 @@ public class Car : MonoBehaviour
     public WheelCollider wheel1, wheel2, wheel3, wheel4;
     public float drivespeed, steerspeed;
     public float brakeForce = 3000f;
+    public float idleBrakeForce = 1000f; // Brake force applied when not accelerating
 
     float horizontalInput, verticalInput;
 
@@ -19,6 +20,7 @@ public class Car : MonoBehaviour
     {
         // Use stored input from Update to avoid mixing input reads across frames
         float motor = verticalInput * drivespeed;
+        print(motor);
 
         bool isBraking = Input.GetKey(KeyCode.Space);
 
@@ -39,6 +41,16 @@ public class Car : MonoBehaviour
             wheel2.brakeTorque = 0f;
             wheel3.brakeTorque = 0f;
             wheel4.brakeTorque = 0f;
+        }
+
+        if (verticalInput < 0.1f && verticalInput > -0.1f)
+        {
+            motor = 0f;
+
+            wheel1.brakeTorque = idleBrakeForce;
+            wheel2.brakeTorque = idleBrakeForce;
+            wheel3.brakeTorque = idleBrakeForce;
+            wheel4.brakeTorque = idleBrakeForce;
         }
 
         // Apply motor torque to wheels (will be zero while braking)
