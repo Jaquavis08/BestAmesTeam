@@ -1,7 +1,7 @@
-using AYellowpaper.SerializedCollections.Editor.Data;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 public class CarEnterExit : MonoBehaviour
 {
@@ -9,9 +9,9 @@ public class CarEnterExit : MonoBehaviour
     public GameObject player;
     public Car carController;
     public Rigidbody carRb;
-    public ParticleSystem exhaustParticles;
-    public ParticleSystem offroadparticles;
-    public ParticleSystem offroadparticles2;
+    public VisualEffect exhaustParticles;
+    public VisualEffect offroadparticles;
+    public VisualEffect offroadparticles2;
 
     public bool isOffroad = false;
 
@@ -71,17 +71,19 @@ public class CarEnterExit : MonoBehaviour
         {
             if (inCar)
             {
-                if (!exhaustParticles.isPlaying) exhaustParticles.Play();
+                // Start exhaust VFX when in car
+                exhaustParticles.Play();
             }
             else
             {
-                if (exhaustParticles.isPlaying) exhaustParticles.Stop();
+                // Stop exhaust VFX when not in car
+                exhaustParticles.Stop();
             }
         }
 
         // Ensure offroad particle initial states are consistent
-        if (offroadparticles != null && offroadparticles.isPlaying && !isOffroad) offroadparticles.Stop();
-        if (offroadparticles2 != null && offroadparticles2.isPlaying && !isOffroad) offroadparticles2.Stop();
+        if (offroadparticles != null && !isOffroad) offroadparticles.Stop();
+        if (offroadparticles2 != null && !isOffroad) offroadparticles2.Stop();
     }
 
     void Update()
@@ -94,11 +96,11 @@ public class CarEnterExit : MonoBehaviour
         {
             if (isOffroad)
             {
-                if (!offroadparticles.isPlaying) offroadparticles.Play();
+                offroadparticles.Play();
             }
             else
             {
-                if (offroadparticles.isPlaying) offroadparticles.Stop();
+                offroadparticles.Stop();
             }
         }
 
@@ -106,11 +108,11 @@ public class CarEnterExit : MonoBehaviour
         {
             if (isOffroad)
             {
-                if (!offroadparticles2.isPlaying) offroadparticles2.Play();
+                offroadparticles2.Play();
             }
             else
             {
-                if (offroadparticles2.isPlaying) offroadparticles2.Stop();
+                offroadparticles2.Stop();
             }
         }
 
@@ -171,7 +173,7 @@ public class CarEnterExit : MonoBehaviour
 
         if (exhaustParticles != null)
         {
-            if (!exhaustParticles.isPlaying) exhaustParticles.Play();
+            exhaustParticles.Play();
         }
     }
        
@@ -236,7 +238,7 @@ public class CarEnterExit : MonoBehaviour
         // Turn off exhaust visuals / particles
         if (exhaustParticles != null)
         {
-            if (exhaustParticles.isPlaying) exhaustParticles.Stop();
+            exhaustParticles.Stop();
         }
 
         if (exhaustHolder != null)

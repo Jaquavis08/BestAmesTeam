@@ -26,11 +26,11 @@ public class TabManager : MonoBehaviour
     {
         foreach (GameObject button in tabButtons)
         {
-            button.transform.GetChild(0).gameObject.SetActive(false);
+            button.transform.GetChild(0).gameObject.SetActive(true);
         }
         if (tabNumber >= 0 && tabNumber < tabButtons.Count)
         {
-            tabButtons[tabNumber].transform.GetChild(0).gameObject.SetActive(true);
+            tabButtons[tabNumber].transform.GetChild(0).gameObject.SetActive(false);
         }
     }
 }
