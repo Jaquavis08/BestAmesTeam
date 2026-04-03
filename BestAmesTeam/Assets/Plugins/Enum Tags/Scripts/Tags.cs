@@ -11,4 +11,5 @@ public const string T_Folder = @"Folder";
 public const string T_floor = @"floor";
 public const string T_NPC = @"NPC";
 public const string T_Exit = @"Exit";
+public const string T_dirt = @"dirt";
 }

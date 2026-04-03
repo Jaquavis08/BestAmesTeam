@@ -8,6 +8,7 @@ TagManager:
   - floor
   - NPC
   - Exit
+  - dirt
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - HeldItem
   - Ground
   - Box
-  - 
+  - Allowed
   - 
   - 
   - 

@@ -5,8 +5,10 @@ public class Computer : MonoBehaviour
     public static Computer instance;
 
     public float interactDistance = 3f;
+    public bool IsComputerOn = false;
 
     public GameObject computerUI;
+    public GameObject computerOffScreen;
 
     public void Awake()
     {
@@ -24,27 +26,17 @@ public class Computer : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            computerUI.SetActive(false);
-            PlayerMovement.Instance.cursorLock = true;
+            UsePC(false);
         }
     }
 
-    public void UsePC()
+    public void UsePC(bool value)
     {
-        computerUI.SetActive(true);
-        PlayerMovement.Instance.cursorLock = false;
-        print("Using computer");
-        if (computerUI == null)
-        {
-            Debug.LogWarning("Placeholdercomputerui: computerUI reference is missing.");
+        computerUI.SetActive(value);
+        computerOffScreen.SetActive(!value);
+        PlayerMovement.Instance.cursorLock = !value;
 
-            return;
-        }
-        //Time.timeScale = computerUI.activeSelf ? 1f : 0f; // Pause game when UI is active
-
-
-        //bool isActive = computerUI.activeSelf;
-        //computerUI.SetActive(!isActive);
+        IsComputerOn = value;
     }
 
 }

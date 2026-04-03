@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/People's/Anthony/MINE 1.unity
+    guid: aa604df635deaa34581a7845a4f1b98d
+  - enabled: 1
     path: Assets/Main/Game.unity
     guid: 8124e5870f4fd4c779e7a5f994e84ad1
   m_configObjects:

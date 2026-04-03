@@ -1,5 +1,8 @@
+using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Daycount : MonoBehaviour
 {
@@ -10,6 +13,8 @@ public class Daycount : MonoBehaviour
     public float time;
     public float daylengthBase = 10f; // minutes
     private float daylength; // minutes
+
+    public Button NextDayButton;
 
     
     public void Awake()
@@ -28,16 +33,47 @@ public class Daycount : MonoBehaviour
     {
         daycount.text = "Day: " + day;
         daylength = daylengthBase * 60f;
-        print(daylength);
     }
     void Update()
     {
-        time += Time.deltaTime;
+        ProccesTime();
+    }
+
+    void ProccesTime()
+    {
+        
         if (time >= daylength)
+        {
+            NPCSpawner.Instance.SpawningNPC = false;
+            NextDayButton.interactable = true;
+        }
+        else
+        {
+            time += Time.deltaTime;
+            NPCSpawner.Instance.SpawningNPC = true;
+            NextDayButton.interactable = false;
+        }
+    }
+
+    public void NextDay()
+    {
+        if(TaskDisplayer.instance.CheckForCompleteQuota())
         {
             time = 0;
             day++;
             daycount.text = "Day: " + day;
+            TaskDisplayer.instance.GetQuotaFormula();
         }
+        else
+        {
+            Death();
+        }
+    }
+
+    void Death()
+    {
+        Console.Clear();
+        SceneManager.LoadScene("MINE 1");
+        print("You Died Had A Death");
     }
 }
