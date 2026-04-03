@@ -1624,7 +1624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 8a180c9c105e3484ca5b16e342910248, type: 2}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -2443,7 +2443,7 @@ GameObject:
   - component: {fileID: 462568538}
   - component: {fileID: 462568537}
   - component: {fileID: 462568536}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2967,7 +2967,7 @@ GameObject:
   - component: {fileID: 511783020}
   - component: {fileID: 511783019}
   - component: {fileID: 511783018}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Register (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8520,7 +8520,7 @@ GameObject:
   - component: {fileID: 1475978799}
   - component: {fileID: 1475978798}
   - component: {fileID: 1475978797}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Register
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10576,7 +10576,7 @@ GameObject:
   - component: {fileID: 1789452657}
   - component: {fileID: 1789452656}
   - component: {fileID: 1789452655}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Register (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
