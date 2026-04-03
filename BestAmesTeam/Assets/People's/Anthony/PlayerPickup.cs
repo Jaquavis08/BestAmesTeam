@@ -64,13 +64,13 @@ public class PlayerPickup : MonoBehaviour
 
             if (hit.collider.GetComponent<Computer>())
             {
-                Computer.instance.UsePC();
+                Computer.instance.UsePC(true);
             }
         }
-        else if()
-        {
-
-        }
+        //else if(Computer.instance.IsComputerOn)
+        //{
+        //    if(Input.GetKeyDown(KeyCode.Escape)) {
+        //}
     }
 
     void PickupBox(ItemBox box)

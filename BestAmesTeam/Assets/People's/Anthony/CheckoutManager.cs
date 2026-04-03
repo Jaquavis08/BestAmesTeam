@@ -1,11 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 public class CheckoutManager : MonoBehaviour
 {
     public static CheckoutManager Instance;
+
     public Transform checkoutSpot;
     public Transform exitPoint;
 
@@ -20,19 +20,35 @@ public class CheckoutManager : MonoBehaviour
     {
         checkoutQueue.Enqueue(npc);
 
-        int positionInLine = checkoutQueue.Count - 1;
-        Vector3 lineOffset = new Vector3(0, 0, -1f * positionInLine);
-        npc.agent.SetDestination(checkoutSpot.position + lineOffset);
+        UpdateQueuePositions();
 
-        Debug.Log(npc.name + " joined, Current queue count: " + checkoutQueue.Count);
-
-        if (positionInLine == 0)
+        if (checkoutQueue.Count == 1)
         {
             StartCoroutine(ProcessQueue());
         }
     }
 
-    private IEnumerator ProcessQueue()
+    void UpdateQueuePositions()
+    {
+        int index = 0;
+
+        foreach (NPCController npc in checkoutQueue)
+        {
+            Vector3 offset = checkoutSpot.forward * index * 1.8f;
+
+            Vector3 targetPos = checkoutSpot.position + offset;
+
+            npc.queueTargetPosition = targetPos; // 🔥 STORE EXACT POSITION
+            npc.inQueue = true;
+
+            npc.agent.isStopped = false;
+            npc.agent.SetDestination(targetPos);
+
+            index++;
+        }
+    }
+
+    IEnumerator ProcessQueue()
     {
         while (checkoutQueue.Count > 0)
         {
@@ -43,26 +59,13 @@ public class CheckoutManager : MonoBehaviour
                 yield return null;
             }
 
-            Debug.Log(currentNPC.name + " is checking out...");
-
-            yield return new WaitForSeconds(5f);
-            EditorApplication.Beep();
+            yield return new WaitForSeconds(3f);
 
             currentNPC.CompleteCheckout(true);
 
             checkoutQueue.Dequeue();
-            Debug.Log("Complete, Queue remaining: " + checkoutQueue.Count);
 
-            if (checkoutQueue.Count > 0)
-            {
-                int idx = 0;
-                foreach (NPCController npc in checkoutQueue)
-                {
-                    Vector3 offset = new Vector3(0, 0, -1f * idx);
-                    npc.agent.SetDestination(checkoutSpot.position + offset);
-                    idx++;
-                }
-            }
+            UpdateQueuePositions();
         }
     }
 }
