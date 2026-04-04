@@ -10,7 +10,6 @@ public class validPlacement : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        print("triggered");
         if (((1 << other.gameObject.layer) & invalidLayers) != 0)
         {
             _collidingObjects.Add(other);
@@ -19,7 +18,6 @@ public class validPlacement : MonoBehaviour
     }
     private void OnTriggerExit(Collider other)
     {
-        print("exit");
         if (((1 << other.gameObject.layer) & invalidLayers) != 0)
         {
             _collidingObjects.Remove(other);

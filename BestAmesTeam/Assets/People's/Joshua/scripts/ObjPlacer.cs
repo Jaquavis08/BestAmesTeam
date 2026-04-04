@@ -10,21 +10,21 @@ public class ObjPlacer : MonoBehaviour
     [SerializeField] private Camera playerCamera;
     [SerializeField] private LayerMask placementlayer;
 
-    [Header("preveiw Material")]
+    [Header("Preveiw Material")]
     [SerializeField] private Material previewMaterial;
-    [SerializeField] private Material validColor;
-    [SerializeField] private Material invalidColor;
+    [SerializeField] private Color validColor;
+    [SerializeField] private Color invalidColor;
 
+    [Header("Raycast Parameters")]
     [SerializeField] private float DistanceFromPlayer;
     [SerializeField] private float raycastStartVerticleOffset;
     [SerializeField] private float raycastDistance;
 
     public float yOffset = 1f;
-
     private GameObject _previewObj = null;
     private Vector3 _currentPlacementposition = Vector3.zero;
     public bool _InPlacementMode = false;
-    private bool _validPreviewState = false;
+    [SerializeField] private bool _validPreviewState = false;
 
     public Transform ShelfParent;
 
@@ -37,16 +37,16 @@ public class ObjPlacer : MonoBehaviour
         if (_InPlacementMode)
         {
             UpdateCurrentPlacementPosition();
-        }
-            UpdateCurrentPlacementPosition();
 
-            if(CanPlaceObject())
+            print(CanPlaceObject());
+            if (CanPlaceObject())
             {
                 SetValidPreviewState();
             }
             else
             {
                 SetInvalidPreviewState();
+            }
         }
     }
 
@@ -97,12 +97,12 @@ public class ObjPlacer : MonoBehaviour
     private void SetValidPreviewState()
     {
 
-        previewMaterial.color = validColor.color;
+        previewMaterial.color = validColor;
         _validPreviewState = true;
     }
     private void SetInvalidPreviewState()
     {
-        previewMaterial.color = invalidColor.color;
+        previewMaterial.color = invalidColor;
         _validPreviewState = false;
     }
     private bool CanPlaceObject()
@@ -110,7 +110,7 @@ public class ObjPlacer : MonoBehaviour
         if(_previewObj == null)
             return false;
 
-        return _previewObj.GetComponentInChildren<validPlacement>().IsValid;
+        return _previewObj.GetComponent<validPlacement>().IsValid;
     }
     private void PlaceObject()
     {
@@ -138,7 +138,7 @@ public class ObjPlacer : MonoBehaviour
         Debug.Log("Exit placement mode");
         Destroy( _previewObj );
         _previewObj = null;
-        _InPlacementMode =false;
+        _InPlacementMode = false;
         
     }
 }
