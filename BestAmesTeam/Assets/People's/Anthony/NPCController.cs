@@ -221,7 +221,10 @@ public class NPCController : MonoBehaviour
     {
         inQueue = false;
 
-        PrintCart(ispaying);
+        // 🔥 MAKE A COPY
+        List<CartItem> cartCopy = new List<CartItem>(cart);
+
+        PrintCart(ispaying, cartCopy);
         cart.Clear();
 
         if (CheckoutManager.Instance.exitPoint != null)
@@ -242,19 +245,61 @@ public class NPCController : MonoBehaviour
         }
     }
 
-    void PrintCart(bool ispaying)
+    void PrintCart(bool ispaying, List<CartItem> cartData)
     {
-        foreach (var entry in cart)
+        if (!ispaying) return;
+
+        StartCoroutine(CheckoutRoutine(cartData));
+    }
+
+    IEnumerator CheckoutRoutine(List<CartItem> cartData)
+    {
+        print($"Cart COPY has {cartData.Count} items.");
+
+        if (CheckoutManager.Instance.checkoutUIParent != null)
         {
-            if (entry.item != null && Currency.Instance != null && ispaying)
+            foreach (Transform child in CheckoutManager.Instance.checkoutUIParent)
             {
-                Currency.Instance.AddCurrency((int)entry.item.price * entry.quantity);
+                Destroy(child.gameObject);
             }
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        foreach (var entry in cartData)
+        {
+            if (entry.item == null) continue;
+
+            float totalPrice = entry.item.price * entry.quantity;
+
+            print($"{entry.quantity} x {entry.item.itemName} - ${totalPrice}");
+
+            if (Currency.Instance != null)
+            {
+                Currency.Instance.AddCurrency((int)totalPrice);
+            }
+
+            if (CheckoutManager.Instance.checkoutItemUIPrefab != null &&
+                CheckoutManager.Instance.checkoutUIParent != null)
+            {
+                GameObject ui = Instantiate(
+                    CheckoutManager.Instance.checkoutItemUIPrefab,
+                    CheckoutManager.Instance.checkoutUIParent
+                );
+
+                CheckoutItemUI uiScript = ui.GetComponent<CheckoutItemUI>();
+                if (uiScript != null)
+                {
+                    uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice);
+                }
+            }
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }
 
-[System.Serializable]
+    [System.Serializable]
 public class CartItem
 {
     public ItemData item;

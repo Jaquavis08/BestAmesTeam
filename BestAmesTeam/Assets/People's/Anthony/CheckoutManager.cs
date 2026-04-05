@@ -9,6 +9,10 @@ public class CheckoutManager : MonoBehaviour
     public Transform checkoutSpot;
     public Transform exitPoint;
 
+    [Header("Checkout UI")]
+    public GameObject checkoutItemUIPrefab;
+    public Transform checkoutUIParent;
+
     public Queue<NPCController> checkoutQueue = new Queue<NPCController>();
 
     void Awake()

@@ -319,6 +319,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5083416605133131177}
+  - component: {fileID: 6775808812100488964}
   m_Layer: 6
   m_Name: HoldPoint
   m_TagString: Untagged
@@ -341,6 +342,35 @@ Transform:
   m_Children: []
   m_Father: {fileID: 3887648688058390172}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6775808812100488964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3192014264047122798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db600d26d63fffc4fb5deb02efb6038e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlaceableObj: {fileID: 1872107809274176394, guid: d743044b2490245489d74db9f042d647, type: 3}
+  PreviewObj: {fileID: 7506972199838875838, guid: 30886506c1ac76e48b31d1d823ac132d, type: 3}
+  playerCamera: {fileID: 591280145058310181}
+  placementlayer:
+    serializedVersion: 2
+    m_Bits: 512
+  previewMaterial: {fileID: 2100000, guid: 65d743168e1e2614191fcc8e417226ce, type: 2}
+  validColor: {r: 0.039215688, g: 0.45490196, b: 0.7254902, a: 0.72156864}
+  invalidColor: {r: 0.7254902, g: 0.050980393, b: 0.039215688, a: 0.72156864}
+  DistanceFromPlayer: 4
+  raycastStartVerticleOffset: 100
+  raycastDistance: 1000
+  yOffset: 0.5
+  _InPlacementMode: 0
+  _validPreviewState: 0
+  ShelfParent: {fileID: 0}
+  enterExitKey: 112
 --- !u!1 &7072514318488160905
 GameObject:
   m_ObjectHideFlags: 0
