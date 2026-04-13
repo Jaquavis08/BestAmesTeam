@@ -64,12 +64,12 @@ public class PlayerPickup : MonoBehaviour
 
             if (hit.collider.GetComponent<Computer>())
             {
-                Computer.instance.UsePC(true);
+                Computer.instance.UsePC();
             }
         }
-        //else if(Computer.instance.IsComputerOn)
+        //else if()
         //{
-        //    if(Input.GetKeyDown(KeyCode.Escape)) {
+
         //}
     }
 
