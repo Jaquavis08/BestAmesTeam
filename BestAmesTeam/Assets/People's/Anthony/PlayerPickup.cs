@@ -62,10 +62,10 @@ public class PlayerPickup : MonoBehaviour
                 }
             }
 
-            //if (hit.collider.GetComponent<Computer>())
-            //{
-            //    Computer.instance.UsePC();
-            //}
+            if (hit.collider.GetComponent<Computer>())
+            {
+                Computer.instance.UsePC(true);
+            }
         }
         //else if()
         //{
