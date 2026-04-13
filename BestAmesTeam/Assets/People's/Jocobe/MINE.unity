@@ -1742,6 +1742,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactDistance: 3
+  IsComputerOn: 0
   computerUI: {fileID: 1239333871}
   computerOffScreen: {fileID: 0}
 --- !u!1 &511783016
@@ -5020,6 +5021,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   interactDistance: 3
+  IsComputerOn: 0
   computerUI: {fileID: 1239333871}
   computerOffScreen: {fileID: 0}
 --- !u!65 &1323419013
@@ -9905,8 +9907,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.09100898, y: 0.03656705, z: 0.0096170325}
-  m_Center: {x: 0.032010946, y: 0.00006622672, z: -0.010796361}
+  m_Size: {x: 0.09100898, y: 0.03656705, z: 0.011849204}
+  m_Center: {x: 0.032010946, y: 0.00006622672, z: -0.011912389}
 --- !u!33 &8776893620202222933
 MeshFilter:
   m_ObjectHideFlags: 0

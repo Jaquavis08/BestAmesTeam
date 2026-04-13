@@ -17,9 +17,26 @@ public class ShelfManager : MonoBehaviour
         Instance = this;
     }
 
+    public void GetShelfToParent()
+    {
+        for (int i = 0; i < shelvesParent.childCount; i++)
+        {
+            print(i);
+            Shelf shelf = shelvesParent.GetChild(i).GetComponent<Shelf>();
+            if (!shelves.Contains(shelf))
+            {
+                if (shelf != null)
+                {
+                    shelves.Add(shelf);
+                }
+            }
+        }
+    }
+
     public void Start()
     {
-        shelves.AddRange(shelvesParent.GetComponentsInChildren<Shelf>());
+        //shelves.AddRange(shelvesParent.GetComponentsInChildren<Shelf>());
+        GetShelfToParent();
     }
 
     public Shelf GetRandomShelfWithItems()

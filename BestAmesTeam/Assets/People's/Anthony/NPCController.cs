@@ -13,12 +13,16 @@ public class NPCController : MonoBehaviour
 
     public int maxItems;
     public int itemsCollected = 0;
+    public float queueSnapSpeed = 8f;
 
     [HideInInspector]
     public NPCSpawner npcSpawner;
 
     private bool isLeaving = false;
     bool isBrowsing = false;
+
+    public Vector3 queueTargetPosition;
+    public bool inQueue = false;
 
     void Start()
     {
@@ -27,69 +31,90 @@ public class NPCController : MonoBehaviour
 
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 90);
-        agent.radius = 0.3f;
+        agent.radius = 0.5f; // 🔥 increased space
         agent.autoRepath = true;
 
-
         maxItems = Random.Range(1, 6);
+
         if (!gameObject.GetComponent<HomelessMan>() || gameObject.GetComponent<HomelessMan>().isTheif)
         {
             ChooseItem();
         }
-
     }
 
     void Update()
     {
-
+        // NORMAL SHOPPING
         if (targetSpot != null && !isBrowsing)
         {
             if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
             {
                 isBrowsing = true;
-                print("NPC reached target spot: " + targetSpot.name);
                 StartCoroutine(GrabItemRoutine());
             }
         }
 
+        // 🔥 QUEUE BEHAVIOR FIX
+        if (CheckoutManager.Instance != null &&
+            CheckoutManager.Instance.checkoutQueue.Contains(this))
+        {
+            // TURN OFF pushing
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
 
-         CheckIfExited();
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                agent.velocity = Vector3.zero;
+                agent.isStopped = true;
+            }
+        }
+        else
+        {
+            // TURN IT BACK ON
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        }
+
+        if (inQueue)
+        {
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
+
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                // 🔥 HARD SNAP (THIS IS THE MAGIC)
+                transform.position = Vector3.Lerp(
+                transform.position,
+                queueTargetPosition,
+                Time.deltaTime * queueSnapSpeed
+                );
+                transform.rotation = Quaternion.LookRotation(-CheckoutManager.Instance.checkoutSpot.forward);
+
+                agent.velocity = Vector3.zero;
+                agent.isStopped = true;
+            }
+        }
+        else
+        {
+            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
+        }
+
+        CheckIfExited();
     }
 
     public void ChooseItem()
     {
-        //if (gameObject.GetComponent<HomelessMan>() && gameObject.GetComponent<HomelessMan>().isTheif)
-        //{
-        //    return;
-        //}
-
-        print("NPC is choosing an item...");
-
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
-
 
         if (shelf == null)
         {
-            Debug.LogError("No shelf found!");
-
-            if (gameObject.GetComponent<HomelessMan>() != null)
-            {
-                gameObject.GetComponent<HomelessMan>().getType();
-                return;
-            }
-
             if (itemsCollected == 0)
             {
                 isLeaving = true;
-                GetComponent<NPCDialogue>().ShowDialogue("You didn't have any items I was looking for!");
+                agent.isStopped = false;
                 agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
             }
             else
             {
                 GoToCheckout();
-                GetComponent<NPCDialogue>().ShowDialogue("You didn't have all the items I was looking for!");
             }
-
             return;
         }
 
@@ -97,21 +122,19 @@ public class NPCController : MonoBehaviour
 
         if (targetSpot == null)
         {
-            Debug.Log("No items on this shelf.");
             GoToCheckout();
             return;
         }
 
-        Debug.Log("NPC chose spot: " + targetSpot.name);
-
-
         Vector3 offset = new Vector3(
-    Random.Range(-0.3f, 0.3f),
-    0f,
-    Random.Range(-0.3f, 0.3f)
-);
+            Random.Range(-0.3f, 0.3f),
+            0f,
+            Random.Range(-0.3f, 0.3f)
+        );
+
         Collider[] hits = Physics.OverlapSphere(targetSpot.standPoint.position, 0.6f);
         bool crowded = false;
+
         foreach (Collider hit in hits)
         {
             if (hit.CompareTag("NPC"))
@@ -123,6 +146,7 @@ public class NPCController : MonoBehaviour
 
         if (!crowded)
         {
+            agent.isStopped = false; // 🔥 IMPORTANT
             agent.SetDestination(targetSpot.standPoint.position + offset);
         }
         else
@@ -142,22 +166,14 @@ public class NPCController : MonoBehaviour
         CartItem existing = cart.Find(c => c.item == item);
 
         if (existing != null)
-        {
             existing.quantity++;
-        }
         else
-        {
-            cart.Add(new CartItem
-            {
-                item = item,
-                quantity = 1
-            });
-        }
+            cart.Add(new CartItem { item = item, quantity = 1 });
     }
 
     void GoToCheckout()
     {
-        Debug.Log(name + " going to checkout");
+        agent.isStopped = false; // 🔥 IMPORTANT
         CheckoutManager.Instance.JoinQueue(this);
     }
 
@@ -172,13 +188,11 @@ public class NPCController : MonoBehaviour
         }
 
         ItemData grabbedItem = targetSpot.TakeItem();
-        print("NPC grabbed item: " + (grabbedItem != null ? grabbedItem.itemName : "null"));
 
         if (grabbedItem != null)
         {
             AddItemToCart(grabbedItem);
             itemsCollected++;
-            Debug.Log("NPC grabbed " + grabbedItem.itemName);
         }
 
         targetSpot = null;
@@ -189,16 +203,8 @@ public class NPCController : MonoBehaviour
         }
         else
         {
-            if (gameObject.GetComponent<HomelessMan>() != null)
-            {
-                CompleteCheckout(false);
-            }
-            else
-            {
-                GoToCheckout();
-            }
+            GoToCheckout();
         }
-
 
         isBrowsing = false;
     }
@@ -213,19 +219,18 @@ public class NPCController : MonoBehaviour
 
     public void CompleteCheckout(bool ispaying)
     {
-        Debug.Log(name + " completed checkout");
+        inQueue = false;
 
-        PrintCart(ispaying);
+        // 🔥 MAKE A COPY
+        List<CartItem> cartCopy = new List<CartItem>(cart);
 
-        if (!gameObject.GetComponent<HomelessMan>())
-        {
-            cart.Clear();
-        }
-
+        PrintCart(ispaying, cartCopy);
+        cart.Clear();
 
         if (CheckoutManager.Instance.exitPoint != null)
         {
             isLeaving = true;
+            agent.isStopped = false; // 🔥 IMPORTANT
             agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
         }
     }
@@ -233,44 +238,68 @@ public class NPCController : MonoBehaviour
     void CheckIfExited()
     {
         if (!isLeaving) return;
-        if (CheckoutManager.Instance.exitPoint == null) return;
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            float distanceToExit = Vector3.Distance(
-                transform.position,
-                CheckoutManager.Instance.exitPoint.position
-            );
-
-            if (distanceToExit <= 1f)
-            {
-                if (npcSpawner != null)
-                    npcSpawner.CustomerLeft();
-
-                Destroy(gameObject);
-            }
+            Destroy(gameObject);
         }
     }
 
-    void PrintCart(bool ispaying)
+    void PrintCart(bool ispaying, List<CartItem> cartData)
     {
-        Debug.Log("NPC CART");
+        if (!ispaying) return;
 
-        foreach (var entry in cart)
+        StartCoroutine(CheckoutRoutine(cartData));
+    }
+
+    IEnumerator CheckoutRoutine(List<CartItem> cartData)
+    {
+        print($"Cart COPY has {cartData.Count} items.");
+
+        if (CheckoutManager.Instance.checkoutUIParent != null)
         {
-            if (entry.item != null && Currency.Instance != null)
+            foreach (Transform child in CheckoutManager.Instance.checkoutUIParent)
             {
-                Debug.Log(entry.item.itemName + " x" + entry.quantity);
-                if (ispaying)
+                Destroy(child.gameObject);
+            }
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        foreach (var entry in cartData)
+        {
+            if (entry.item == null) continue;
+
+            float totalPrice = entry.item.price * entry.quantity;
+
+            print($"{entry.quantity} x {entry.item.itemName} - ${totalPrice}");
+
+            if (Currency.Instance != null)
+            {
+                Currency.Instance.AddCurrency((int)totalPrice);
+            }
+
+            if (CheckoutManager.Instance.checkoutItemUIPrefab != null &&
+                CheckoutManager.Instance.checkoutUIParent != null)
+            {
+                GameObject ui = Instantiate(
+                    CheckoutManager.Instance.checkoutItemUIPrefab,
+                    CheckoutManager.Instance.checkoutUIParent
+                );
+
+                CheckoutItemUI uiScript = ui.GetComponent<CheckoutItemUI>();
+                if (uiScript != null)
                 {
-                    Currency.Instance.AddCurrency((int)entry.item.price * entry.quantity);
+                    uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice);
                 }
             }
+
+            yield return new WaitForSeconds(0.1f);
         }
     }
 }
 
-[System.Serializable]
+    [System.Serializable]
 public class CartItem
 {
     public ItemData item;

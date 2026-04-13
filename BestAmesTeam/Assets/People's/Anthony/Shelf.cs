@@ -12,7 +12,10 @@ public class Shelf : MonoBehaviour
 
     void Start()
     {
-        ShelfManager.Instance.shelves.Add(this);
+        if (!ShelfManager.Instance.shelves.Contains(this))
+        {
+            ShelfManager.Instance.shelves.Add(this);
+        }
     }
 
     public ItemSpot GetRandomSpotWithItem()

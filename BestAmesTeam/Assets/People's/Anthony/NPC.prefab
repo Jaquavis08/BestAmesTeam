@@ -242,7 +242,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3968215767256214959}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 511.8, y: 11.744, z: 394.73}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -365,7 +365,10 @@ MonoBehaviour:
   cart: []
   maxItems: 6
   itemsCollected: 0
+  queueSnapSpeed: 8
   npcSpawner: {fileID: 0}
+  queueTargetPosition: {x: 0, y: 0, z: 0}
+  inQueue: 0
 --- !u!114 &4460813229267602244
 MonoBehaviour:
   m_ObjectHideFlags: 0
