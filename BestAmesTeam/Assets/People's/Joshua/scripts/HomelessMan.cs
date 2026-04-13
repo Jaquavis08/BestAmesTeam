@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -43,8 +44,14 @@ public class HomelessMan : MonoBehaviour
     bool thiefInteracting = false;
     bool isLeaving = false;
 
+    // BEGGER STATE
+    public Canvas beggerUICanvas;
+    public bool beggerIsPaid = false;
+    public bool beggerIsShunned = false;
+
     void Start()
     {
+        beggerUICanvas.enabled = false;
         getType();
 
         isInteracting = false;
@@ -81,18 +88,18 @@ public class HomelessMan : MonoBehaviour
         isBegger = false;
         isTheif = true;
 
-        //switch(choice)
-        //{
-        //    case 1:
-        //        isSleeper = true;
-        //        break;
-        //    case 2:
-        //        isBegger = true;
-        //        break;
-        //    case 3:
-        //        isTheif = true;
-        //        break;
-        //}
+        switch(choice)
+        {
+           case 1:
+                isSleeper = true;
+              break;
+          case 2:
+              isBegger = true;
+               break;
+            case 3:
+               isTheif = true;
+               break;
+        }
     }
 
     void Update()
@@ -117,33 +124,6 @@ public class HomelessMan : MonoBehaviour
 
     void ThiefCaught()
     {
-        // Plan (pseudocode):
-        // 1. Log start.
-        // 2. Get NPCController and its cart; bail out if missing or empty.
-        // 3. Build two dictionaries:
-        //    a) counts: maps item name -> total quantity
-        //    b) representative: maps item name -> representative GameObject prefab (if any)
-        //    For each entry in cart:
-        //      - If entry is CartItem, use ci.item.name (or "Unknown") for key and ci.quantity (min 1) for qty.
-        //        Attempt to discover a prefab/model GameObject on the item via common field/property names (safe reflect).
-        //      - Otherwise, try to resolve a human key: GameObject.name, or "name" prop via reflection, or entry.ToString()
-        //      - Accumulate counts.
-        // 4. If no counts, log and return.
-        // 5. Safely obtain ShelfManager box prefab and item dictionary if available.
-        // 6. For each distinct item in counts:
-        //      - Compute spawn position
-        //      - Instantiate boxPrefab if available, otherwise create a small cube fallback
-        //      - Get ItemBox component; if present assign itemType (if found) and itemCount; otherwise log warning
-        //      - Parent box to a sensible object
-        //      - If we have a representative GameObject, instantiate a child copy, strip physics/colliders/agents and scale/position it
-        //      - Create a simple TextMesh child showing the count and orient towards main camera
-        // 7. After creating all boxes, clear the NPC's cart once (outside the loop).
-        // 8. Mark thief as leaving and log completion.
-        //
-        // Implementation notes:
-        // - All external calls are guarded (ShelfManager, ItemDictionary, ItemBox).
-        // - Clear the cart once after processing to avoid losing data mid-processing (bug fix).
-        // - Defensive null-checking prevents exceptions that could cause "sometimes fails" behavior.
 
         print("Thief caught! Attempting to return stolen items.");
 
@@ -376,8 +356,12 @@ public class HomelessMan : MonoBehaviour
             if (dist <= interactionDistance && !isInteracting)
             {
                 isInteracting = true;
-                // TODO: beg dialogue/animation
+               beggerUICanvas.enabled = true;
+                
             }
+            HandleBeggerPayment();
+            HandleBeggerShunning();
+
         }
         else
         {
@@ -399,7 +383,45 @@ public class HomelessMan : MonoBehaviour
             }
         }
     }
+    void  HandleBeggerPayment()
+    {
+        int cost = Random.Range(25, 50);
+        Currency.Instance.amount -= cost;
+        beggerIsPaid = true;
+        isInteracting = false;
+        beggerUICanvas.enabled = false;
+        if (agent != null)
+            agent.isStopped = false;
+    }
 
+    void HandleBeggerShunning()
+    {
+        beggerIsShunned = true;
+        isInteracting = false;
+        beggerUICanvas.enabled = false;
+        if (agent != null)
+            agent.isStopped = false;
+
+        int choice = Random.Range(0, 4);
+
+        switch (choice)
+        {
+            case 1:
+                agent.SetDestination(exitPoint.position);
+                break;
+            case 2:
+                agent.SetDestination(exitPoint.position);
+                break;
+            case 3:
+                isTheif = true;
+                isBegger = false;
+                break;
+            case 4:
+                agent.SetDestination(exitPoint.position);
+                break;
+        }
+
+    }
     void HandleSleeperBehavior()
     {
         if (agent == null) return;
