@@ -4,7 +4,8 @@ using UnityEngine;
 public class ItemData : ScriptableObject
 {
     public string itemName;
-    public float price;
+    public int price;
     public GameObject prefab;
     public Sprite icon;
+    public int quanity;
 }
