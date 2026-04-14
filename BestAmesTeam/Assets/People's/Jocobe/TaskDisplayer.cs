@@ -52,8 +52,11 @@ public class TaskDisplayer : MonoBehaviour
 
 
         int currentDay = Daycount.instance.day;
+
         // Filter tasks for current day that are not completed
         var candidates = Tasks.Where(t => t.day == currentDay && t.completed == false).ToList();
+
+        print($"Found {candidates.Count} candidate tasks for day {currentDay}");
 
         if (candidates.Count == 0)
         {

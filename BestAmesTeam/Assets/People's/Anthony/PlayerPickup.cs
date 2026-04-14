@@ -59,12 +59,16 @@ public class PlayerPickup : MonoBehaviour
                 {
                     Destroy(heldBox.gameObject);
                     heldBox = null;
+                    if (TaskDisplayer.instance.Tasks[2] != null)
+                        TaskDisplayer.instance.Tasks[2].completed = true; 
                 }
             }
 
             if (hit.collider.GetComponent<Computer>())
             {
                 Computer.instance.UsePC(true);
+                if (TaskDisplayer.instance.Tasks[1] != null)
+                    TaskDisplayer.instance.Tasks[1].completed = true; 
             }
         }
         //else if()
