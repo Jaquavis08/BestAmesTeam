@@ -6,9 +6,9 @@ public class PlayerMovement : MonoBehaviour
 {
     public static PlayerMovement Instance;
 
-    [SerializeField] Transform playerCamera;
+    public Transform playerCamera;
     [SerializeField][Range(0.0f, 0.5f)] float mouseSmoothTime = 0.03f;
-    [SerializeField] public bool cursorLock = true;
+    public bool cursorLock = true;
     [SerializeField] float mouseSensitivity = 3.5f;
     [SerializeField] float speed = 6.0f;
     [SerializeField] [Range(0.0f, 0.5f)] float moveSmoothTime = 0.3f;
