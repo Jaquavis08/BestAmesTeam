@@ -246,6 +246,7 @@ public class NPCController : MonoBehaviour
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             Destroy(gameObject);
+            NPCSpawner.Instance.CustomerLeft();
         }
     }
 

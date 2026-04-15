@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CheckoutManager : MonoBehaviour
@@ -72,4 +73,6 @@ public class CheckoutManager : MonoBehaviour
             UpdateQueuePositions();
         }
     }
+
+    
 }
