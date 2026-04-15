@@ -38,10 +38,14 @@ public class HomelessMan : MonoBehaviour
     public bool beggerIsShunned = false;
 
 
-
-    void Start()
+    void Awake ()
     {
         getType();
+
+    }
+    void Start()
+    {
+        
 
         Pcamera = GetComponent<PlayerMovement>().playerCamera;
         beggerUICanvas.enabled = false;
@@ -385,12 +389,16 @@ public class HomelessMan : MonoBehaviour
                 {
                     float distanceToExit = Vector3.Distance(transform.position, exitPoint.position);
                     if (distanceToExit <= 3f)
+                    {
                         Destroy(gameObject);
+                    }
+                    
                 }
             }
             else
             {
                 agent.isStopped = true;
+                
             }
         }
     }
@@ -432,6 +440,7 @@ public class HomelessMan : MonoBehaviour
             case 3:
                 isTheif = true;
                 isBegger = false;
+                beggerIsShunned = false;
                 break;
             case 4:
                 agent.SetDestination(exitPoint.position);
