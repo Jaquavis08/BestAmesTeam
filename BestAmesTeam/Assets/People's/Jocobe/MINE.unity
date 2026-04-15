@@ -630,7 +630,8 @@ MonoBehaviour:
   spawnPoint: {fileID: 1275910728}
   NPCFolder: {fileID: 1515669001}
   spawnInterval: 4
-  maxCustomers: 10
+  maxCustomers: 1
+  currentCustomers: 0
   SpawningNPC: 1
 --- !u!1 &67649717
 GameObject:
@@ -3710,7 +3711,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 174.45
+      value: 468.63
       objectReference: {fileID: 0}
     - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3718,7 +3719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 339.23
+      value: 417.87
       objectReference: {fileID: 0}
     - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_LocalRotation.w
@@ -8206,7 +8207,7 @@ MonoBehaviour:
   checkoutSpot: {fileID: 1604316488}
   exitPoint: {fileID: 418151606}
   checkoutItemUIPrefab: {fileID: 9171890995941948372, guid: bc282e443f81c5a42bc59612972ced3b, type: 3}
-  checkoutUIParent: {fileID: 1918506441}
+  checkoutUIParent: {fileID: 2000826170}
 --- !u!1 &1030591232
 GameObject:
   m_ObjectHideFlags: 0
