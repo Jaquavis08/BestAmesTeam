@@ -15,20 +15,4 @@ public class Task1 : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    public void SpawnPrefab()
-    {
-        if (spawnPrefab == null)
-        {
-            Debug.LogWarning("SpawnPrefab called but no spawnPrefab is assigned on " + name);
-            return;
-        }
-
-        Vector3 basePosition = spawnParent != null ? spawnParent.position : transform.position;
-        Vector3 spawnPosition = basePosition + spawnOffset;
-
-        Instantiate(spawnPrefab, spawnPosition, Quaternion.identity, spawnParent);
-        if (TaskDisplayer.instance.Tasks[3] != null)
-            TaskDisplayer.instance.Tasks[3].completed = true;
-    }
 }

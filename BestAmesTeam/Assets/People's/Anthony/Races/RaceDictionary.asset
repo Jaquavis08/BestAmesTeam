@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: RaceDictionary
   m_EditorClassIdentifier: 
   Races:
-  - {fileID: 2800000, guid: 64e53491e29bcff4ea32e3593e885b1f, type: 3}
-  - {fileID: 2800000, guid: 27bd4b2f27ae1ab48b4c646e0de9c4a0, type: 3}
-  - {fileID: 2800000, guid: bfea78e841b4f474096e29faab329b0a, type: 3}
-  - {fileID: 2800000, guid: fbaa455ae7ae8514286ac897d8156a83, type: 3}
-  - {fileID: 2800000, guid: 7ffbcfa1b9a82d0478f28197d1181d37, type: 3}
-  - {fileID: 2800000, guid: 01c79a8b28cd53645bb23b3aedfae803, type: 3}
-  - {fileID: 2800000, guid: 0b865c462c641a04f95f815fa2e67364, type: 3}
-  - {fileID: 2800000, guid: 7f12ee2cd6d1a9841822f7713ceb0252, type: 3}
+  - {fileID: 2100000, guid: a53cc712143866c4d88ca12c724c42ab, type: 2}
+  - {fileID: 2100000, guid: 3dcbfdfb81319b240ba339e5df8caff7, type: 2}
+  - {fileID: 2100000, guid: dbb8d9a9151216640a27d8382d071a3b, type: 2}
+  - {fileID: 2100000, guid: e7f0ba1e7b3c7374fa98b74c0525226b, type: 2}
+  - {fileID: 2100000, guid: 41c9d094f515bd549a2d046fae963b3c, type: 2}
+  - {fileID: 2100000, guid: 263b277dd6b4de2439dd53f978aad918, type: 2}
+  - {fileID: 2100000, guid: 1c8a69add23985e478e108ca8808ce6e, type: 2}
+  - {fileID: 2100000, guid: 914cd5af93d03a44ab107656e30061fb, type: 2}

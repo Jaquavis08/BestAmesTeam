@@ -13,7 +13,6 @@ public class RestockManager : MonoBehaviour
     public GameObject RestockItem;
 
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         RestoreStock();
@@ -22,16 +21,16 @@ public class RestockManager : MonoBehaviour
     public void RestoreStock()
     {
         restockItems.Clear();
-        for (int i = 0; i < itemDictionary.items.Length; i++)
+
+        foreach (var item in itemDictionary.items)
         {
-            print(itemDictionary.items[i].name);
-            RestockItem restockItem = new RestockItem();
-
-            restockItem.name = itemDictionary.items[i].name;
-            restockItem.price = itemDictionary.items[i].price;
-            restockItem.quantity = itemDictionary.items[i].quanity;
-            restockItem.icon = itemDictionary.items[i].icon;
-
+            RestockItem restockItem = new()
+            {
+                name = item.name,
+                price = item.price,
+                quantity = item.quanity,
+                icon = item.icon
+            };
 
             restockItems.Add(restockItem);
 
@@ -41,14 +40,13 @@ public class RestockManager : MonoBehaviour
             ItemRestockUI.transform.GetChild(1).GetComponent<TMP_Text>().text = restockItem.name;
             ItemRestockUI.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + restockItem.price.ToString();
             ItemRestockUI.transform.GetChild(3).GetComponent<TMP_Text>().text = "x" + restockItem.quantity.ToString();
+
+            ItemRestockUI.GetComponent<Button>().onClick.AddListener(() => SpawnStock.Instance.SpawnManager(item));
+            print(item.name);
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
 
 [System.Serializable]
