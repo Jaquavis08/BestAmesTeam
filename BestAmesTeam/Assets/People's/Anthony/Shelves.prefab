@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7905556923052961410}
   - component: {fileID: 525878452809139696}
   m_Layer: 0
-  m_Name: Shelve
+  m_Name: Shelves
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

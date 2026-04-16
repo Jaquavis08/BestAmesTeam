@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 3183297925840057036}
   - component: {fileID: 9182797065367387616}
   - component: {fileID: 258829843139180466}
-  m_Layer: 0
+  - component: {fileID: 5443283551265148005}
+  m_Layer: 7
   m_Name: Homeless
   m_TagString: NPC
   m_Icon: {fileID: 0}
@@ -146,16 +147,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cff92b91514158479f695fa99ba5752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  navMeshSurface: {fileID: 1557996222782629472, guid: 766933b4dc4874f4fbed47523eb18bec, type: 3}
+  navMeshSurface: {fileID: 0}
   Shelf: {fileID: 3100040980733641465, guid: 01c882ab418a4c8488ae3d2cf166d0a2, type: 3}
+  isBrowsing: 0
   isInteracting: 0
-  isSleeper: 0
   isBegger: 0
   isTheif: 0
+  Pcamera: {fileID: 0}
   agent: {fileID: 9182797065367387616}
-  player: {fileID: 5516760649300538513}
+  player: {fileID: 0}
   exitPoint: {fileID: 302067814163818241, guid: f31de89e8b77c8046b9adcc7bfb14b0e, type: 3}
-  interactionDistance: 2
-  shopCenter: {fileID: 2264094838117394960, guid: bd2d5c055d060c1418ed40a05fb4e222, type: 3}
-  shopRadius: 8
-  isPaid: 0
+  interactionDistance: 10
+  beggerUICanvas: {fileID: 0}
+  beggerIsPaid: 0
+  beggerIsShunned: 0
+--- !u!114 &5443283551265148005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968339426048806467}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59a44f0bf8457554ea6b544b8b4a036f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 9182797065367387616}
+  cart: []
+  maxItems: 0
+  itemsCollected: 0
+  queueSnapSpeed: 8
+  npcSpawner: {fileID: 0}
+  queueTargetPosition: {x: 0, y: 0, z: 0}
+  inQueue: 0

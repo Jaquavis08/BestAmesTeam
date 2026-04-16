@@ -24,7 +24,7 @@ public class NPCSpawner : MonoBehaviour
     public float spawnInterval = 8f;
     public int maxCustomers = 10;
 
-    private int currentCustomers = 0;
+    public int currentCustomers = 0;
 
     public bool SpawningNPC = true;
 
@@ -58,5 +58,7 @@ public class NPCSpawner : MonoBehaviour
     {
         currentCustomers--;
         if (currentCustomers < 0) currentCustomers = 0;
+        if (TaskDisplayer.instance.Tasks[3] != null)
+            TaskDisplayer.instance.Tasks[3].completed = true;
     }
 }

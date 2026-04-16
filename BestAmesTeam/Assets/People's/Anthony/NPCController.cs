@@ -105,6 +105,8 @@ public class NPCController : MonoBehaviour
 
         if (shelf == null)
         {
+            print("No shelves with items found!");
+
             if (itemsCollected == 0)
             {
                 isLeaving = true;
@@ -119,6 +121,8 @@ public class NPCController : MonoBehaviour
         }
 
         targetSpot = shelf.GetRandomSpotWithItem();
+
+        print($"NPC {gameObject.name} is targeting shelf {shelf.name} at spot {targetSpot.name}");
 
         if (targetSpot == null)
         {
@@ -242,6 +246,7 @@ public class NPCController : MonoBehaviour
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
             Destroy(gameObject);
+            NPCSpawner.Instance.CustomerLeft();
         }
     }
 
