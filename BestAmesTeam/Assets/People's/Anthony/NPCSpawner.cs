@@ -58,7 +58,7 @@ public class NPCSpawner : MonoBehaviour
     {
         currentCustomers--;
         if (currentCustomers < 0) currentCustomers = 0;
-        if (TaskDisplayer.instance.Tasks[3] != null)
+        if (TaskDisplayer.instance.Tasks.Count > 3)
             TaskDisplayer.instance.Tasks[3].completed = true;
     }
 }
