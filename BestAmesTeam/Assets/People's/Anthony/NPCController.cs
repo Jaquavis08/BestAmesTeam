@@ -177,8 +177,17 @@ public class NPCController : MonoBehaviour
 
     void GoToCheckout()
     {
-        agent.isStopped = false; // 🔥 IMPORTANT
-        CheckoutManager.Instance.JoinQueue(this);
+        if (!transform.GetComponent<HomelessMan>())
+        {
+            agent.isStopped = false;
+            CheckoutManager.Instance.JoinQueue(this);
+        }
+        else
+        {
+            isLeaving = true;
+            agent.isStopped = false;
+            agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
+        }
     }
 
     public IEnumerator GrabItemRoutine()
