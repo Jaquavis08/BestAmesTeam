@@ -42,6 +42,7 @@ public class RestockManager : MonoBehaviour
             ItemRestockUI.transform.GetChild(3).GetComponent<TMP_Text>().text = "x" + restockItem.quantity.ToString();
 
             ItemRestockUI.GetComponent<Button>().onClick.AddListener(() => SpawnStock.Instance.SpawnManager(item));
+           
             if (TaskDisplayer.instance.Tasks.Count > 2)
                 TaskDisplayer.instance.Tasks[2].completed = true;
             print(item.name);
