@@ -118,13 +118,24 @@ public class CarEnterExit : MonoBehaviour
 
         if (Input.GetKeyDown(enterExitKey))
         {
-            
-            if (!inCar)
+
+            // Compare player distance to the car using squared distance for efficiency
+            float sqrAllowed = interactionDistance * interactionDistance;
+            float sqrActual = (player.transform.position - transform.position).sqrMagnitude;
+
+            if (!inCar && sqrActual <= sqrAllowed)
             {
                 EnterCar();
+                if (TaskDisplayer.instance.Tasks.Count > 5)
+                    TaskDisplayer.instance.Tasks[5].completed = true;
                 return;
             }
-            
+            else
+            {
+                Debug.LogFormat("Too far to enter car. Distance = {0:F2}, Allowed = {1:F2}",
+                    Mathf.Sqrt(sqrActual), interactionDistance);
+            }
+
             if (inCar)
             {
                 Debug.Log("Exit key pressed while in car, attempting to exit...");
