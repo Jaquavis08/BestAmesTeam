@@ -5,6 +5,8 @@ public class PlayerPickup : MonoBehaviour
     public Transform holdPoint;
     public float interactDistance = 3f;
 
+    
+
     ItemBox heldBox;
 
     void Update()
@@ -21,6 +23,8 @@ public class PlayerPickup : MonoBehaviour
         {
             DropBox();
         }
+
+        Check();
     }
 
     void TryInteract(Ray ray)
@@ -75,6 +79,37 @@ public class PlayerPickup : MonoBehaviour
         //{
 
         //}
+    }
+
+    public void Check()
+    {
+        if (heldBox == null || boxboi.instance.boxbox == null) return;
+
+        Collider heldCollider = heldBox.GetComponent<Collider>();
+        bool isInside = false;
+
+        if (heldCollider != null)
+        {
+            Bounds boxBounds = boxboi.instance.boxbox.bounds;
+            Bounds heldBounds = heldCollider.bounds;
+
+            if (boxBounds.Contains(heldBounds.min) && boxBounds.Contains(heldBounds.max))
+            {
+                isInside = true;
+            }
+        }
+        else
+        {
+            if (boxboi.instance.boxbox.bounds.Contains(heldBox.transform.position))
+            {
+                isInside = true;
+            }
+        }
+
+        if (isInside && TaskDisplayer.instance.Tasks.Count > 6)
+        {
+            TaskDisplayer.instance.Tasks[6].completed = true;
+        }
     }
 
     void PickupBox(ItemBox box)
