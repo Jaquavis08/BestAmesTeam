@@ -32,7 +32,7 @@ public class Daycount : MonoBehaviour
     public void Start()
     {
         daycount.text = "Day: " + day;
-        daylength = daylengthBase * 60f;
+        daylength = daylengthBase * 10f;
     }
     void Update()
     {
@@ -59,7 +59,7 @@ public class Daycount : MonoBehaviour
     {
         if(TaskDisplayer.instance.CheckForCompleteQuota())
         {
-            time = 0;
+            time = 10f;
             day++;
             daycount.text = "Day: " + day;
             TaskDisplayer.instance.GetQuotaFormula();
