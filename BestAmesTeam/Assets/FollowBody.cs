@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteAlways]
 public class FollowBody : MonoBehaviour
 {
     public List<Transform> partsToFollow = new List<Transform>();
@@ -9,44 +10,57 @@ public class FollowBody : MonoBehaviour
     public Transform mainBody;
     public List<Transform> partsList = new List<Transform>();
 
-    void Update()
+    void LateUpdate()
     {
-        if (partsToFollow.Count <= 0 || partsParent.Count <= 0)
+        if (mainBody == null || partsList.Count == 0) return;
+
+        if (partsToFollow.Count == 0 || partsParent.Count == 0)
         {
             Repair();
         }
 
-        for (int i = 0; i < partsToFollow.Count; i++)
+        int count = Mathf.Min(partsToFollow.Count, partsParent.Count);
+
+        for (int i = 0; i < count; i++)
         {
-            if (partsToFollow[i].position != partsParent[i].position || partsToFollow[i].rotation != partsParent[i].rotation)
-            {
-                partsToFollow[i].position = partsParent[i].position;
-                partsToFollow[i].rotation = partsParent[i].rotation;
-            }
+            if (partsToFollow[i] == null || partsParent[i] == null) continue;
+
+            partsToFollow[i].position = partsParent[i].position;
+            partsToFollow[i].rotation = partsParent[i].rotation;
         }
     }
 
+    [ContextMenu("Repair")]
     public void Repair()
     {
         partsParent.Clear();
-        for (int i = 0; i < mainBody.GetChild(0).childCount; i++)
+        partsToFollow.Clear();
+
+        List<Transform> parentAll = new List<Transform>();
+        foreach (Transform t in mainBody.GetComponentsInChildren<Transform>())
         {
-            partsParent.Add(mainBody.GetChild(0).GetChild(i));
+            if (t != mainBody)
+                parentAll.Add(t);
         }
 
-        partsToFollow.Clear();
-        for (int i = 0; i < partsList.Count; i++)
+        List<Transform> followAll = new List<Transform>();
+        foreach (Transform part in partsList)
         {
-            Debug.LogError(i);
-            for (int x = 0; x < partsList[i].childCount - 1; x++)
+            foreach (Transform t in part.GetComponentsInChildren<Transform>())
             {
-                Debug.LogError(x);
-                for (int y = 0; y < partsList[i].GetChild(0).GetChild(0).childCount; y++)
-                {
-                    Debug.LogError(y);
-                    partsToFollow.Add(partsList[i].GetChild(0).GetChild(0).GetChild(y));
-                }
+                if (t != part)
+                    followAll.Add(t);
             }
         }
+
+        int count = Mathf.Min(parentAll.Count, followAll.Count);
+
+        for (int i = 0; i < count; i++)
+        {
+            partsParent.Add(parentAll[i]);
+            partsToFollow.Add(followAll[i]);
+        }
+
+        Debug.Log($"Matched {count} transforms");
     }
 }
