@@ -640,6 +640,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5298148169919809210, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
+      propertyPath: ShelfParent
+      value: 
+      objectReference: {fileID: 1746877423}
     - target: {fileID: 5708354196114074900, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
       propertyPath: m_LocalPosition.x
       value: 455.61
@@ -1091,7 +1095,7 @@ MonoBehaviour:
   - _gameObject: {fileID: 2069654643}
     _prefab: Assets/People's/Anthony/Shelves.prefab
   - _gameObject: {fileID: 40243228}
-    _prefab: Assets/People's/Anthony/Player.prefab
+    _prefab: Assets/People's/Anthony/JA PLAYER.prefab
   - _gameObject: {fileID: 1659926435}
     _prefab: Assets/People's/Anthony/Box.prefab
 --- !u!4 &117677038

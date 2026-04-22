@@ -1,5 +1,4 @@
-using System.Runtime.CompilerServices;
-using UnityEditor.PackageManager;
+
 using UnityEngine;
 
 public class ObjPlacer : MonoBehaviour
@@ -76,7 +75,7 @@ public class ObjPlacer : MonoBehaviour
         {
            
 
-            if (!_InPlacementMode && transform.childCount <= 0)
+            if (!_InPlacementMode)
             {
                 EnterPlacementMode();
                 

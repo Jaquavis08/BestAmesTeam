@@ -296,8 +296,9 @@ GameObject:
   - component: {fileID: 4180366103252835769}
   - component: {fileID: 2425096372001970298}
   - component: {fileID: 1208670544494615808}
+  - component: {fileID: 5298148169919809210}
   m_Layer: 6
-  m_Name: Player
+  m_Name: JA PLAYER
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -591,6 +592,35 @@ CharacterController:
   m_SkinWidth: 0.03
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5298148169919809210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6340524811450681607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db600d26d63fffc4fb5deb02efb6038e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlaceableObj: {fileID: 3100040980733641465, guid: 01c882ab418a4c8488ae3d2cf166d0a2, type: 3}
+  PreviewObj: {fileID: 7506972199838875838, guid: 30886506c1ac76e48b31d1d823ac132d, type: 3}
+  playerCamera: {fileID: 2888731957942459227}
+  placementlayer:
+    serializedVersion: 2
+    m_Bits: 520
+  previewMaterial: {fileID: 2100000, guid: 7243b5fdef07b60468b699f668773d48, type: 2}
+  validColor: {r: 0, g: 1, b: 0.11066723, a: 0.40392157}
+  invalidColor: {r: 1, g: 0, b: 0, a: 0.33333334}
+  DistanceFromPlayer: 3
+  raycastStartVerticleOffset: 100
+  raycastDistance: 1000
+  yOffset: 0.5
+  _InPlacementMode: 0
+  _validPreviewState: 0
+  ShelfParent: {fileID: 0}
+  enterExitKey: 101
 --- !u!1 &6537734246208124340
 GameObject:
   m_ObjectHideFlags: 0
