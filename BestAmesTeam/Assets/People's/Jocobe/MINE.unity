@@ -815,7 +815,7 @@ MonoBehaviour:
   spawnPoint: {fileID: 1275910728}
   NPCFolder: {fileID: 1515669001}
   spawnInterval: 0.1
-  maxCustomers: 50
+  maxCustomers: 20
   currentCustomers: 0
   SpawningNPC: 1
 --- !u!1 &67753624
@@ -11315,7 +11315,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _scenePrefabInstances:
   - _gameObject: {fileID: 645622164}
-    _prefab: Assets/People's/Anthony/Player.prefab
+    _prefab: Assets/People's/Anthony/JA PLAYER.prefab
   - _gameObject: {fileID: 1549965939}
     _prefab: Assets/blender assets/Shop Inside.obj
   - _gameObject: {fileID: 120550868}
