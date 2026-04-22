@@ -11,7 +11,7 @@ public class Daycount : MonoBehaviour
     public TMP_Text daycount;
     public int day = 0;
     public float time;
-    public float daylengthBase = 10f; // minutes
+    public float daylengthBase = 1f; // minutes
     private float daylength; // minutes
 
     public Button NextDayButton;
@@ -32,7 +32,7 @@ public class Daycount : MonoBehaviour
     public void Start()
     {
         daycount.text = "Day: " + day;
-        daylength = daylengthBase * 10f;
+        daylength = daylengthBase * 10000f;
     }
     void Update()
     {
@@ -59,7 +59,7 @@ public class Daycount : MonoBehaviour
     {
         if(TaskDisplayer.instance.CheckForCompleteQuota())
         {
-            time = 10f;
+            time = 0;
             day++;
             daycount.text = "Day: " + day;
             TaskDisplayer.instance.GetQuotaFormula();

@@ -36,31 +36,48 @@ public class FollowBody : MonoBehaviour
         partsParent.Clear();
         partsToFollow.Clear();
 
-        List<Transform> parentAll = new List<Transform>();
-        foreach (Transform t in mainBody.GetComponentsInChildren<Transform>())
-        {
-            if (t != mainBody)
-                parentAll.Add(t);
-        }
+        // Build map from mainBody
+        Dictionary<string, Transform> parentMap = new Dictionary<string, Transform>();
 
-        List<Transform> followAll = new List<Transform>();
-        foreach (Transform part in partsList)
+        foreach (Transform t in mainBody.GetComponentsInChildren<Transform>(true))
         {
-            foreach (Transform t in part.GetComponentsInChildren<Transform>())
+            if (!parentMap.ContainsKey(t.name))
             {
-                if (t != part)
-                    followAll.Add(t);
+                parentMap.Add(t.name, t);
             }
         }
 
-        int count = Mathf.Min(parentAll.Count, followAll.Count);
-
-        for (int i = 0; i < count; i++)
+        // Match from partsList
+        for (int i = 0; i < partsList.Count; i++)
         {
-            partsParent.Add(parentAll[i]);
-            partsToFollow.Add(followAll[i]);
+            foreach (Transform t in partsList[i].GetComponentsInChildren<Transform>(true))
+            {
+                if (!t.CompareTag("CharacterEdit")) continue;
+
+                if (parentMap.TryGetValue(t.name, out Transform match))
+                {
+                    partsToFollow.Add(t);
+                    partsParent.Add(match);
+
+                    Debug.Log($"Matched: {t.name}");
+                }
+            }
         }
 
-        Debug.Log($"Matched {count} transforms");
+        Debug.Log($"FINAL COUNT: {partsToFollow.Count}");
+    }
+
+
+    string GetPath(Transform t, Transform root)
+    {
+        string path = t.name;
+
+        while (t.parent != null && t.parent != root)
+        {
+            t = t.parent;
+            path = t.name + "/" + path;
+        }
+
+        return path;
     }
 }

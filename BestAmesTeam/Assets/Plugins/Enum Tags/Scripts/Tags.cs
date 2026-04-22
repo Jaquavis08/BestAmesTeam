@@ -12,4 +12,5 @@ public const string T_floor = @"floor";
 public const string T_NPC = @"NPC";
 public const string T_Exit = @"Exit";
 public const string T_dirt = @"dirt";
+public const string T_CharacterEdit = @"CharacterEdit";
 }

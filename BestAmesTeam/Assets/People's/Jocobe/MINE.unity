@@ -814,8 +814,8 @@ MonoBehaviour:
   npcPrefab: {fileID: 3968215767256214959, guid: 736e5653a33211d4f83f21e67afc07d3, type: 3}
   spawnPoint: {fileID: 1275910728}
   NPCFolder: {fileID: 1515669001}
-  spawnInterval: 4
-  maxCustomers: 2147483647
+  spawnInterval: 0.1
+  maxCustomers: 20
   currentCustomers: 0
   SpawningNPC: 1
 --- !u!1 &67649717
@@ -2693,6 +2693,10 @@ PrefabInstance:
     - target: {fileID: 3154337823448553151, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4002671732868702501, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: itemCount
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 4091370455635239378, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_Name

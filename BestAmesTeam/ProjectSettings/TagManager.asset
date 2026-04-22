@@ -9,6 +9,7 @@ TagManager:
   - NPC
   - Exit
   - dirt
+  - CharacterEdit
   layers:
   - Default
   - TransparentFX
