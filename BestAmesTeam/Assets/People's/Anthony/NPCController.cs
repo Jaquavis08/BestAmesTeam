@@ -101,9 +101,10 @@ public class NPCController : MonoBehaviour
 
     public void ChooseItem()
     {
+        bool check = ShelfCheck();
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
-
-        if (shelf == null)
+        print(check);
+        if (check == false)
         {
             print("No shelves with items found!");
 
@@ -159,6 +160,11 @@ public class NPCController : MonoBehaviour
         }
     }
 
+    public bool ShelfCheck()
+    {
+        Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
+        return shelf != null;
+    }
     IEnumerator WaitThenChooseAnotherSpot()
     {
         yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));

@@ -4,11 +4,14 @@ using UnityEngine;
 [ExecuteAlways]
 public class FollowBody : MonoBehaviour
 {
+    public AccessoriesDictionary AccessoriesDictionary;
+
     public List<Transform> partsToFollow = new List<Transform>();
     public List<Transform> partsParent = new List<Transform>();
 
     public Transform mainBody;
     public List<Transform> partsList = new List<Transform>();
+
 
     void LateUpdate()
     {
@@ -17,6 +20,7 @@ public class FollowBody : MonoBehaviour
         if (partsToFollow.Count == 0 || partsParent.Count == 0)
         {
             Repair();
+            GetOutfits();
         }
 
         int count = Mathf.Min(partsToFollow.Count, partsParent.Count);
@@ -27,6 +31,20 @@ public class FollowBody : MonoBehaviour
 
             partsToFollow[i].position = partsParent[i].position;
             partsToFollow[i].rotation = partsParent[i].rotation;
+        }
+    }
+
+    [ContextMenu("GetOutfit")]
+    public void GetOutfits()
+    {
+        // Implementation for GetOutfit
+        for (int i = 0; i < partsList.Count; i++)
+        {
+            SkinnedMeshRenderer renderer = partsList[i].GetComponentInChildren<SkinnedMeshRenderer>();
+            if (renderer != null)
+            {
+                renderer.material = AccessoriesDictionary.GetRandomColor();
+            }
         }
     }
 

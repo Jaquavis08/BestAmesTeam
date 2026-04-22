@@ -51,6 +51,11 @@ public class NPCSpawner : MonoBehaviour
         if (controller != null)
         {
             controller.npcSpawner = this;
+            if (controller.ShelfCheck() == false)
+            {
+                Destroy(npc);
+                currentCustomers--;
+            }
         }
     }
 
