@@ -876,11 +876,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 200324255}
   m_CullTransparentMesh: 1
---- !u!1 &201838228 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6598267089140502855, guid: 736e5653a33211d4f83f21e67afc07d3, type: 3}
-  m_PrefabInstance: {fileID: 1273289812}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &206631155
 GameObject:
   m_ObjectHideFlags: 0
@@ -3158,7 +3153,7 @@ MonoBehaviour:
     _prefab: Assets/People's/Anthony/NPC.prefab
   - _gameObject: {fileID: 1273289815}
     _prefab: Assets/People's/Anthony/BF_NPCMESH.fbx
-  - _gameObject: {fileID: 201838228}
+  - _gameObject: {fileID: 1844535527}
     _prefab: Assets/People's/Anthony/shirtMESH.fbx
 --- !u!4 &499382602
 Transform:
@@ -9328,8 +9323,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 81631636}
   m_HandleRect: {fileID: 81631635}
   m_Direction: 2
-  m_Value: 0.9999989
-  m_Size: 0.5781959
+  m_Value: 1.0000011
+  m_Size: 0.57819605
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -11348,8 +11343,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 958926325}
   m_HandleRect: {fileID: 958926324}
   m_Direction: 2
-  m_Value: 0.9999972
-  m_Size: 0.4833604
+  m_Value: 0.9999983
+  m_Size: 0.4833605
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -12332,6 +12327,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1832658612}
   m_CullTransparentMesh: 1
+--- !u!1 &1844535527 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8256498245079848134, guid: 736e5653a33211d4f83f21e67afc07d3, type: 3}
+  m_PrefabInstance: {fileID: 1273289812}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1890778386
 GameObject:
   m_ObjectHideFlags: 0
