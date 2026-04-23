@@ -1,8 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AccessoriesDictionary", menuName = "Scriptable Objects/AccessoriesDictionary")]
 public class AccessoriesDictionary : ScriptableObject
 {
+    public List<GameObject> Shirts;
+    public List<GameObject> Pants;
+
     public Material[] materials;
 
     public Material GetRandomColor()
