@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class Daycount : MonoBehaviour
 {
+    
     public static Daycount instance;
 
     public TMP_Text daycount;
@@ -16,7 +17,10 @@ public class Daycount : MonoBehaviour
 
     public Button NextDayButton;
 
-    
+    public Transform SunTransform;
+    public Vector3 sunMinRotation = new Vector3(0f, 0f, 0f);
+    public Vector3 sunMaxRotation = new Vector3(-180f, 0f, 0f);
+
     public void Awake()
     {
         if (instance == null)
@@ -32,7 +36,8 @@ public class Daycount : MonoBehaviour
     public void Start()
     {
         daycount.text = "Day: " + day;
-        daylength = daylengthBase * 10000f;
+        daylength = daylengthBase * 100f;
+        UpdateSunPosition(); 
     }
     void Update()
     {
@@ -41,7 +46,6 @@ public class Daycount : MonoBehaviour
 
     void ProccesTime()
     {
-        
         if (time >= daylength)
         {
             NPCSpawner.Instance.SpawningNPC = false;
@@ -53,6 +57,23 @@ public class Daycount : MonoBehaviour
             NPCSpawner.Instance.SpawningNPC = true;
             NextDayButton.interactable = false;
         }
+
+        UpdateSunPosition();
+    }
+
+    void UpdateSunPosition()
+    {
+        if (SunTransform == null)
+            return;
+
+        float t = 0f;
+        if (daylength > 0f)
+            t = Mathf.Clamp01(time / daylength);
+
+        Quaternion minQ = Quaternion.Euler(sunMinRotation);
+        Quaternion maxQ = Quaternion.Euler(sunMaxRotation);
+
+        SunTransform.rotation = Quaternion.Lerp(minQ, maxQ, t);
     }
 
     public void NextDay()
@@ -65,6 +86,8 @@ public class Daycount : MonoBehaviour
             TaskDisplayer.instance.GetQuotaFormula();
             if (TaskDisplayer.instance.Tasks.Count > 7)
                 TaskDisplayer.instance.Tasks[7].completed = true;
+
+            UpdateSunPosition();
         }
         else
         {

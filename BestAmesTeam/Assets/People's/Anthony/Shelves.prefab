@@ -194,7 +194,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 73c176f402d2c2f4d929aa5da7585d17, type: 2}
+  - {fileID: 2100000, guid: b9a46807239b370419c83d53ab5ed239, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -360,7 +360,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 19b863394d4e34645b9f9b0703819fbb, type: 2}
-  itemCount: 4
+  itemCount: 0
   maxStock: 10
   standPoint: {fileID: 5884006802065939683}
 --- !u!1 &7301714139406759604
@@ -517,6 +517,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   item: {fileID: 11400000, guid: 19b863394d4e34645b9f9b0703819fbb, type: 2}
-  itemCount: 4
+  itemCount: 0
   maxStock: 10
   standPoint: {fileID: 6424097689634911558}
