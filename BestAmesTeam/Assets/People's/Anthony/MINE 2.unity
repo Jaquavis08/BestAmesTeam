@@ -7830,6 +7830,9 @@ MonoBehaviour:
   time: 0
   daylengthBase: 1
   NextDayButton: {fileID: 200324257}
+  SunTransform: {fileID: 0}
+  sunMinRotation: {x: 0, y: 0, z: 0}
+  sunMaxRotation: {x: -180, y: 0, z: 0}
 --- !u!4 &945243339
 Transform:
   m_ObjectHideFlags: 0
