@@ -4461,6 +4461,9 @@ MonoBehaviour:
   time: 0
   daylengthBase: 1
   NextDayButton: {fileID: 809227186}
+  SunTransform: {fileID: 1354411380}
+  sunMinRotation: {x: 15831.31, y: 0, z: 0}
+  sunMaxRotation: {x: -16030.64, y: 0, z: 0}
 --- !u!1 &568452882
 GameObject:
   m_ObjectHideFlags: 0
@@ -9703,13 +9706,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1354411377}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.33772284, y: -0, z: -0, w: 0.9412456}
+  m_LocalRotation: {x: -0.07577546, y: 0, z: 0, w: 0.9971249}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 39.476, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 15831.31, y: 0, z: 0}
 --- !u!1 &1387056024
 GameObject:
   m_ObjectHideFlags: 0
