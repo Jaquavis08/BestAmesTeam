@@ -4126,7 +4126,7 @@ MonoBehaviour:
   - _gameObject: {fileID: 1315198660}
     _prefab: Assets/People's/Anthony/Shelves.prefab
   - _gameObject: {fileID: 4219908314173175027}
-    _prefab: Assets/People's/Anthony/Player.prefab
+    _prefab: Assets/People's/Anthony/JA PLAYER.prefab
   - _gameObject: {fileID: 26008414}
     _prefab: Assets/People's/Anthony/Box.prefab
   - _gameObject: {fileID: 2044671864}
