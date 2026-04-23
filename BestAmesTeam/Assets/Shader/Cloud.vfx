@@ -16,9 +16,9 @@ MonoBehaviour:
   - title: Base Loop
     position:
       serializedVersion: 2
-      x: 412
+      x: 852
       y: -1433
-      width: 914
+      width: 481
       height: 1579
     contents:
     - model: {fileID: 8926484042661614608}
@@ -38,7 +38,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 852
     y: -1433
-    width: 474
+    width: 481
     height: 2197
 --- !u!114 &114350483966674976
 MonoBehaviour:
@@ -196,7 +196,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
           PublicKeyToken=b77a5c561934e089
-      m_SerializableObject: 1
+      m_SerializableObject: 2
     m_Space: -1
   m_Property:
     name: Rate
@@ -258,7 +258,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614834}
   - {fileID: 8926484042661614806}
   - {fileID: 8926484042661615097}
-  m_UIPosition: {x: 877, y: -1086}
+  m_UIPosition: {x: 884, y: -1086}
   m_UICollapsed: 0
   m_UISuperCollapsed: 0
   m_InputSlots:
@@ -298,7 +298,7 @@ MonoBehaviour:
   - {fileID: 8926484042661614662}
   - {fileID: 8926484042661614893}
   dataType: 0
-  capacity: 68
+  capacity: 2000
   stripCapacity: 1
   particlePerStripCount: 32
   needsComputeBounds: 1
@@ -1440,7 +1440,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Mesh, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"obj":{"fileID":-8224457720715901952,"guid":"be71bc447dbee76489771ca02f2fafad","type":3}}'
+      m_SerializableObject: '{"obj":{"fileID":-8224457720715901952,"guid":"59f081f7a8f82ae48a8e847c0a81e5ed","type":3}}'
     m_Space: -1
   m_Property:
     name: mesh
@@ -2065,7 +2065,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEditor.VFX.Line, Unity.VisualEffectGraph.Editor,
           Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"start":{"x":0.0,"y":0.0,"z":0.0},"end":{"x":30.0,"y":0.0,"z":0.0}}'
+      m_SerializableObject: '{"start":{"x":0.0,"y":0.0,"z":0.0},"end":{"x":100.0,"y":0.0,"z":0.0}}'
     m_Space: 0
   m_Property:
     name: line
