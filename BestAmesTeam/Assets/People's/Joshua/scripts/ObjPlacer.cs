@@ -1,4 +1,5 @@
 
+using Unity.AI.Navigation;
 using UnityEngine;
 
 public class ObjPlacer : MonoBehaviour
@@ -27,14 +28,21 @@ public class ObjPlacer : MonoBehaviour
 
     public Transform ShelfParent;
 
+    public NavMeshSurface navMeshSurface;
+
     public KeyCode enterExitKey = KeyCode.P;
 
     void Update()
     {
         UpdateInput();
 
-        if (_InPlacementMode)
+        if (_InPlacementMode && ShelfCheck())
         {
+            if (PlayerPickup.Instance.heldBox.GetComponent<MeshRenderer>().enabled == true)
+            {
+                PlayerPickup.Instance.heldBox.GetComponent<MeshRenderer>().enabled = false;
+            }
+
             UpdateCurrentPlacementPosition();
 
             print(CanPlaceObject());
@@ -46,6 +54,18 @@ public class ObjPlacer : MonoBehaviour
             {
                 SetInvalidPreviewState();
             }
+        }
+    }
+
+    public bool ShelfCheck()
+    {
+        if (PlayerPickup.Instance.heldBox != null && PlayerPickup.Instance.heldBox.GetComponent<ItemBox>().itemType.itemName == "Shelf")
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -71,10 +91,8 @@ public class ObjPlacer : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (Input.GetKeyDown(enterExitKey))
+        if (Input.GetKeyDown(enterExitKey) && ShelfCheck())
         {
-           
-
             if (!_InPlacementMode)
             {
                 EnterPlacementMode();
@@ -95,7 +113,6 @@ public class ObjPlacer : MonoBehaviour
     }
     private void SetValidPreviewState()
     {
-
         previewMaterial.color = validColor;
         _validPreviewState = true;
     }
@@ -118,8 +135,16 @@ public class ObjPlacer : MonoBehaviour
         Debug.Log("Placed object");
         Quaternion rotation = Quaternion.Euler(0f, playerCamera.transform.eulerAngles.y, 0f);
         GameObject placedObj = Instantiate(PlaceableObj, _currentPlacementposition, rotation, ShelfParent);
-        Destroy(placedObj.GetComponent<BoxCollider>());
+
+        Destroy(PlayerPickup.Instance.heldBox.gameObject);
+        PlayerPickup.Instance.heldBox = null;
+
+        //Destroy(placedObj.GetComponent<BoxCollider>());
         ExitPlacementMode();
+
+        Debug.Log("Rebuilding NavMesh");
+        navMeshSurface.BuildNavMesh();
+        //navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
     }
 
 

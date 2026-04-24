@@ -1523,6 +1523,9 @@ MonoBehaviour:
   time: 0
   daylengthBase: 1
   NextDayButton: {fileID: 1127920043}
+  SunTransform: {fileID: 0}
+  sunMinRotation: {x: 0, y: 0, z: 0}
+  sunMaxRotation: {x: -180, y: 0, z: 0}
 --- !u!114 &204050880
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8334,8 +8337,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1273578752}
   m_HandleRect: {fileID: 1273578751}
   m_Direction: 2
-  m_Value: 0.9999989
-  m_Size: 0.5781959
+  m_Value: 1.0000011
+  m_Size: 0.57819605
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8505,7 +8508,7 @@ MonoBehaviour:
   m_LayerMask:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_UseGeometry: 0
+  m_UseGeometry: 1
   m_DefaultArea: 0
   m_GenerateLinks: 0
   m_IgnoreNavMeshAgent: 1
@@ -8515,7 +8518,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: f9ce6016c73f9bb4eae5edae2818f135, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 6fb991dbde90f184188f13753afbbd05, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &1283997725
 GameObject:
@@ -11460,6 +11463,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4002671732868702501, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: itemType
+      value: 
+      objectReference: {fileID: 11400000, guid: ca9486d525faa2248bbd6d66ee720363, type: 2}
+    - target: {fileID: 4002671732868702501, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+      propertyPath: itemCount
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4091370455635239378, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
       propertyPath: m_Name
       value: Model
@@ -13544,6 +13555,9 @@ MonoBehaviour:
   time: 0
   daylengthBase: 10
   NextDayButton: {fileID: 0}
+  SunTransform: {fileID: 0}
+  sunMinRotation: {x: 0, y: 0, z: 0}
+  sunMaxRotation: {x: -180, y: 0, z: 0}
 --- !u!4 &1989054185
 Transform:
   m_ObjectHideFlags: 0

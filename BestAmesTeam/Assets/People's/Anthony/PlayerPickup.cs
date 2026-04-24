@@ -2,12 +2,15 @@ using UnityEngine;
 
 public class PlayerPickup : MonoBehaviour
 {
+    public static PlayerPickup Instance;
     public Transform holdPoint;
     public float interactDistance = 3f;
+    public ItemBox heldBox;
 
-    
-
-    ItemBox heldBox;
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Update()
     {
