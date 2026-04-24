@@ -644,6 +644,10 @@ PrefabInstance:
       propertyPath: ShelfParent
       value: 
       objectReference: {fileID: 1746877423}
+    - target: {fileID: 5298148169919809210, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
+      propertyPath: navMeshSurface
+      value: 
+      objectReference: {fileID: 1283274098}
     - target: {fileID: 5708354196114074900, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
       propertyPath: m_LocalPosition.x
       value: 455.61
@@ -8337,8 +8341,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1273578752}
   m_HandleRect: {fileID: 1273578751}
   m_Direction: 2
-  m_Value: 1.0000011
-  m_Size: 0.57819605
+  m_Value: 0.9999989
+  m_Size: 0.5781959
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8518,7 +8522,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 6fb991dbde90f184188f13753afbbd05, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 8e43d57e99587a04683f4981557c50cb, type: 2}
   m_BuildHeightMesh: 0
 --- !u!1 &1283997725
 GameObject:
