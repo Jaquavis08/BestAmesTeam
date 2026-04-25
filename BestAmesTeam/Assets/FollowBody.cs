@@ -79,6 +79,12 @@ public class FollowBody : MonoBehaviour
         pants.transform.localPosition = Vector3.zero;
         pants.transform.localScale = Vector3.one;
 
+        // Spawn Hair
+        GameObject hair = Instantiate(AccessoriesDictionary.Hair[Random.Range(0, AccessoriesDictionary.Hair.Count)]).gameObject;
+        hair.transform.parent = this.transform;
+        hair.transform.localPosition = Vector3.zero;
+        hair.transform.localScale = Vector3.one;
+
 
         CharacterBase.GetComponent<SkinnedMeshRenderer>().material = raceDictionary.GetRandomRace();
 
