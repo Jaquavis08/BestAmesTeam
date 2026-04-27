@@ -108,16 +108,7 @@ public class NPCController : MonoBehaviour
         {
             print("No shelves with items found!");
 
-            if (itemsCollected == 0)
-            {
-                isLeaving = true;
-                agent.isStopped = false;
-                agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
-            }
-            else
-            {
-                GoToCheckout();
-            }
+            GoToCheckout();
             return;
         }
 
@@ -183,7 +174,7 @@ public class NPCController : MonoBehaviour
 
     void GoToCheckout()
     {
-        if (!transform.GetComponent<HomelessMan>())
+        if (!transform.GetComponent<HomelessMan>() && itemsCollected > 0)
         {
             agent.isStopped = false;
             CheckoutManager.Instance.JoinQueue(this);
@@ -260,8 +251,9 @@ public class NPCController : MonoBehaviour
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
-            Destroy(gameObject);
+            print($"NPC {gameObject.name} has exited the store.");
             NPCSpawner.Instance.CustomerLeft();
+            Destroy(gameObject);
         }
     }
 

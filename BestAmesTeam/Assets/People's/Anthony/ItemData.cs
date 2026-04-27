@@ -8,4 +8,11 @@ public class ItemData : ScriptableObject
     public GameObject prefab;
     public Sprite icon;
     public int quanity;
+    public ItemType itemType;
+}
+
+public enum ItemType
+{
+    Product,
+    Furniture,
 }
