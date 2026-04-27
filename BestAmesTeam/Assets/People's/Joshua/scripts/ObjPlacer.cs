@@ -1,6 +1,9 @@
 
+using System.Collections;
+using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ObjPlacer : MonoBehaviour
 {
@@ -25,6 +28,8 @@ public class ObjPlacer : MonoBehaviour
     private Vector3 _currentPlacementposition = Vector3.zero;
     public bool _InPlacementMode = false;
     [SerializeField] private bool _validPreviewState = false;
+
+    [SerializeField] private List<NavMeshBuildSource> Sources;
 
     public Transform ShelfParent;
 
@@ -139,13 +144,10 @@ public class ObjPlacer : MonoBehaviour
         Destroy(PlayerPickup.Instance.heldBox.gameObject);
         PlayerPickup.Instance.heldBox = null;
 
-        //Destroy(placedObj.GetComponent<BoxCollider>());
+        Destroy(placedObj.GetComponent<BoxCollider>());
         ExitPlacementMode();
-
-        Debug.Log("Rebuilding NavMesh");
-        navMeshSurface.BuildNavMesh();
-        //navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
     }
+
 
 
     private void EnterPlacementMode()
