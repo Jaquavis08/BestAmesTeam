@@ -50,11 +50,11 @@ MonoBehaviour:
     m_OverrideState: 0
     m_Value: 0
   renderingMode:
-    m_OverrideState: 0
+    m_OverrideState: 1
     m_Value: 0
   material:
     m_OverrideState: 0
-    m_Value: {fileID: 0}
+    m_Value: {fileID: 2100000, guid: e6b9b44320f4448d9d5e0ee634259966, type: 2}
   airDensityR:
     m_OverrideState: 0
     m_Value: 0.04534
@@ -269,7 +269,7 @@ MonoBehaviour:
     m_Value: 4
   cloudType:
     m_OverrideState: 0
-    m_Value: 0
+    m_Value: 1
   skyAmbientMode:
     m_OverrideState: 1
     m_Value: 1
