@@ -8,6 +8,7 @@ public class ItemData : ScriptableObject
     public GameObject prefab;
     public Sprite icon;
     public int quanity;
+    public float objectDistance;
     public ItemType itemType;
 }
 

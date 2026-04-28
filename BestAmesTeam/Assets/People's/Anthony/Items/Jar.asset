@@ -17,3 +17,5 @@ MonoBehaviour:
   prefab: {fileID: 919132149155446097, guid: 443dfa8f8156e7f4eb547f9c418e7334, type: 3}
   icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   quanity: 10
+  objectDistance: 0.5
+  itemType: 0
