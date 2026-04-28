@@ -39,17 +39,22 @@ public class CheckoutManager : MonoBehaviour
 
         foreach (NPCController npc in checkoutQueue)
         {
-            Vector3 offset = checkoutSpot.forward * index * 1.8f;
+            if (npc.agent != null)
+            {
+                Vector3 offset = checkoutSpot.forward * index * 1.8f;
 
-            Vector3 targetPos = checkoutSpot.position + offset;
+                Vector3 targetPos = checkoutSpot.position + offset;
 
-            npc.queueTargetPosition = targetPos; // 🔥 STORE EXACT POSITION
-            npc.inQueue = true;
+                npc.queueTargetPosition = targetPos; // 🔥 STORE EXACT POSITION
+                npc.inQueue = true;
 
-            npc.agent.isStopped = false;
-            npc.agent.SetDestination(targetPos);
+                Debug.LogWarning($"NPC {npc.name} assigned queue position {index} at {targetPos}");
 
-            index++;
+                npc.agent.isStopped = false;
+                npc.agent.SetDestination(targetPos);
+
+                index++;
+            }
         }
     }
 
