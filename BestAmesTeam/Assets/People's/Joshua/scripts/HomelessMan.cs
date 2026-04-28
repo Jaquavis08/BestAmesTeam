@@ -47,7 +47,7 @@ public class HomelessMan : MonoBehaviour
     {
         
 
-        Pcamera = GetComponent<PlayerMovement>().playerCamera;
+        Pcamera = FindFirstObjectByType<PlayerMovement>().playerCamera;
         beggerUICanvas.enabled = false;
         
 
