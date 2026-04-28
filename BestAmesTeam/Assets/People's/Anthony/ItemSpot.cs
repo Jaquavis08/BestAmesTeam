@@ -89,7 +89,7 @@ public class ItemSpot : MonoBehaviour
         GameObject prefab = item.prefab;
         if (prefab == null) return;
 
-        float spacing = 0.25f;
+        float spacing = item.objectDistance;
         float totalWidth = (itemCount - 1) * spacing;
         Vector3 startOffset = new Vector3(-totalWidth * 0.5f, 0f, 0f);
 
