@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class ItemBox : MonoBehaviour
 {
@@ -11,7 +12,7 @@ public class ItemBox : MonoBehaviour
     private static readonly int OpenTriggerHash = Animator.StringToHash("OpenTrigger");
     private static readonly int CloseTriggerHash = Animator.StringToHash("CloseTrigger");
 
-    private bool shelfAccessEnabled = false;
+    public bool boxOpened = false;
 
     private void Awake()
     {
@@ -23,23 +24,23 @@ public class ItemBox : MonoBehaviour
 
     public void Start()
     {
-        OpenBox();
-        EnableShelfAccess();
+        //OpenBox();
+        //EnableShelfAccess();
         CloseBox();
-        DisableShelfAccess();
+        //DisableShelfAccess();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(openKey) && !shelfAccessEnabled)
+        if (Input.GetKeyDown(openKey))
         {
             OpenBox();
-            EnableShelfAccess();
+            //EnableShelfAccess();
         }
         if (itemCount <= 0)
         {
             CloseBox();
-            DisableShelfAccess();
+           // DisableShelfAccess();
         }
     }
 
@@ -49,6 +50,7 @@ public class ItemBox : MonoBehaviour
         {
             animator.SetTrigger(OpenTriggerHash);
         }
+        boxOpened = true;
     }
 
     public void CloseBox()
@@ -57,6 +59,7 @@ public class ItemBox : MonoBehaviour
         {
             animator.SetTrigger(CloseTriggerHash);
         }
+        boxOpened = false;
     }
 
 
@@ -64,31 +67,34 @@ public class ItemBox : MonoBehaviour
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-    private void DisableShelfAccess()
-    {
-        shelfAccessEnabled = false;
-    }
+    //private void DisableShelfAccess()
+    //{
+    //    shelfAccessEnabled = false;
+    //}
 
-    public bool IsShelfAccessible()
-    {
-        return shelfAccessEnabled;
-    }
+    //public bool IsShelfAccessible()
+    //{
+    //    return shelfAccessEnabled;
+    //}
 
-    private void EnableShelfAccess()
-    {
-        shelfAccessEnabled = true;
-    }
+    //private void EnableShelfAccess()
+    //{
+    //    shelfAccessEnabled = true;
+    //}
 
-    public bool TryPlaceItemOnShelf()
-    {
-        if (!shelfAccessEnabled) return false;
+    //public bool TryPlaceItemOnShelf()
+    //{
+    //    if (!boxOpened) return false;
+    //    if (itemCount <= 0) return false;
 
-        itemCount--;
-        return true;
-    }
+    //    itemCount = UnityEngine.Mathf.Max(0, itemCount - 1);
+    //    return true;
+    //}
     public bool TakeItem()
     {
         if (itemCount <= 0) return false;
+
+        if (!boxOpened) return false;
 
         itemCount--;
         return true;
