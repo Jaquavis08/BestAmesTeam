@@ -567,6 +567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 2106933195762162267}
   interactDistance: 3
+  heldBox: {fileID: 0}
 --- !u!143 &1208670544494615808
 CharacterController:
   m_ObjectHideFlags: 0
@@ -604,7 +605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db600d26d63fffc4fb5deb02efb6038e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlaceableObj: {fileID: 3100040980733641465, guid: 01c882ab418a4c8488ae3d2cf166d0a2, type: 3}
+  PlaceableObj: {fileID: 1872107809274176394, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
   PreviewObj: {fileID: 7506972199838875838, guid: 30886506c1ac76e48b31d1d823ac132d, type: 3}
   playerCamera: {fileID: 2888731957942459227}
   placementlayer:
@@ -620,6 +621,7 @@ MonoBehaviour:
   _InPlacementMode: 0
   _validPreviewState: 0
   ShelfParent: {fileID: 0}
+  navMeshSurface: {fileID: 0}
   enterExitKey: 101
 --- !u!1 &6537734246208124340
 GameObject:
@@ -645,10 +647,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6537734246208124340}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.246, z: 1.469}
+  m_LocalRotation: {x: -0.08715578, y: 0, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: -0.24600029, z: 1.4689941}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5708354196114074900}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -10, y: 0, z: 0}

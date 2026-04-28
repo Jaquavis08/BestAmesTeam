@@ -96,7 +96,7 @@ public class ItemSpot : MonoBehaviour
         for (int i = 0; i < itemCount; i++)
         {
             GameObject instance = Object.Instantiate(prefab, parent);
-            instance.transform.localPosition = startOffset + new Vector3(i * spacing, 0f, 0f);
+            instance.transform.localPosition = startOffset + new Vector3(i * spacing -1.35f, 0f, 0f);
             instance.transform.localRotation = Quaternion.identity;
             instance.transform.localScale = prefab.transform.localScale;
             instance.name = $"{prefab.name}_{i}";
