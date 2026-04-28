@@ -45,9 +45,16 @@ public class RestockManager : MonoBehaviour
                 ItemRestockUI.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + productItem.price.ToString();
                 ItemRestockUI.transform.GetChild(3).GetComponent<TMP_Text>().text = "x" + productItem.quantity.ToString();
 
-                ItemRestockUI.GetComponent<Button>().onClick.AddListener(() => SpawnStock.Instance.SpawnManager(item));
 
-                if (TaskDisplayer.instance.Tasks.Count > 2)
+
+                ItemData capturedItem = item;
+                ItemRestockUI.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    if (SpawnStock.Instance != null)
+                        SpawnStock.Instance.SpawnManager(capturedItem);
+                });
+
+                if (TaskDisplayer.instance != null && TaskDisplayer.instance.Tasks != null && TaskDisplayer.instance.Tasks.Count > 2)
                     TaskDisplayer.instance.Tasks[2].completed = true;
                 print(item.name);
             }
@@ -69,9 +76,14 @@ public class RestockManager : MonoBehaviour
                 ItemFurnitureUI.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + furnitureItem.price.ToString();
                 ItemFurnitureUI.transform.GetChild(3).GetComponent<TMP_Text>().text = "x" + furnitureItem.quantity.ToString();
 
-                ItemFurnitureUI.GetComponent<Button>().onClick.AddListener(() => SpawnStock.Instance.SpawnManager(item));
+                ItemData capturedItem = item;
+                ItemFurnitureUI.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    if (SpawnStock.Instance != null)
+                        SpawnStock.Instance.SpawnManager(capturedItem);
+                });
 
-                if (TaskDisplayer.instance.Tasks.Count > 2)
+                if (TaskDisplayer.instance != null && TaskDisplayer.instance.Tasks != null && TaskDisplayer.instance.Tasks.Count > 2)
                     TaskDisplayer.instance.Tasks[2].completed = true;
                 print(item.name);
             }
