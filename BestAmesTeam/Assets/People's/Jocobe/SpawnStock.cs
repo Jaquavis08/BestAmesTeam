@@ -4,7 +4,7 @@ using UnityEngine;
 public class SpawnStock : MonoBehaviour
 {
     public static SpawnStock Instance;
-    private ItemDictionary itemDictionary = ShelfManager.Instance.ItemDictionary;
+    private ItemDictionary itemDictionary;
     public GameObject ItemStockPrefab;
     public Transform StockParent;
 
@@ -20,9 +20,15 @@ public class SpawnStock : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        itemDictionary = ShelfManager.Instance.ItemDictionary;
+    }
+
     public void SpawnManager(ItemData item)
     {
-        if (Currency.Instance.amount > item.price)
+
+        if (Currency.Instance.amount >= item.price)
         {
             Debug.LogWarning("Spawning " + item);
         Currency.Instance.amount -= item.price;
@@ -31,6 +37,7 @@ public class SpawnStock : MonoBehaviour
         itemStock.GetComponent<ItemBox>().itemCount = item.quanity;
         if (TaskDisplayer.instance.Tasks.Count > 4)
             TaskDisplayer.instance.Tasks[4].completed = true;
+
         }
         else
         {

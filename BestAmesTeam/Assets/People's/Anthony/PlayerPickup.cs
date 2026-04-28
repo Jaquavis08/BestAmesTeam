@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerPickup : MonoBehaviour
@@ -64,7 +65,7 @@ public class PlayerPickup : MonoBehaviour
 
                 if (heldBox.IsEmpty())
                 {
-                    Destroy(heldBox.gameObject);
+                    StartCoroutine(DestroyAfterDelay(heldBox.gameObject, 3f));
                     heldBox = null;
                     if (TaskDisplayer.instance.Tasks.Count > 2)
                         TaskDisplayer.instance.Tasks[2].completed = true; 
@@ -140,5 +141,14 @@ public class PlayerPickup : MonoBehaviour
         heldBox.GetComponent<Collider>().enabled = true;
         heldBox = null;
         Debug.Log("Dropped box");
+    }
+
+    private IEnumerator DestroyAfterDelay(GameObject obj, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (obj != null)
+        {
+            Destroy(obj);
+        }
     }
 }

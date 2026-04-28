@@ -13,7 +13,8 @@ MonoBehaviour:
   m_Name: Shelf
   m_EditorClassIdentifier: 
   itemName: Shelf
-  price: 25
-  prefab: {fileID: 3100040980733641465, guid: 01c882ab418a4c8488ae3d2cf166d0a2, type: 3}
+  price: 0
+  prefab: {fileID: 1872107809274176394, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
   icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   quanity: 1
+  itemType: 1
