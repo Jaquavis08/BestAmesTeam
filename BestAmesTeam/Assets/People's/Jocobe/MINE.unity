@@ -3521,6 +3521,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 455776902}
   m_CullTransparentMesh: 1
+--- !u!1 &456778792 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4513668246009545493, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+  m_PrefabInstance: {fileID: 1095954693}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &457472024
 GameObject:
   m_ObjectHideFlags: 0
@@ -4397,6 +4402,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 537941102}
   m_CullTransparentMesh: 1
+--- !u!1 &546090886 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4513668246009545493, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+  m_PrefabInstance: {fileID: 120550866}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &557450410
 GameObject:
   m_ObjectHideFlags: 0
@@ -10312,7 +10322,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeef8de45b2b9b44aa9d2da7cb5b96b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ItemStockPrefab: {fileID: 4091370455635239378, guid: 1624c5b04823f2d49b5a45d2cba3833b, type: 3}
+  ItemStockPrefab: {fileID: 5938003273798219971}
   StockParent: {fileID: 1505772694}
 --- !u!1 &1454197678
 GameObject:
@@ -11359,7 +11369,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemDictionary: {fileID: 11400000, guid: 1186dd06d7a27444ba71e8931fedf9b9, type: 2}
   restockItems: []
-  Parent: {fileID: 402947577}
+  FurnitureItems: []
+  ProductsParent: {fileID: 0}
+  FurnitureParent: {fileID: 0}
   RestockItem: {fileID: 989600768727605892, guid: 93c2385d487aa154c8d2732bcf9c1fc1, type: 3}
 --- !u!4 &1592174333
 Transform:
@@ -11412,10 +11424,16 @@ MonoBehaviour:
     _prefab: Assets/blender assets/Shop Inside.obj
   - _gameObject: {fileID: 120550868}
     _prefab: Assets/People's/Anthony/Shelves.prefab
+  - _gameObject: {fileID: 546090886}
+    _prefab: Assets/Prefabs/Shelf.prefab
   - _gameObject: {fileID: 518988147}
     _prefab: Assets/People's/Anthony/Shelves.prefab
+  - _gameObject: {fileID: 456778792}
+    _prefab: Assets/Prefabs/Shelf.prefab
   - _gameObject: {fileID: 511047092}
     _prefab: Assets/People's/Anthony/Shelves.prefab
+  - _gameObject: {fileID: 1859752140}
+    _prefab: Assets/Prefabs/Shelf.prefab
   - _gameObject: {fileID: 1950194391}
     _prefab: Assets/blender assets/loop.fbx
   - _gameObject: {fileID: 338996324}
@@ -13643,6 +13661,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -20, y: -20}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1859752140 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4513668246009545493, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+  m_PrefabInstance: {fileID: 1948714049}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1891430432
 GameObject:
   m_ObjectHideFlags: 0
