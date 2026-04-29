@@ -23,6 +23,8 @@ public class CheckoutManager : MonoBehaviour
 
     public void JoinQueue(NPCController npc)
     {
+        if (checkoutQueue.Contains(npc)) return; // 🔥 prevent double entry
+
         checkoutQueue.Enqueue(npc);
 
         UpdateQueuePositions();
@@ -48,10 +50,13 @@ public class CheckoutManager : MonoBehaviour
                 npc.queueTargetPosition = targetPos; // 🔥 STORE EXACT POSITION
                 npc.inQueue = true;
 
-                Debug.LogWarning($"NPC {npc.name} assigned queue position {index} at {targetPos}");
+                //Debug.LogWarning($"NPC {npc.name} assigned queue position {index} at {targetPos}");
 
-                npc.agent.isStopped = false;
-                npc.agent.SetDestination(targetPos);
+                npc.inQueue = true;
+
+                npc.agent.isStopped = true;
+                npc.agent.ResetPath();
+                npc.SetNPCPosition(targetPos);
 
                 index++;
             }
@@ -64,6 +69,12 @@ public class CheckoutManager : MonoBehaviour
         {
             NPCController currentNPC = checkoutQueue.Peek();
 
+            if (currentNPC == null)
+            {
+                checkoutQueue.Dequeue();
+                continue;
+            }
+
             while (!currentNPC.AtCheckoutSpot())
             {
                 yield return null;
@@ -75,9 +86,57 @@ public class CheckoutManager : MonoBehaviour
 
             checkoutQueue.Dequeue();
 
+            // 🔥 IMPORTANT
+            currentNPC.inQueue = false;
+
+            yield return null; // 🔥 let NavMesh settle first
             UpdateQueuePositions();
         }
     }
 
-    
+
+    public IEnumerator CheckoutRoutine(List<CartItem> cartData)
+    {
+        if (this == null) yield break;
+
+        if (checkoutUIParent != null)
+        {
+            foreach (Transform child in checkoutUIParent)
+            {
+                Destroy(child.gameObject);
+            }
+        }
+
+        yield return new WaitForSeconds(0.1f);
+
+        foreach (var entry in cartData)
+        {
+            if (entry == null || entry.item == null) continue;
+
+            float totalPrice = entry.item.price * entry.quantity;
+
+            if (Currency.Instance != null)
+            {
+                Currency.Instance.AddCurrency((int)totalPrice);
+            }
+
+            if (checkoutItemUIPrefab != null && checkoutUIParent != null)
+            {
+                GameObject ui = Instantiate(
+                    checkoutItemUIPrefab,
+                    checkoutUIParent
+                );
+
+                CheckoutItemUI uiScript = ui.GetComponent<CheckoutItemUI>();
+                if (uiScript != null)
+                {
+                    uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice);
+                }
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
 }

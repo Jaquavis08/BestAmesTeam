@@ -43,10 +43,11 @@ public class ObjPlacer : MonoBehaviour
 
         if (_InPlacementMode && ShelfCheck())
         {
-            if (PlayerPickup.Instance.heldBox.GetComponent<MeshRenderer>().enabled == true)
+            if (PlayerPickup.Instance.heldBox.enabled == true)
             {
-                PlayerPickup.Instance.heldBox.GetComponent<MeshRenderer>().enabled = false;
+                PlayerPickup.Instance.heldBox.enabled = false;
             }
+            print(PlayerPickup.Instance.heldBox.enabled);
 
             UpdateCurrentPlacementPosition();
 
@@ -76,21 +77,34 @@ public class ObjPlacer : MonoBehaviour
 
     private void UpdateCurrentPlacementPosition()
     {
-        Vector3 cameraFoward = new Vector3(playerCamera.transform.forward.x, 0f, playerCamera.transform.forward.z);
-        cameraFoward.Normalize();
+        Vector3 cameraForward = playerCamera.transform.forward;
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
 
-        Vector3 startPos = playerCamera.transform.position + (cameraFoward * DistanceFromPlayer);
-        startPos.y += raycastStartVerticleOffset;
+        Vector3 rayOrigin = playerCamera.transform.position + cameraForward * DistanceFromPlayer;
+        rayOrigin.y += 1.5f; // small lift above player
+
+        Ray ray = new Ray(rayOrigin, Vector3.down);
 
         RaycastHit hitInfo;
-        if(Physics.Raycast(startPos, Vector3.down, out hitInfo, raycastDistance, placementlayer))
+
+        if (Physics.Raycast(ray, out hitInfo, raycastDistance, placementlayer))
         {
             _currentPlacementposition = hitInfo.point;
         }
+        else
+        {
+            // fallback: just place forward on ground level
+            _currentPlacementposition = rayOrigin + Vector3.down * 2f;
+        }
 
         Quaternion rotation = Quaternion.Euler(0f, playerCamera.transform.eulerAngles.y, 0f);
-        _previewObj.transform.position = _currentPlacementposition += new Vector3(0f, yOffset, 0f);
-        _previewObj.transform.rotation = rotation;
+
+        if (_previewObj != null)
+        {
+            _previewObj.transform.position = _currentPlacementposition + Vector3.up * yOffset;
+            _previewObj.transform.rotation = rotation;
+        }
     }
 
 
@@ -144,7 +158,7 @@ public class ObjPlacer : MonoBehaviour
         Destroy(PlayerPickup.Instance.heldBox.gameObject);
         PlayerPickup.Instance.heldBox = null;
 
-        Destroy(placedObj.GetComponent<BoxCollider>());
+        //Destroy(placedObj.GetComponent<BoxCollider>());
         ExitPlacementMode();
     }
 

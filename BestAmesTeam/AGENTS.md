@@ -2,7 +2,7 @@
 - Project name: BestAmesTeam
 - Unity version: Unity 6000.0.27f1
 - Active game object:
-  - Name: Managers
+  - Name: Screen (1)
   - Tag: Untagged
-  - Layer: Default
+  - Layer: Ground
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->

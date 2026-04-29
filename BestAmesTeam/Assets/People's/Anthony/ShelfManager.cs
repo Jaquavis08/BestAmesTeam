@@ -21,7 +21,7 @@ public class ShelfManager : MonoBehaviour
     {
         for (int i = 0; i < shelvesParent.childCount; i++)
         {
-            print(i);
+            //print(i);
             Shelf shelf = shelvesParent.GetChild(i).GetComponent<Shelf>();
             if (!shelves.Contains(shelf))
             {
@@ -47,7 +47,7 @@ public class ShelfManager : MonoBehaviour
         {
             if (shelf.HasAnyItems())
             {
-                print("Shelf has items");
+                //print("Shelf has items");
                 shelvesWithItems.Add(shelf);
             }
         }

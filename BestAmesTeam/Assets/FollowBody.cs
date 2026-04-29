@@ -138,7 +138,7 @@ public class FollowBody : MonoBehaviour
                     partsToFollow.Add(t);
                     partsParent.Add(match);
 
-                    Debug.Log($"Matched: {t.name}");
+                    //Debug.Log($"Matched: {t.name}");
                 }
             }
         }

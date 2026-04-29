@@ -29,6 +29,20 @@ public class NPCController : MonoBehaviour
         if (agent == null)
             agent = GetComponent<NavMeshAgent>();
 
+        // 🔥 FORCE PLACE ON NAVMESH
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(transform.position, out hit, 2f, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+        }
+        else
+        {
+            Debug.LogError("NPC not placed on NavMesh! Name: " + gameObject.name);
+            return;
+        }
+
+        agent.Warp(transform.position); // 🔥 IMPORTANT
+
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 90);
         agent.radius = 0.5f; // 🔥 increased space
@@ -52,25 +66,6 @@ public class NPCController : MonoBehaviour
                 isBrowsing = true;
                 StartCoroutine(GrabItemRoutine());
             }
-        }
-
-        // 🔥 QUEUE BEHAVIOR FIX
-        if (CheckoutManager.Instance != null &&
-            CheckoutManager.Instance.checkoutQueue.Contains(this))
-        {
-            // TURN OFF pushing
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.NoObstacleAvoidance;
-
-            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
-            {
-                agent.velocity = Vector3.zero;
-                agent.isStopped = true;
-            }
-        }
-        else
-        {
-            // TURN IT BACK ON
-            agent.obstacleAvoidanceType = ObstacleAvoidanceType.HighQualityObstacleAvoidance;
         }
 
         if (inQueue)
@@ -99,11 +94,24 @@ public class NPCController : MonoBehaviour
         CheckIfExited();
     }
 
+    bool IsAgentValid()
+    {
+        return agent != null && agent.isOnNavMesh;
+    }
+
+    public void SetNPCPosition(Vector3 Position)
+    {
+        if (IsAgentValid())
+        {
+            agent.SetDestination(Position);
+        }
+    }
+
     public void ChooseItem()
     {
         bool check = ShelfCheck();
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
-        print(check);
+        //print(check);
         if (check == false)
         {
             print("No shelves with items found!");
@@ -114,7 +122,7 @@ public class NPCController : MonoBehaviour
 
         targetSpot = shelf.GetRandomSpotWithItem();
 
-        print($"NPC {gameObject.name} is targeting shelf {shelf.name} at spot {targetSpot.name}");
+        //print($"NPC {gameObject.name} is targeting shelf {shelf.name} at spot {targetSpot.name}");
 
         if (targetSpot == null)
         {
@@ -143,7 +151,7 @@ public class NPCController : MonoBehaviour
         if (!crowded)
         {
             agent.isStopped = false; // 🔥 IMPORTANT
-            agent.SetDestination(targetSpot.standPoint.position + offset);
+            SetNPCPosition(targetSpot.standPoint.position + offset);
         }
         else
         {
@@ -183,7 +191,7 @@ public class NPCController : MonoBehaviour
         {
             isLeaving = true;
             agent.isStopped = false;
-            agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
+            SetNPCPosition(CheckoutManager.Instance.exitPoint.position);
         }
     }
 
@@ -221,7 +229,10 @@ public class NPCController : MonoBehaviour
 
     public bool AtCheckoutSpot()
     {
-        if (CheckoutManager.Instance.checkoutSpot == null)
+        if (this == null || agent == null)
+            return true; // treat as "done" so queue doesn't break
+
+        if (CheckoutManager.Instance == null || CheckoutManager.Instance.checkoutSpot == null)
             return true;
 
         return !agent.pathPending && agent.remainingDistance <= agent.stoppingDistance;
@@ -241,7 +252,7 @@ public class NPCController : MonoBehaviour
         {
             isLeaving = true;
             agent.isStopped = false; // 🔥 IMPORTANT
-            agent.SetDestination(CheckoutManager.Instance.exitPoint.position);
+            SetNPCPosition(CheckoutManager.Instance.exitPoint.position);
         }
     }
 
@@ -261,54 +272,59 @@ public class NPCController : MonoBehaviour
     {
         if (!ispaying) return;
 
-        StartCoroutine(CheckoutRoutine(cartData));
-    }
-
-    IEnumerator CheckoutRoutine(List<CartItem> cartData)
-    {
-        print($"Cart COPY has {cartData.Count} items.");
-
-        if (CheckoutManager.Instance.checkoutUIParent != null)
+        if (CheckoutManager.Instance != null)
         {
-            foreach (Transform child in CheckoutManager.Instance.checkoutUIParent)
-            {
-                Destroy(child.gameObject);
-            }
-        }
-
-        yield return new WaitForSeconds(0.1f);
-
-        foreach (var entry in cartData)
-        {
-            if (entry.item == null) continue;
-
-            float totalPrice = entry.item.price * entry.quantity;
-
-            print($"{entry.quantity} x {entry.item.itemName} - ${totalPrice}");
-
-            if (Currency.Instance != null)
-            {
-                Currency.Instance.AddCurrency((int)totalPrice);
-            }
-
-            if (CheckoutManager.Instance.checkoutItemUIPrefab != null &&
-                CheckoutManager.Instance.checkoutUIParent != null)
-            {
-                GameObject ui = Instantiate(
-                    CheckoutManager.Instance.checkoutItemUIPrefab,
-                    CheckoutManager.Instance.checkoutUIParent
-                );
-
-                CheckoutItemUI uiScript = ui.GetComponent<CheckoutItemUI>();
-                if (uiScript != null)
-                {
-                    uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice);
-                }
-            }
-
-            yield return new WaitForSeconds(0.1f);
+            CheckoutManager.Instance.StartCoroutine(
+                CheckoutManager.Instance.CheckoutRoutine(cartData)
+            );
         }
     }
+
+    //IEnumerator CheckoutRoutine(List<CartItem> cartData)
+    //{
+    //    print($"Cart COPY has {cartData.Count} items.");
+
+    //    if (CheckoutManager.Instance.checkoutUIParent != null)
+    //    {
+    //        foreach (Transform child in CheckoutManager.Instance.checkoutUIParent)
+    //        {
+    //            Destroy(child.gameObject);
+    //        }
+    //    }
+
+    //    yield return new WaitForSeconds(0.1f);
+
+    //    foreach (var entry in cartData)
+    //    {
+    //        if (entry.item == null) continue;
+
+    //        float totalPrice = entry.item.price * entry.quantity;
+
+    //        print($"{entry.quantity} x {entry.item.itemName} - ${totalPrice}");
+
+    //        if (Currency.Instance != null)
+    //        {
+    //            Currency.Instance.AddCurrency((int)totalPrice);
+    //        }
+
+    //        if (CheckoutManager.Instance.checkoutItemUIPrefab != null &&
+    //            CheckoutManager.Instance.checkoutUIParent != null)
+    //        {
+    //            GameObject ui = Instantiate(
+    //                CheckoutManager.Instance.checkoutItemUIPrefab,
+    //                CheckoutManager.Instance.checkoutUIParent
+    //            );
+
+    //            CheckoutItemUI uiScript = ui.GetComponent<CheckoutItemUI>();
+    //            if (uiScript != null)
+    //            {
+    //                uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice);
+    //            }
+    //        }
+
+    //        yield return new WaitForSeconds(0.1f);
+    //    }
+    //}
 }
 
     [System.Serializable]

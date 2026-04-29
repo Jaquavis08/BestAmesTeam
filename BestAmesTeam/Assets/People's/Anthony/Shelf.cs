@@ -24,7 +24,7 @@ public class Shelf : MonoBehaviour
 
         foreach (ItemSpot spot in spots)
         {
-            Debug.Log("Checking spot: " + spot.name + " occupied: " + spot.occupied);
+            //Debug.Log("Checking spot: " + spot.name + " occupied: " + spot.occupied);
 
             if (spot.occupied)
             {
@@ -32,7 +32,7 @@ public class Shelf : MonoBehaviour
             }
         }
 
-        Debug.Log("Available spots: " + available.Count);
+        //Debug.Log("Available spots: " + available.Count);
 
         if (available.Count == 0)
             return null;
@@ -44,7 +44,7 @@ public class Shelf : MonoBehaviour
     {
         foreach (ItemSpot spot in spots)
         {
-            print(spot);
+            //print(spot);
             if (spot.occupied)
                 return true;
         }
