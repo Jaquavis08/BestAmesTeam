@@ -24,6 +24,8 @@ public class NPCController : MonoBehaviour
     public Vector3 queueTargetPosition;
     public bool inQueue = false;
 
+    public Animator animator;
+
     void Start()
     {
         if (agent == null)
@@ -58,6 +60,11 @@ public class NPCController : MonoBehaviour
 
     void Update()
     {
+        animator = GetComponent<Animator>();
+        float speed = agent.velocity.magnitude;
+        if (animator != null)
+            animator.SetFloat("Speed", speed);
+
         // NORMAL SHOPPING
         if (targetSpot != null && !isBrowsing)
         {
