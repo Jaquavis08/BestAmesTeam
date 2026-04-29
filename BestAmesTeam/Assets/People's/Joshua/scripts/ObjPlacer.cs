@@ -1,5 +1,3 @@
-
-using System.Collections;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -36,6 +34,8 @@ public class ObjPlacer : MonoBehaviour
     public NavMeshSurface navMeshSurface;
 
     public KeyCode enterExitKey = KeyCode.P;
+
+    [SerializeField] private List<GameObject> allowedCollisionObjects = new List<GameObject>();
 
     void Update()
     {
@@ -115,13 +115,13 @@ public class ObjPlacer : MonoBehaviour
             if (!_InPlacementMode)
             {
                 EnterPlacementMode();
-                
+
 
             }
             else if (_InPlacementMode)
             {
                 ExitPlacementMode();
-                
+
             }
 
         }
@@ -140,13 +140,106 @@ public class ObjPlacer : MonoBehaviour
         previewMaterial.color = invalidColor;
         _validPreviewState = false;
     }
-    private bool CanPlaceObject()
+    public bool CanPlaceObject()
     {
         if(_previewObj == null)
             return false;
 
-        return _previewObj.GetComponent<validPlacement>().IsValid;
+        // original validity plus ensure preview is not colliding with other colliders
+        var validComp = _previewObj.GetComponent<validPlacement>();
+        bool isValid = validComp != null ? validComp.IsValid : true;
+        if (!isValid) return false;
+
+        return !IsPreviewColliding();
     }
+
+    // Returns true if any preview collider overlaps other non-preview colliders
+    private bool IsPreviewColliding()
+    {
+        if (_previewObj == null)
+            return false;
+
+        Collider[] previewColliders = _previewObj.GetComponentsInChildren<Collider>();
+        if (previewColliders == null || previewColliders.Length == 0)
+            return false;
+
+        foreach (var col in previewColliders)
+        {
+            if (!col.enabled)
+                continue;
+
+            // Handle BoxCollider
+            var box = col as BoxCollider;
+            if (box != null)
+            {
+                Vector3 worldCenter = col.transform.TransformPoint(box.center);
+                Vector3 worldHalfExtents = Vector3.Scale(box.size * 0.5f, col.transform.lossyScale);
+                Collider[] hits = Physics.OverlapBox(worldCenter, worldHalfExtents, col.transform.rotation, ~0, QueryTriggerInteraction.Ignore);
+                foreach (var hit in hits)
+                {
+                    if (hit == null) continue;
+                    if (IsPartOfPreview(hit)) continue;
+                    if (IsAllowedCollision(hit)) continue;
+                    return true;
+                }
+                continue;
+            }
+
+            // Handle SphereCollider
+            var sph = col as SphereCollider;
+            if (sph != null)
+            {
+                Vector3 worldCenter = col.transform.TransformPoint(sph.center);
+                float maxScale = Mathf.Max(col.transform.lossyScale.x, Mathf.Max(col.transform.lossyScale.y, col.transform.lossyScale.z));
+                float worldRadius = sph.radius * maxScale;
+                Collider[] hits = Physics.OverlapSphere(worldCenter, worldRadius, ~0, QueryTriggerInteraction.Ignore);
+                foreach (var hit in hits)
+                {
+                    if (hit == null) continue;
+                    if (IsPartOfPreview(hit)) continue;
+                    if (IsAllowedCollision(hit)) continue;
+                    return true;
+                }
+                continue;
+            }
+
+            // Fallback: use bounds
+            var bounds = col.bounds;
+            Collider[] fallbackHits = Physics.OverlapBox(bounds.center, bounds.extents, Quaternion.identity, ~0, QueryTriggerInteraction.Ignore);
+            foreach (var hit in fallbackHits)
+            {
+                if (hit == null) continue;
+                if (IsPartOfPreview(hit)) continue;
+                if (IsAllowedCollision(hit)) continue;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // Returns true if the collider belongs to an allowed object set in allowedCollisionObjects
+    private bool IsAllowedCollision(Collider other)
+    {
+        if (other == null || allowedCollisionObjects == null || allowedCollisionObjects.Count == 0)
+            return false;
+
+        foreach (var allowed in allowedCollisionObjects)
+        {
+            if (allowed == null) continue;
+            if (other.transform.IsChildOf(allowed.transform) || other.gameObject == allowed)
+                return true;
+        }
+
+        return false;
+    }
+
+    private bool IsPartOfPreview(Collider other)
+    {
+        if (other == null || _previewObj == null) return false;
+        return other.transform.IsChildOf(_previewObj.transform);
+    }
+
     private void PlaceObject()
     {
         if (!_InPlacementMode || !_validPreviewState)
@@ -179,6 +272,6 @@ public class ObjPlacer : MonoBehaviour
         Destroy( _previewObj );
         _previewObj = null;
         _InPlacementMode = false;
-        
+
     }
 }
