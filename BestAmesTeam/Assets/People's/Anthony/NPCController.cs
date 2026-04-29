@@ -60,7 +60,7 @@ public class NPCController : MonoBehaviour
 
     void Update()
     {
-        animator = GetComponent<Animator>();
+        //animator = GetComponent<Animator>();
         float speed = agent.velocity.magnitude;
         if (animator != null)
             animator.SetFloat("Speed", speed);
@@ -128,6 +128,8 @@ public class NPCController : MonoBehaviour
         }
 
         targetSpot = shelf.GetRandomSpotWithItem();
+
+        animator.SetTrigger("Grab");
 
         //print($"NPC {gameObject.name} is targeting shelf {shelf.name} at spot {targetSpot.name}");
 
