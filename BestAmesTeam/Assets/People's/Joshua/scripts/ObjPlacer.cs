@@ -35,6 +35,8 @@ public class ObjPlacer : MonoBehaviour
 
     public KeyCode enterExitKey = KeyCode.P;
 
+    public Transform NPCFolder;
+
     [SerializeField] private List<GameObject> allowedCollisionObjects = new List<GameObject>();
 
     void Update()
@@ -110,18 +112,32 @@ public class ObjPlacer : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (Input.GetKeyDown(enterExitKey) && ShelfCheck() || Input.GetKeyDown(KeyCode.Mouse0) && ShelfCheck())
+        if (PlayerPickup.Instance.heldBox == null)
         {
-            if (!_InPlacementMode)
-            {
-                EnterPlacementMode();
-            }
-            else if (_InPlacementMode)
-            {
-                ExitPlacementMode();
-            }
-
+            ExitPlacementMode();
         }
+
+        if (!ShelfCheck())
+            return;
+
+
+        if (!_InPlacementMode && (Input.GetKeyDown(enterExitKey) || Input.GetMouseButtonDown(0)))
+        {
+            EnterPlacementMode();
+            return;
+        }
+
+        if (_InPlacementMode && Input.GetKeyDown(enterExitKey))
+        {
+            ExitPlacementMode();
+            return;
+        }
+
+        if (_InPlacementMode && Input.GetMouseButtonDown(0))
+        {
+            PlaceObject();
+        }
+
         else if (Input.GetMouseButtonDown(0) && _InPlacementMode)
         {
             PlaceObject();
@@ -222,6 +238,13 @@ public class ObjPlacer : MonoBehaviour
     // Returns true if the collider belongs to an allowed object set in allowedCollisionObjects
     private bool IsAllowedCollision(Collider other)
     {
+        print(other.gameObject.name);
+        if (other.CompareTag("NPC") && !allowedCollisionObjects.Contains(other.gameObject))
+        {
+            LoopNPCFolder();
+        }
+
+
         if (other == null || allowedCollisionObjects == null || allowedCollisionObjects.Count == 0)
             return false;
 
@@ -233,6 +256,18 @@ public class ObjPlacer : MonoBehaviour
         }
 
         return false;
+    }
+
+    public void LoopNPCFolder()
+    {
+        for (int i = 0; i < NPCFolder.childCount; i++)
+        {
+            GameObject npc = NPCFolder.GetChild(i).gameObject;
+            if (!allowedCollisionObjects.Contains(npc))
+            {
+                allowedCollisionObjects.Add(npc);
+            }
+        }
     }
 
     private bool IsPartOfPreview(Collider other)
@@ -273,6 +308,6 @@ public class ObjPlacer : MonoBehaviour
         Destroy( _previewObj );
         _previewObj = null;
         _InPlacementMode = false;
-
+        PlayerPickup.Instance.heldBox.gameObject.SetActive(true);
     }
 }
