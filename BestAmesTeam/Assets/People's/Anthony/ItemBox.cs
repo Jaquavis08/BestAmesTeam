@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
@@ -22,26 +23,32 @@ public class ItemBox : MonoBehaviour
         }
     }
 
-    public void Start()
-    {
-        //OpenBox();
-        //EnableShelfAccess();
-        CloseBox();
-        //DisableShelfAccess();
-    }
-
     private void Update()
     {
-        if (Input.GetKeyDown(openKey))
+        if (Input.GetKeyDown(openKey) || Input.GetKeyDown(KeyCode.Mouse0))
         {
-            OpenBox();
-            GetVisualItems();
-            //EnableShelfAccess();
+            if (PlayerPickup.Instance.heldBox == this && boxOpened != true)
+            {
+                boxOpened = true;
+                print("Open key pressed");
+                OpenBox();
+                GetVisualItems();
+            }
         }
         if (itemCount <= 0)
         {
+            print("Box is empty");
             CloseBox();
-           // DisableShelfAccess();
+        }
+
+        if (PlayerPickup.Instance.heldBox == this)
+        {
+            PlayerPickup.Instance.ItemAndCountText.enabled = true;
+            PlayerPickup.Instance.ItemAndCountText.text = $"{itemType.itemName}: x{itemCount}";
+        }
+        else if (PlayerPickup.Instance.heldBox == null)
+        {
+            PlayerPickup.Instance.ItemAndCountText.enabled = false;
         }
     }
 
@@ -87,6 +94,14 @@ public class ItemBox : MonoBehaviour
         instance.transform.localRotation = Quaternion.identity;
         instance.transform.localScale = size;
         instance.name = $"{prefab.name}";
+
+
+
+        if (instance.GetComponent<NavMeshObstacle>() != null)
+        {
+            instance.GetComponent<NavMeshObstacle>().enabled = false;
+            instance.GetComponent<BoxCollider>().enabled = false;
+        }
     }
 
     public void OpenBox()
@@ -95,16 +110,15 @@ public class ItemBox : MonoBehaviour
         {
             animator.SetTrigger(OpenTriggerHash);
         }
-        boxOpened = true;
     }
 
     public void CloseBox()
     {
+        boxOpened = false;
         if (animator != null)
         {
             animator.SetTrigger(CloseTriggerHash);
         }
-        boxOpened = false;
     }
 
 

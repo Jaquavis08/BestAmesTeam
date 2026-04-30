@@ -567,6 +567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 2106933195762162267}
   interactDistance: 3
+  ItemAndCountText: {fileID: 0}
   heldBox: {fileID: 0}
 --- !u!143 &1208670544494615808
 CharacterController:
@@ -623,6 +624,9 @@ MonoBehaviour:
   ShelfParent: {fileID: 0}
   navMeshSurface: {fileID: 0}
   enterExitKey: 101
+  allowedCollisionObjects:
+  - {fileID: 0}
+  - {fileID: 3968215767256214959, guid: 736e5653a33211d4f83f21e67afc07d3, type: 3}
 --- !u!1 &6537734246208124340
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,10 +651,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6537734246208124340}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.17364825, y: 0, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: -0.24600029, z: 1.4689941}
+  m_LocalRotation: {x: -0.258819, y: 0, z: 0, w: 0.9659259}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0.892}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5708354196114074900}
-  m_LocalEulerAnglesHint: {x: -20, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -30, y: 0, z: 0}
