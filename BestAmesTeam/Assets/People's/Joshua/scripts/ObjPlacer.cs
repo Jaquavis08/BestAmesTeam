@@ -43,11 +43,11 @@ public class ObjPlacer : MonoBehaviour
 
         if (_InPlacementMode && ShelfCheck())
         {
-            if (PlayerPickup.Instance.heldBox.enabled == true)
+            if (PlayerPickup.Instance.heldBox.gameObject.activeSelf)
             {
-                PlayerPickup.Instance.heldBox.enabled = false;
+                PlayerPickup.Instance.heldBox.gameObject.SetActive(false);
             }
-            print(PlayerPickup.Instance.heldBox.enabled);
+            Debug.LogWarning(PlayerPickup.Instance.heldBox.enabled);
 
             UpdateCurrentPlacementPosition();
 
@@ -110,22 +110,31 @@ public class ObjPlacer : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (Input.GetKeyDown(enterExitKey) && ShelfCheck())
+
+        if (PlayerPickup.Instance.heldBox == null)
         {
-            if (!_InPlacementMode)
-            {
-                EnterPlacementMode();
-
-
-            }
-            else if (_InPlacementMode)
-            {
-                ExitPlacementMode();
-
-            }
-
+            ExitPlacementMode();
         }
-        else if (Input.GetMouseButtonDown(0) && _InPlacementMode)
+
+        if (!ShelfCheck())
+            return;
+
+        // ENTER MODE (key or mouse)
+        if (!_InPlacementMode && (Input.GetKeyDown(enterExitKey) || Input.GetMouseButtonDown(0)))
+        {
+            EnterPlacementMode();
+            return;
+        }
+
+        // EXIT MODE (ONLY key)
+        if (_InPlacementMode && Input.GetKeyDown(enterExitKey))
+        {
+            ExitPlacementMode();
+            return;
+        }
+
+        // PLACE OBJECT (mouse only)
+        if (_InPlacementMode && Input.GetMouseButtonDown(0))
         {
             PlaceObject();
         }
@@ -272,6 +281,6 @@ public class ObjPlacer : MonoBehaviour
         Destroy( _previewObj );
         _previewObj = null;
         _InPlacementMode = false;
-
+        PlayerPickup.Instance.heldBox.gameObject.SetActive(true);
     }
 }

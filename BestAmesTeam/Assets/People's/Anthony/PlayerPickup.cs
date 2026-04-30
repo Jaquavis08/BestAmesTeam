@@ -1,11 +1,16 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class PlayerPickup : MonoBehaviour
 {
     public static PlayerPickup Instance;
     public Transform holdPoint;
     public float interactDistance = 3f;
+
+    public TMP_Text ItemAndCountText;
+
     public ItemBox heldBox;
 
     private void Awake()
@@ -29,6 +34,11 @@ public class PlayerPickup : MonoBehaviour
         }
 
         Check();
+
+        //if (heldBox != null)
+        //{
+
+        //}
     }
 
     void TryInteract(Ray ray)
@@ -139,6 +149,12 @@ public class PlayerPickup : MonoBehaviour
         Rigidbody rb = heldBox.GetComponent<Rigidbody>();
         if (rb) rb.isKinematic = false;
         heldBox.GetComponent<Collider>().enabled = true;
+        if (heldBox.gameObject.activeSelf == false)
+        {
+            heldBox.gameObject.SetActive(true);
+            print("Reactivated box");
+        }
+        heldBox.CloseBox();
         heldBox = null;
         Debug.Log("Dropped box");
     }
