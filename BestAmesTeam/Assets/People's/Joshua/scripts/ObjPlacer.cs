@@ -110,25 +110,33 @@ public class ObjPlacer : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (Input.GetKeyDown(enterExitKey) && ShelfCheck() || Input.GetKeyDown(KeyCode.Mouse0) && ShelfCheck())
-        {
-            if (!_InPlacementMode)
-            {
-                EnterPlacementMode();
-            }
-            else if (_InPlacementMode)
-            {
-                ExitPlacementMode();
-            }
 
-        }
-        else if (Input.GetMouseButtonDown(0) && _InPlacementMode)
-        {
-            PlaceObject();
-        }
-        else if (PlayerPickup.Instance.heldBox == null)
+        if (PlayerPickup.Instance.heldBox == null)
         {
             ExitPlacementMode();
+        }
+
+        if (!ShelfCheck())
+            return;
+
+        // ENTER MODE (key or mouse)
+        if (!_InPlacementMode && (Input.GetKeyDown(enterExitKey) || Input.GetMouseButtonDown(0)))
+        {
+            EnterPlacementMode();
+            return;
+        }
+
+        // EXIT MODE (ONLY key)
+        if (_InPlacementMode && Input.GetKeyDown(enterExitKey))
+        {
+            ExitPlacementMode();
+            return;
+        }
+
+        // PLACE OBJECT (mouse only)
+        if (_InPlacementMode && Input.GetMouseButtonDown(0))
+        {
+            PlaceObject();
         }
     }
     private void SetValidPreviewState()
@@ -273,6 +281,6 @@ public class ObjPlacer : MonoBehaviour
         Destroy( _previewObj );
         _previewObj = null;
         _InPlacementMode = false;
-
+        PlayerPickup.Instance.heldBox.gameObject.SetActive(true);
     }
 }
