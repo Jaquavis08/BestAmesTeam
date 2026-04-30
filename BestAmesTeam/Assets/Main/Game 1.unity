@@ -3925,6 +3925,12 @@ MonoBehaviour:
     _prefab: Assets/People's/Anthony/NPC.prefab
   - _gameObject: {fileID: 1215517084}
     _prefab: Assets/People's/Anthony/BF_NPCMESH.fbx
+  - _gameObject: {fileID: 1215517082}
+    _prefab: Assets/People's/Anthony/NPC.prefab
+  - _gameObject: {fileID: 1215517082}
+    _prefab: Assets/People's/Anthony/NPC.prefab
+  - _gameObject: {fileID: 1215517082}
+    _prefab: Assets/People's/Anthony/NPC.prefab
   - _gameObject: {fileID: 1491097255}
     _prefab: Assets/People's/Anthony/gnome/BF_Gnome.prefab
   - _gameObject: {fileID: 1748822159}
@@ -14619,7 +14625,7 @@ Transform:
   m_GameObject: {fileID: 1557735865}
   serializedVersion: 2
   m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
-  m_LocalPosition: {x: -0.8, y: -3.6138248, z: -6.333832}
+  m_LocalPosition: {x: -0.8, y: -3.6138248, z: -15.47}
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18706,7 +18712,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.034477845, y: 463.90054}
+  m_AnchoredPosition: {x: -0.034477845, y: 463.9002}
   m_SizeDelta: {x: 0, y: 1099.8}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1892846020
