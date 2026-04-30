@@ -15,6 +15,7 @@ MonoBehaviour:
   Shirts:
   - {fileID: 4137999187155173917, guid: 2bdde7684790d014a82d8b7bf044aa6f, type: 3}
   - {fileID: 361812059474037566, guid: 5d9de7cc74d71c74f9a69b16ed9b98ae, type: 3}
+  - {fileID: 6703368262047888171, guid: 3c11992111f82354d860d4f8da0182e8, type: 3}
   Pants:
   - {fileID: 2779426842941341422, guid: e796496bece260340bcb47131e79746a, type: 3}
   Hair:
