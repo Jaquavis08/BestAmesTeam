@@ -12,7 +12,7 @@ public class Shelf : MonoBehaviour
 
     void Start()
     {
-        if (!ShelfManager.Instance.shelves.Contains(this))
+        if (!ShelfManager.Instance.shelves.Contains(this) && this.transform.parent == ShelfManager.Instance.shelvesParent)
         {
             ShelfManager.Instance.shelves.Add(this);
         }

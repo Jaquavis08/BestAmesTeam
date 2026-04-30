@@ -43,11 +43,11 @@ public class ObjPlacer : MonoBehaviour
 
         if (_InPlacementMode && ShelfCheck())
         {
-            if (PlayerPickup.Instance.heldBox.enabled == true)
+            if (PlayerPickup.Instance.heldBox.gameObject.activeSelf)
             {
-                PlayerPickup.Instance.heldBox.enabled = false;
+                PlayerPickup.Instance.heldBox.gameObject.SetActive(false);
             }
-            print(PlayerPickup.Instance.heldBox.enabled);
+            Debug.LogWarning(PlayerPickup.Instance.heldBox.enabled);
 
             UpdateCurrentPlacementPosition();
 
@@ -110,24 +110,25 @@ public class ObjPlacer : MonoBehaviour
 
     private void UpdateInput()
     {
-        if (Input.GetKeyDown(enterExitKey) && ShelfCheck())
+        if (Input.GetKeyDown(enterExitKey) && ShelfCheck() || Input.GetKeyDown(KeyCode.Mouse0) && ShelfCheck())
         {
             if (!_InPlacementMode)
             {
                 EnterPlacementMode();
-
-
             }
             else if (_InPlacementMode)
             {
                 ExitPlacementMode();
-
             }
 
         }
         else if (Input.GetMouseButtonDown(0) && _InPlacementMode)
         {
             PlaceObject();
+        }
+        else if (PlayerPickup.Instance.heldBox == null)
+        {
+            ExitPlacementMode();
         }
     }
     private void SetValidPreviewState()
