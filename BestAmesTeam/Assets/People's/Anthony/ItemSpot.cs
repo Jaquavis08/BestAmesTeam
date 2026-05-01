@@ -62,25 +62,62 @@ public class ItemSpot : MonoBehaviour
         }
     }
 
+    //public void ValidateShelfItems()
+    //{
+    //    Transform parent = this.gameObject != null ? this.transform : transform;
+
+    //    // Clear existing spawned items
+    //    for (int i = parent.childCount - 1; i >= 0; i--)
+    //    {
+    //        GameObject child = parent.GetChild(i).gameObject;
+
+    //        if(child.name != "StandPoint")
+    //        {
+    //            if (Application.isPlaying)
+    //            {
+    //                Destroy(child);
+    //            }
+    //            else
+    //            {
+    //                DestroyImmediate(child);
+    //            }
+    //        }
+    //    }
+
+    //    if (item == null || itemCount <= 0) return;
+
+    //    GameObject prefab = item.prefab;
+    //    if (prefab == null) return;
+
+    //    float spacing = item.objectDistance;
+    //    float totalWidth = (itemCount - 1) * spacing;
+    //    Vector3 startOffset = new Vector3(-totalWidth * 0.5f, 0f, 0f);
+
+    //    for (int i = 0; i < itemCount; i++)
+    //    {
+    //        GameObject instance = Object.Instantiate(prefab, parent);
+    //        instance.transform.localPosition = startOffset + new Vector3(i * spacing -1.35f, 0f, 0f);
+    //        instance.transform.localRotation = Quaternion.identity;
+    //        instance.transform.localScale = prefab.transform.localScale;
+    //        instance.name = $"{prefab.name}_{i}";
+    //    }
+    //}
+
     public void ValidateShelfItems()
     {
-        Transform parent = this.gameObject != null ? this.transform : transform;
+        Transform parent = transform;
 
         // Clear existing spawned items
         for (int i = parent.childCount - 1; i >= 0; i--)
         {
             GameObject child = parent.GetChild(i).gameObject;
 
-            if(child.name != "StandPoint")
+            if (child.name != "StandPoint")
             {
                 if (Application.isPlaying)
-                {
                     Destroy(child);
-                }
                 else
-                {
                     DestroyImmediate(child);
-                }
             }
         }
 
@@ -89,14 +126,40 @@ public class ItemSpot : MonoBehaviour
         GameObject prefab = item.prefab;
         if (prefab == null) return;
 
-        float spacing = item.objectDistance;
-        float totalWidth = (itemCount - 1) * spacing;
-        Vector3 startOffset = new Vector3(-totalWidth * 0.5f, 0f, 0f);
-
-        for (int i = 0; i < itemCount; i++)
+        // ✅ GET BOX COLLIDER
+        BoxCollider box = GetComponent<BoxCollider>();
+        if (box == null)
         {
-            GameObject instance = Object.Instantiate(prefab, parent);
-            instance.transform.localPosition = startOffset + new Vector3(i * spacing -1.35f, 0f, 0f);
+            Debug.LogWarning("No BoxCollider found on ItemSpot");
+            return;
+        }
+
+        // ✅ CENTER + SIZE
+        Vector3 center = box.center;
+        float width = box.size.x;
+
+        float spacing = item.objectDistance;
+
+        // Clamp max items to fit inside box
+        int maxFit = Mathf.FloorToInt(width / spacing);
+        int spawnCount = Mathf.Min(itemCount, maxFit);
+
+        // ✅ START POSITION (centered)
+        float totalWidth = (spawnCount - 1) * spacing;
+        float startX = center.x - totalWidth / 2f;
+
+        for (int i = 0; i < spawnCount; i++)
+        {
+            GameObject instance = Instantiate(prefab, parent);
+
+            float xPos = startX + i * spacing;
+
+            instance.transform.localPosition = new Vector3(
+                xPos,
+                center.y,
+                center.z
+            );
+
             instance.transform.localRotation = Quaternion.identity;
             instance.transform.localScale = prefab.transform.localScale;
             instance.name = $"{prefab.name}_{i}";

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 557077437880230615}
     m_Modifications:
+    - target: {fileID: 1478661527933995777, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1872107809274176394, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
       propertyPath: m_Name
       value: Shelves
