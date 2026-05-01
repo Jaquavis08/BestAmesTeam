@@ -129,7 +129,6 @@ public class NPCController : MonoBehaviour
 
         targetSpot = shelf.GetRandomSpotWithItem();
 
-        animator.SetTrigger("Grab");
 
         //print($"NPC {gameObject.name} is targeting shelf {shelf.name} at spot {targetSpot.name}");
 
@@ -206,6 +205,7 @@ public class NPCController : MonoBehaviour
 
     public IEnumerator GrabItemRoutine()
     {
+        animator.SetTrigger("Grab");
         yield return new WaitForSeconds(Random.Range(1f, 2f));
 
         if (targetSpot == null)
