@@ -21,6 +21,9 @@ public class Daycount : MonoBehaviour
     public Vector3 sunMinRotation = new Vector3(0f, 0f, 0f);
     public Vector3 sunMaxRotation = new Vector3(-180f, 0f, 0f);
 
+    public GameObject DeathUI;
+    public bool DeathEnabled = false;
+
     public void Awake()
     {
         if (instance == null)
@@ -50,6 +53,12 @@ public class Daycount : MonoBehaviour
         {
             NPCSpawner.Instance.SpawningNPC = false;
             NextDayButton.interactable = true;
+
+            if (!TaskDisplayer.instance.CheckForCompleteQuota() && DeathEnabled == false)
+            {
+                DeathEnabled = true;
+                Death();
+            }
         }
         else
         {
@@ -98,7 +107,21 @@ public class Daycount : MonoBehaviour
     void Death()
     {
         Console.Clear();
-        SceneManager.LoadScene("MINE 1");
+        DeathUI.SetActive(true);
+        Time.timeScale = 0f;
+        PlayerMovement.Instance.cursorLock = false;
         print("You Died Had A Death");
+    }
+
+    public void Restart()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void MainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
     }
 }

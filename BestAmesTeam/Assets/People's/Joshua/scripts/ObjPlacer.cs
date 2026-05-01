@@ -308,6 +308,9 @@ public class ObjPlacer : MonoBehaviour
         Destroy( _previewObj );
         _previewObj = null;
         _InPlacementMode = false;
-        PlayerPickup.Instance.heldBox.gameObject.SetActive(true);
+        if(PlayerPickup.Instance.heldBox != null)
+        {
+            PlayerPickup.Instance.heldBox.gameObject.SetActive(true);
+        }
     }
 }
