@@ -12,7 +12,7 @@ public class Daycount : MonoBehaviour
     public TMP_Text daycount;
     public int day = 0;
     public float time;
-    public float daylengthBase = 1f; // minutes
+    private float daylengthBase = 2.5f; // minutes
     private float daylength; // minutes
 
     public Button NextDayButton;
@@ -39,7 +39,7 @@ public class Daycount : MonoBehaviour
     public void Start()
     {
         daycount.text = "Day: " + day;
-        daylength = daylengthBase * 100f;
+        daylength = daylengthBase * 60f;
         UpdateSunPosition(); 
     }
     void Update()
