@@ -23,7 +23,7 @@ public class CheckoutManager : MonoBehaviour
 
     public void JoinQueue(NPCController npc)
     {
-        if (checkoutQueue.Contains(npc)) return; // 🔥 prevent double entry
+        if (checkoutQueue.Contains(npc)) return;
 
         checkoutQueue.Enqueue(npc);
 

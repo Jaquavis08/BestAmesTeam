@@ -22,6 +22,8 @@ MonoBehaviour:
   - {fileID: 3785903311745296297, guid: ebb2a785110c2804b8e4808e91ea3d81, type: 3}
   - {fileID: 1315896372246808750, guid: f8d9b3f71b9ff964eafad48854b93835, type: 3}
   - {fileID: 2321864179608558858, guid: 175b900548955914ea7d7a31934004fb, type: 3}
+  Shoes:
+  - {fileID: 4306886268606821380, guid: 97dac25b4be21e74b81c8cf2a5896a69, type: 3}
   materials:
   - {fileID: 2100000, guid: 4d22790c7d4389c4b9cc557d13b11b54, type: 2}
   - {fileID: 2100000, guid: 9fb8c8d5ccc4c2f4da8cfabe47c0803a, type: 2}

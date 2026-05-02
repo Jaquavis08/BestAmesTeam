@@ -1,0 +1,107 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3964377065961818453
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -3619580999660318008, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: -39927173752976820, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 660171764230629677, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_Name
+      value: BF_NPCshoe
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2729319237343822979, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 3025128437023786065, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 6048060417407900939, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8262629195344785239, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8755683914451442978, guid: 51115a889521ba8418d42646490b13ac, type: 3}
+      propertyPath: m_TagString
+      value: CharacterEdit
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 51115a889521ba8418d42646490b13ac, type: 3}

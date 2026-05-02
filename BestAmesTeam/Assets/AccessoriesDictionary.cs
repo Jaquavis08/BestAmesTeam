@@ -7,6 +7,7 @@ public class AccessoriesDictionary : ScriptableObject
     public List<GameObject> Shirts;
     public List<GameObject> Pants;
     public List<GameObject> Hair;
+    public List<GameObject> Shoes;
 
     public Material[] materials;
 
