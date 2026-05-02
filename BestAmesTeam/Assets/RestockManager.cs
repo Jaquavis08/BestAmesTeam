@@ -14,6 +14,8 @@ public class RestockManager : MonoBehaviour
     public Transform FurnitureParent;
     public GameObject RestockItem;
 
+    public Transform IconsParent;
+
 
     void Start()
     {
@@ -33,14 +35,14 @@ public class RestockManager : MonoBehaviour
                     name = item.name,
                     price = item.price,
                     quantity = item.quanity,
-                    icon = item.icon
+                    icon = item.Icon
                 };
 
                 restockItems.Add(productItem);
 
                 GameObject ItemRestockUI = Instantiate(RestockItem, ProductsParent);
 
-                ItemRestockUI.transform.GetChild(0).GetComponent<Image>().sprite = productItem.icon;
+                ItemRestockUI.transform.GetChild(0).GetComponent<RawImage>().texture = productItem.icon;
                 ItemRestockUI.transform.GetChild(1).GetComponent<TMP_Text>().text = productItem.name;
                 ItemRestockUI.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + productItem.price.ToString();
                 ItemRestockUI.transform.GetChild(3).GetComponent<TMP_Text>().text = "x" + productItem.quantity.ToString();
@@ -65,13 +67,13 @@ public class RestockManager : MonoBehaviour
                     name = item.name,
                     price = item.price,
                     quantity = item.quanity,
-                    icon = item.icon
+                    icon = item.Icon
                 };
                 FurnitureItems.Add(furnitureItem);
 
                 GameObject ItemFurnitureUI = Instantiate(RestockItem, FurnitureParent);
 
-                ItemFurnitureUI.transform.GetChild(0).GetComponent<Image>().sprite = furnitureItem.icon;
+                ItemFurnitureUI.transform.GetChild(0).GetComponent<RawImage>().texture = furnitureItem.icon;
                 ItemFurnitureUI.transform.GetChild(1).GetComponent<TMP_Text>().text = furnitureItem.name;
                 ItemFurnitureUI.transform.GetChild(2).GetComponent<TMP_Text>().text = "$" + furnitureItem.price.ToString();
                 ItemFurnitureUI.transform.GetChild(3).GetComponent<TMP_Text>().text = "x" + furnitureItem.quantity.ToString();
@@ -88,6 +90,9 @@ public class RestockManager : MonoBehaviour
                 print(item.name);
             }
         }
+
+        IconsParent.gameObject.SetActive(false);
+        IconsParent.gameObject.SetActive(true);
     }
 
 
@@ -99,5 +104,5 @@ public class RestockItem
     public string name;
     public int price;
     public int quantity;
-    public Sprite icon;
+    public Texture icon;
 }

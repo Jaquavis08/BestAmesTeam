@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: Jar
   price: 25
   prefab: {fileID: 121448363819909694, guid: be8fa9a227778bd42b9071b264e784af, type: 3}
-  icon: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  Icon: {fileID: 8400000, guid: 56c6abbaad8d59e48b0c3da797ba4f0d, type: 2}
   quanity: 10
   objectDistance: 0.5
   itemType: 0
