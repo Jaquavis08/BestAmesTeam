@@ -107,17 +107,19 @@ public class CheckoutManager : MonoBehaviour
             }
         }
 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.2f);
 
         foreach (var entry in cartData)
         {
             if (entry == null || entry.item == null) continue;
 
-            float totalPrice = entry.item.price * entry.quantity;
+            float totalPrice = entry.item.Value * entry.quantity;
+            float tax = totalPrice * Random.Range(0.07f, 0.1f); // Example tax rate
+            print(tax);
 
             if (Currency.Instance != null)
             {
-                Currency.Instance.AddCurrency((int)totalPrice);
+                Currency.Instance.AddCurrency(totalPrice + tax);
             }
 
             if (checkoutItemUIPrefab != null && checkoutUIParent != null)
@@ -130,7 +132,7 @@ public class CheckoutManager : MonoBehaviour
                 CheckoutItemUI uiScript = ui.GetComponent<CheckoutItemUI>();
                 if (uiScript != null)
                 {
-                    uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice);
+                    uiScript.Setup(entry.item.itemName, entry.quantity, totalPrice, tax);
                 }
             }
 

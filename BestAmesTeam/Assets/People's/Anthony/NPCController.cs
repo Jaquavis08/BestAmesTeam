@@ -259,7 +259,7 @@ public class NPCController : MonoBehaviour
         if (inQueue) yield break; // safety check
 
         animator.SetTrigger("Grab");
-        yield return new WaitForSeconds(Random.Range(1f, 2f));
+        yield return new WaitForSeconds(Random.Range(1.5f, 2f));
 
         if (targetSpot == null)
         {

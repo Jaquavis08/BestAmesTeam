@@ -10897,7 +10897,7 @@ MonoBehaviour:
   MainPC: {fileID: 1904398062}
   quotaTab: {fileID: 1676723099}
   currentQuotaMoneyCount: 0
-  currentQuotaForDay: 300
+  currentQuotaForDay: 100
   quotaValue: {fileID: 0}
 --- !u!4 &791597495
 Transform:
@@ -19497,8 +19497,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 974523926}
   m_HandleRect: {fileID: 974523925}
   m_Direction: 2
-  m_Value: -0.000010920245
-  m_Size: 0.5781907
+  m_Value: 0.000004341784
+  m_Size: 0.5781953
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -20924,7 +20924,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1565966704}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: -0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -20934,8 +20934,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -658, y: -57.1}
-  m_SizeDelta: {x: 562, y: 635.9}
+  m_AnchoredPosition: {x: -2.7, y: -57.1}
+  m_SizeDelta: {x: 1872.5, y: 635.9}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1565966706
 MonoBehaviour:
@@ -25538,8 +25538,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.034477845, y: 463.90408}
-  m_SizeDelta: {x: 0, y: 1099.8}
+  m_AnchoredPosition: {x: -0.034477845, y: 463.89755}
+  m_SizeDelta: {x: 1356.7, y: 1099.8}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1892846020
 MonoBehaviour:
@@ -25558,10 +25558,10 @@ MonoBehaviour:
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 1
+  m_ChildAlignment: 3
   m_StartCorner: 0
-  m_StartAxis: 0
-  m_CellSize: {x: 550, y: 50}
+  m_StartAxis: 1
+  m_CellSize: {x: 1000, y: 100}
   m_Spacing: {x: 0, y: 0}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -31790,6 +31790,10 @@ PrefabInstance:
       propertyPath: navMeshSurface
       value: 
       objectReference: {fileID: 1398712290}
+    - target: {fileID: 5298148169919809210, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
+      propertyPath: DistanceFromPlayer
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5298148169919809210, guid: 619bc1cd0e0ed004385f2b24368a7194, type: 3}
       propertyPath: placementlayer.m_Bits
       value: 648

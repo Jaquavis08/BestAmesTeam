@@ -15,8 +15,8 @@ public class TaskDisplayer : MonoBehaviour
     public GameObject MainPC;
 
     public GameObject quotaTab;
-    public int currentQuotaMoneyCount;
-    public int currentQuotaForDay;
+    public float currentQuotaMoneyCount;
+    public float currentQuotaForDay;
 
     public GameObject quotaValue;
 
