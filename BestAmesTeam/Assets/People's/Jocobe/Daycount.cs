@@ -24,6 +24,8 @@ public class Daycount : MonoBehaviour
     public GameObject DeathUI;
     public bool DeathEnabled = false;
 
+    public TMP_Text Clock;
+
     public void Awake()
     {
         if (instance == null)
@@ -45,6 +47,36 @@ public class Daycount : MonoBehaviour
     void Update()
     {
         ProccesTime();
+        UpdateClock();
+    }
+
+    void UpdateClock()
+    {
+        if (Clock == null) return;
+
+        float normalizedTime = time / daylength;
+
+        float totalMinutes = (normalizedTime * 12f * 60f) + (8 * 60);
+
+        int hours = Mathf.FloorToInt(totalMinutes / 60f);
+        int minutes = Mathf.FloorToInt(totalMinutes % 60f);
+
+
+        minutes = Mathf.RoundToInt(minutes / 15f) * 15;
+
+        if (minutes == 60)
+        {
+            minutes = 0;
+            hours += 1;
+        }
+
+        // 🔥 CONVERT TO 12-HOUR FORMAT
+        string ampm = hours >= 12 ? "PM" : "AM";
+
+        int hours12 = hours % 12;
+        if (hours12 == 0) hours12 = 12;
+
+        Clock.text = string.Format("{0}:{1:00}{2}", hours12, minutes, ampm);
     }
 
     void ProccesTime()

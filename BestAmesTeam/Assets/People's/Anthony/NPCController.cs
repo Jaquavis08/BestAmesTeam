@@ -91,6 +91,11 @@ public class NPCController : MonoBehaviour
             isIdlePlaying = false;
         }
 
+        if (!isBrowsing && !inQueue && agent.isStopped)
+        {
+            agent.isStopped = false;
+        }
+
         // NORMAL SHOPPING
         if (targetSpot != null && !isBrowsing)
         {
@@ -98,7 +103,7 @@ public class NPCController : MonoBehaviour
             {
                 float dist = Vector3.Distance(transform.position, targetSpot.standPoint.position);
 
-                if (dist <= 1.2f) // same range as your grab check
+                if (dist <= 1.2f && itemsCollected < maxItems) // same range as your grab check
                 {
                     isBrowsing = true;
                     StartCoroutine(GrabItemRoutine());
@@ -147,6 +152,13 @@ public class NPCController : MonoBehaviour
 
     public void ChooseItem()
     {
+        if (itemsCollected >= maxItems)
+        {
+            Debug.LogError("NPC " + gameObject.name + " has already collected max items! Items collected: " + itemsCollected);
+            return;
+        }
+        Debug.LogWarning("NPC " + gameObject.name + " is choosing an item. Items collected: " + itemsCollected);
+
         bool check = ShelfCheck();
         Shelf shelf = ShelfManager.Instance.GetRandomShelfWithItems();
         //print(check);
@@ -187,7 +199,7 @@ public class NPCController : MonoBehaviour
             }
         }
 
-        if (!crowded)
+        if (!crowded && !inQueue)
         {
             agent.isStopped = false; // 🔥 IMPORTANT
             SetNPCPosition(targetSpot.standPoint.position + offset);
@@ -206,7 +218,7 @@ public class NPCController : MonoBehaviour
 
     IEnumerator WaitThenChooseAnotherSpot()
     {
-        yield return new WaitForSeconds(Random.Range(0.2f, 0.5f));
+        yield return new WaitForSeconds(Random.Range(0.25f, 0.5f));
         ChooseItem();
     }
 
@@ -222,21 +234,30 @@ public class NPCController : MonoBehaviour
 
     void GoToCheckout()
     {
-        if (!transform.GetComponent<HomelessMan>() && itemsCollected > 0)
+        isBrowsing = false;
+        targetSpot = null;
+
+        if (agent != null && agent.isOnNavMesh)
         {
             agent.isStopped = false;
+            agent.ResetPath();
+        }
+
+        if (!transform.GetComponent<HomelessMan>() && itemsCollected > 0)
+        {
             CheckoutManager.Instance.JoinQueue(this);
         }
         else
         {
             isLeaving = true;
-            agent.isStopped = false;
             SetNPCPosition(CheckoutManager.Instance.exitPoint.position);
         }
     }
 
     public IEnumerator GrabItemRoutine()
     {
+        if (inQueue) yield break; // safety check
+
         animator.SetTrigger("Grab");
         yield return new WaitForSeconds(Random.Range(1f, 2f));
 
@@ -255,6 +276,12 @@ public class NPCController : MonoBehaviour
         }
 
         targetSpot = null;
+
+        if (agent != null && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+            agent.ResetPath();
+        }
 
         if (itemsCollected < maxItems)
         {
