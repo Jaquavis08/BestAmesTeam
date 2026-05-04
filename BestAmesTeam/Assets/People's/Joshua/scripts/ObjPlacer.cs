@@ -288,6 +288,10 @@ public class ObjPlacer : MonoBehaviour
         PlayerPickup.Instance.heldBox = null;
 
         //Destroy(placedObj.GetComponent<BoxCollider>());
+
+        //if (TaskDisplayer.instance.Tasks.Count > 1)
+        TaskDisplayer.instance.Tasks[1].completed = true;
+
         ExitPlacementMode();
     }
 
@@ -308,7 +312,8 @@ public class ObjPlacer : MonoBehaviour
         Destroy( _previewObj );
         _previewObj = null;
         _InPlacementMode = false;
-        if(PlayerPickup.Instance.heldBox != null)
+
+        if (PlayerPickup.Instance.heldBox != null)
         {
             PlayerPickup.Instance.heldBox.gameObject.SetActive(true);
         }

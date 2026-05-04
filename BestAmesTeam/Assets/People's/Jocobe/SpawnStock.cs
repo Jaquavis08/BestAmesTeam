@@ -35,8 +35,7 @@ public class SpawnStock : MonoBehaviour
         GameObject itemStock = Instantiate(ItemStockPrefab, StockParent.position, Quaternion.identity, StockParent);
         itemStock.GetComponent<ItemBox>().itemType = item;
         itemStock.GetComponent<ItemBox>().itemCount = item.quanity;
-        if (TaskDisplayer.instance.Tasks.Count > 4)
-            TaskDisplayer.instance.Tasks[4].completed = true;
+        TaskDisplayer.instance.Tasks[5].completed = true;
 
         }
         else
