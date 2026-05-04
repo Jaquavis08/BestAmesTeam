@@ -6,7 +6,7 @@ public class Car : MonoBehaviour
     public WheelCollider wheel1, wheel2, wheel3, wheel4;
     public float drivespeed, steerspeed;
     public float brakeForce = 3000f;
-    public float idleBrakeForce = 1000f; // Brake force applied when not accelerating
+    public float idleBrakeForce = 1000f;
 
     float horizontalInput, verticalInput;
 
@@ -18,7 +18,6 @@ public class Car : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Use stored input from Update to avoid mixing input reads across frames
         float motor = verticalInput * drivespeed;
         print(motor);
 
@@ -26,7 +25,6 @@ public class Car : MonoBehaviour
 
         if (isBraking)
         {
-            // When braking, cut motor torque and apply brake torque
             motor = 0f;
 
             wheel1.brakeTorque = brakeForce;
@@ -36,7 +34,6 @@ public class Car : MonoBehaviour
         }
         else
         {
-            // No braking: clear brake torque
             wheel1.brakeTorque = 0f;
             wheel2.brakeTorque = 0f;
             wheel3.brakeTorque = 0f;
@@ -53,13 +50,11 @@ public class Car : MonoBehaviour
             wheel4.brakeTorque = idleBrakeForce;
         }
 
-        // Apply motor torque to wheels (will be zero while braking)
         wheel1.motorTorque = motor;
         wheel2.motorTorque = motor;
         wheel3.motorTorque = motor;
         wheel4.motorTorque = motor;
 
-        // Apply steering
         wheel1.steerAngle = steerspeed * horizontalInput;
         wheel2.steerAngle = steerspeed * horizontalInput;
     }

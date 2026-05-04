@@ -25,7 +25,6 @@ public class TutorialPopUpManager : MonoBehaviour
         if (Physics.Raycast(ray, out hit, interactDistance))
         {
 
-            //Debug.Log("Ray hit: " + hit.collider.name);
 
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("HeldItem"))
             {

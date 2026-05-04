@@ -11,7 +11,7 @@ public class Task1 : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            TaskDisplayer.instance.Tasks[0].completed = true; // Mark the first task as completed
+            TaskDisplayer.instance.Tasks[0].completed = true;
             Destroy(gameObject);
         }
     }

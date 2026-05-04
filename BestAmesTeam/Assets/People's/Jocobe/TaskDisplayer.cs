@@ -52,8 +52,6 @@ public class TaskDisplayer : MonoBehaviour
 
 
         int currentDay = Daycount.instance.day;
-
-        // Filter tasks for current day that are not completed
         var candidates = Tasks.Where(t => t.day == currentDay && t.completed == false).ToList();
 
         print($"Found {candidates.Count} candidate tasks for day {currentDay}");
@@ -64,7 +62,7 @@ public class TaskDisplayer : MonoBehaviour
             return;
         }
 
-        // Find the lowest order among candidates and pick the first matching task
+ 
         int minOrder = candidates.Min(t => t.order);
         var selected = candidates.FirstOrDefault(t => t.order == minOrder);
 
@@ -99,7 +97,7 @@ public class TaskDisplayer : MonoBehaviour
     public void GetQuotaFormula()
     {
         currentQuotaMoneyCount = 0;
-        // FIXED formula (uses float properly)
+
         currentQuotaForDay = Mathf.RoundToInt(300 * (Daycount.instance.day + 1) / 1.5f);
 
         Debug.Log($"Quota: {currentQuotaForDay}");
