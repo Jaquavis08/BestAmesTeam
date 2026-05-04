@@ -75,10 +75,8 @@ public class PlayerPickup : MonoBehaviour
 
                 if (heldBox.IsEmpty())
                 {
-                    StartCoroutine(DestroyAfterDelay(heldBox.gameObject, 3f));
+                    StartCoroutine(DestroyAfterDelay(heldBox.gameObject, 1f));
                     heldBox = null;
-                    if (TaskDisplayer.instance.Tasks.Count > 2)
-                        TaskDisplayer.instance.Tasks[2].completed = true; 
                 }
             }
 

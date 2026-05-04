@@ -109,7 +109,7 @@ public class TaskDisplayer : MonoBehaviour
 [System.Serializable]
 public class Task
 {
-    public string task;
+    [TextArea(3, 10)] public string task;
     public int day;
     public int order;
     public bool completed;
