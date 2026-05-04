@@ -59,6 +59,7 @@ public class ItemSpot : MonoBehaviour
         {
             itemCount++;
             Debug.Log("Shelf restocked. Stock: " + itemCount);
+            TaskDisplayer.instance.Tasks[3].completed = true;
         }
     }
 

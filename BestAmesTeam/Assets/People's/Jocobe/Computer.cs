@@ -35,7 +35,7 @@ public class Computer : MonoBehaviour
         computerUI.SetActive(value);
         computerOffScreen.SetActive(!value);
         PlayerMovement.Instance.cursorLock = !value;
-
+        TaskDisplayer.instance.Tasks[4].completed = true;
         IsComputerOn = value;
     }
 
