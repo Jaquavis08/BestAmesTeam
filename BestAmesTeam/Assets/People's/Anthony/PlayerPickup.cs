@@ -7,7 +7,7 @@ public class PlayerPickup : MonoBehaviour
 {
     public static PlayerPickup Instance;
     public Transform holdPoint;
-    public float interactDistance = 3f;
+    private float interactDistance = 4f;
 
     public TMP_Text ItemAndCountText;
 
@@ -75,18 +75,15 @@ public class PlayerPickup : MonoBehaviour
 
                 if (heldBox.IsEmpty())
                 {
-                    StartCoroutine(DestroyAfterDelay(heldBox.gameObject, 3f));
+                    StartCoroutine(DestroyAfterDelay(heldBox.gameObject, 1f));
                     heldBox = null;
-                    if (TaskDisplayer.instance.Tasks.Count > 2)
-                        TaskDisplayer.instance.Tasks[2].completed = true; 
                 }
             }
 
             if (hit.collider.GetComponent<Computer>())
             {
                 Computer.instance.UsePC(true);
-                if (TaskDisplayer.instance.Tasks.Count > 1)
-                    TaskDisplayer.instance.Tasks[1].completed = true; 
+                Debug.LogWarning("Interacted with computer");
             }
         }
         //else if()
@@ -118,11 +115,6 @@ public class PlayerPickup : MonoBehaviour
             {
                 isInside = true;
             }
-        }
-
-        if (isInside && TaskDisplayer.instance.Tasks.Count > 6)
-        {
-            TaskDisplayer.instance.Tasks[6].completed = true;
         }
     }
 

@@ -125,8 +125,8 @@ public class Daycount : MonoBehaviour
             day++;
             daycount.text = "Day: " + day;
             TaskDisplayer.instance.GetQuotaFormula();
-            if (TaskDisplayer.instance.Tasks.Count > 7)
-                TaskDisplayer.instance.Tasks[7].completed = true;
+            //if (TaskDisplayer.instance.Tasks.Count > 7)
+                //TaskDisplayer.instance.Tasks[7].completed = true;
 
             UpdateSunPosition();
         }
