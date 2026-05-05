@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class RestockManager : MonoBehaviour
 {
+    public static RestockManager Instance;
+
     public ItemDictionary itemDictionary;
 
     public List<RestockItem> restockItems;
@@ -15,6 +17,14 @@ public class RestockManager : MonoBehaviour
     public GameObject RestockItem;
 
     public Transform IconsParent;
+
+    public void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+        else
+            Destroy(gameObject);
+    }
 
 
     void Start()
@@ -56,8 +66,8 @@ public class RestockManager : MonoBehaviour
                         SpawnStock.Instance.SpawnManager(capturedItem);
                 });
 
-                if (TaskDisplayer.instance != null && TaskDisplayer.instance.Tasks != null && TaskDisplayer.instance.Tasks.Count > 2)
-                    TaskDisplayer.instance.Tasks[2].completed = true;
+                //if (TaskDisplayer.instance != null && TaskDisplayer.instance.Tasks != null && TaskDisplayer.instance.Tasks.Count > 2)
+                    //TaskDisplayer.instance.Tasks[3].completed = true;
                 print(item.name);
             }
             else if (item.itemType == ItemType.Furniture)
@@ -85,16 +95,18 @@ public class RestockManager : MonoBehaviour
                         SpawnStock.Instance.SpawnManager(capturedItem);
                 });
 
-                if (TaskDisplayer.instance != null && TaskDisplayer.instance.Tasks != null && TaskDisplayer.instance.Tasks.Count > 2)
-                    TaskDisplayer.instance.Tasks[2].completed = true;
                 print(item.name);
             }
         }
 
+        CameraFixer();
+    }
+
+    public void CameraFixer()
+    {
         IconsParent.gameObject.SetActive(false);
         IconsParent.gameObject.SetActive(true);
     }
-
 
 }
 

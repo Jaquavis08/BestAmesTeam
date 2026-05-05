@@ -119,8 +119,6 @@ public class CarEnterExit : MonoBehaviour
             if (!inCar && sqrActual <= sqrAllowed)
             {
                 EnterCar();
-                if (TaskDisplayer.instance.Tasks.Count > 5)
-                    TaskDisplayer.instance.Tasks[5].completed = true;
                 return;
             }
             else
@@ -158,6 +156,7 @@ public class CarEnterExit : MonoBehaviour
 
     void EnterCar()
     {
+        TaskDisplayer.instance.Tasks[6].completed = true;
         Debug.LogWarning("Entering car...");
         inCar = true;
         player.SetActive(false);
@@ -232,6 +231,8 @@ public class CarEnterExit : MonoBehaviour
 
         if (carCamera != null) carCamera.SetActive(false);
         if (playerCamera != null) playerCamera.SetActive(true);
+
+        RestockManager.Instance.CameraFixer();
 
 
         if (exhaustParticles != null)
