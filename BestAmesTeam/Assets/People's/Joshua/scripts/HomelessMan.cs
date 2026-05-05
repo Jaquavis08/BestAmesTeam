@@ -1,4 +1,4 @@
-   using System.Collections.Generic;
+using System.Collections.Generic;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
@@ -45,11 +45,11 @@ public class HomelessMan : MonoBehaviour
     }
     void Start()
     {
-        
+
 
         Pcamera = FindFirstObjectByType<PlayerMovement>().playerCamera;
         beggerUICanvas.enabled = false;
-        
+
 
         isInteracting = false;
 
@@ -342,42 +342,52 @@ public class HomelessMan : MonoBehaviour
 
     void HandleBeggerBehavior()
     {
-        float dist = Vector3.Distance(transform.position, player.position);
-
         if (agent == null || player == null) return;
+
+        float dist = Vector3.Distance(transform.position, player.position);
 
         if (!beggerIsPaid && !beggerIsShunned)
         {
-
-
-            agent.SetDestination(player.position);
-
+            // Only update destination when not currently interacting so the agent truly stops while UI is active
+            if (!isInteracting)
+            {
+                agent.isStopped = false;
+                agent.SetDestination(player.position);
+            }
 
             if (dist <= interactionDistance && !isInteracting)
             {
                 isInteracting = true;
                 beggerUICanvas.enabled = true;
-                agent.isStopped = true;
+
+                // Immediately stop the agent and clear its path so the gnome doesn't slide
+                if (agent != null)
+                {
+                    agent.isStopped = true;
+                    try
+                    {
+                        agent.ResetPath();
+                    }
+                    catch { }
+                }
+
+                // zero rigidbody velocity to ensure immediate halt
+                var rb = GetComponent<Rigidbody>();
+                if (rb != null)
+                    rb.linearVelocity = Vector3.zero;
+
                 PlayerMovement.Instance.cursorLock = false;
-                beggerUICanvas.enabled = true;
                 Pcamera.LookAt(this.transform.position);
-
-
-
             }
             else if (isInteracting && dist > interactionDistance + 0.5f)
             {
                 isInteracting = false;
                 beggerUICanvas.enabled = false;
-                agent.isStopped = false;
+                if (agent != null)
+                    agent.isStopped = false;
                 PlayerMovement.Instance.cursorLock = true;
-                beggerUICanvas.enabled = false;
-
-
             }
         }
-
-
         else
         {
             if (exitPoint != null)
@@ -392,21 +402,57 @@ public class HomelessMan : MonoBehaviour
                     {
                         Destroy(gameObject);
                     }
-                    
                 }
             }
             else
             {
                 agent.isStopped = true;
-                
             }
         }
     }
     public void HandleBeggerPayment()
     {
-        int cost = Random.Range(25, 50);
+        int cost = Random.Range(1, 10);
+
+        // Ensure Currency is present and read the player's money from the Currency instance
+        int playerMoney = 0;
+        if (Currency.Instance != null)
+            playerMoney = Mathf.FloorToInt(Currency.Instance.amount);
+
+        // If player can't pay, the begger turns into a thief
+        if (playerMoney < cost)
+        {
+            Debug.Log("Player cannot afford begger's request. Begger will turn into a thief.");
+            // Reset begger UI and state
+            beggerIsPaid = false;
+            beggerIsShunned = false;
+            isInteracting = false;
+            beggerUICanvas.enabled = false;
+            PlayerMovement.Instance.cursorLock = true;
+
+            if (agent != null)
+            {
+                agent.isStopped = false;
+            }
+
+            // Convert to thief
+            isTheif = true;
+            isBegger = false;
+
+            var npc = gameObject.GetComponent<NPCController>();
+            if (npc != null)
+            {
+                // Let NPCController pick a target/item to steal
+                npc.ChooseItem();
+            }
+
+            return;
+        }
+
+        // Otherwise accept payment
         PlayerMovement.Instance.cursorLock = true;
-        Currency.Instance.amount -= cost;
+        if (Currency.Instance != null)
+            Currency.Instance.amount -= cost;
         beggerIsPaid = true;
         isInteracting = false;
         beggerUICanvas.enabled = false;
@@ -414,7 +460,18 @@ public class HomelessMan : MonoBehaviour
             agent.isStopped = false;
         if (beggerIsPaid)
         {
-            agent.SetDestination(exitPoint.position);
+            if (exitPoint == null)
+            {
+                var exitGo = GameObject.FindWithTag("Exit");
+                if (exitGo != null)
+                    exitPoint = exitGo.transform;
+            }
+            if (exitPoint != null)
+                agent.SetDestination(exitPoint.position);
+        }
+        else
+        {
+            HandleBeggerShunning();
         }
     }
 

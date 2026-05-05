@@ -310,7 +310,7 @@ public class NPCController : MonoBehaviour
     {
         inQueue = false;
 
-        // 🔥 MAKE A COPY
+        
         List<CartItem> cartCopy = new List<CartItem>(cart);
 
         PrintCart(ispaying, cartCopy);
@@ -319,7 +319,7 @@ public class NPCController : MonoBehaviour
         if (CheckoutManager.Instance.exitPoint != null)
         {
             isLeaving = true;
-            agent.isStopped = false; // 🔥 IMPORTANT
+            agent.isStopped = false; 
             SetNPCPosition(CheckoutManager.Instance.exitPoint.position);
         }
     }
@@ -327,6 +327,13 @@ public class NPCController : MonoBehaviour
     void CheckIfExited()
     {
         if (!isLeaving) return;
+
+        if (agent.GetComponent<HomelessMan>())
+        {
+            NPCSpawner.Instance.GnomeLeft();
+            Destroy(gameObject);
+            return;
+        }
 
         if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
         {
