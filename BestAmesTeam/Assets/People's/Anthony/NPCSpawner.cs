@@ -24,6 +24,11 @@ public class NPCSpawner : MonoBehaviour
     public float spawnInterval = 8f;
     public int maxCustomers = 10;
 
+    private float GnomeSpawnTimeMin = 100f; // 100
+    private float GnomeSpawnTimeMax = 240f; // 240
+    public GameObject GnomePrefab;
+    public int GnomeSpawnCount = 0;
+
     public int currentCustomers = 0;
 
     public bool SpawningNPC = true;
@@ -31,7 +36,31 @@ public class NPCSpawner : MonoBehaviour
     void Start()
     {
         InvokeRepeating(nameof(SpawnCustomer), 2f, spawnInterval);
+
+        InvokeRepeating(nameof(SpawnGnome), Random.Range(GnomeSpawnTimeMin + 30f, GnomeSpawnTimeMax), Random.Range(GnomeSpawnTimeMin, GnomeSpawnTimeMax));
     }
+
+
+    void SpawnGnome()
+    {
+        if (GnomePrefab == null || spawnPoint == null)
+        {
+            Debug.LogWarning("Gnome Prefab or Spawn Point not assigned.");
+            return;
+        }
+        if (GnomeSpawnCount >= 1) return;
+        GameObject gnome = Instantiate(GnomePrefab, spawnPoint.position, spawnPoint.rotation);
+        gnome.transform.parent = NPCFolder.transform;
+        GnomeSpawnCount++;
+    }
+
+    public void GnomeLeft()
+    {
+        GnomeSpawnCount--;
+        if (GnomeSpawnCount < 0) GnomeSpawnCount = 0;
+    }
+
+
 
     void SpawnCustomer()
     {
