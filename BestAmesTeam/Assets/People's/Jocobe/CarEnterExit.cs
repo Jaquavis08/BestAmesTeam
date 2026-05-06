@@ -63,6 +63,11 @@ public class CarEnterExit : MonoBehaviour
     public Renderer carRenderer;
     public Material[] carMaterial;
 
+    public Light[] headlights;
+    //public KeyCode headlightKey = KeyCode.L;
+
+    public bool headlightsOn = false;
+
 
     private void Start()
     {
@@ -92,6 +97,16 @@ public class CarEnterExit : MonoBehaviour
 
         if (offroadparticles != null && !isOffroad) offroadparticles.Stop();
         if (offroadparticles2 != null && !isOffroad) offroadparticles2.Stop();
+    }
+
+    void ToggleHeadlights()
+    {
+        headlightsOn = !headlightsOn;
+
+        foreach (Light light in headlights)
+        {
+            light.enabled = headlightsOn;
+        }
     }
 
     void Update()
@@ -124,7 +139,7 @@ public class CarEnterExit : MonoBehaviour
 
         if (Input.GetKeyDown(enterExitKey))
         {
-
+            ToggleHeadlights();
             float sqrAllowed = interactionDistance * interactionDistance;
             float sqrActual = (player.transform.position - enterPoint.position).sqrMagnitude;
 
