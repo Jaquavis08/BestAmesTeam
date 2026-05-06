@@ -181,6 +181,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 4369314944683307127, guid: b9953c359d1ad6e40bec8caabaddc03f, type: 3}
   m_PrefabInstance: {fileID: 129060413}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &582146277 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3731684410961809776, guid: b9953c359d1ad6e40bec8caabaddc03f, type: 3}
+  m_PrefabInstance: {fileID: 129060413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &748624063
 GameObject:
   m_ObjectHideFlags: 0
@@ -421,6 +426,16 @@ MonoBehaviour:
   m_ObsoleteUseShadowQualitySettings: 0
   m_ObsoleteCustomShadowResolution: 512
   m_ObsoleteContactShadows: 0
+--- !u!1 &1422095351 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7916369585109094414, guid: b9953c359d1ad6e40bec8caabaddc03f, type: 3}
+  m_PrefabInstance: {fileID: 129060413}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1599318505 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7715881195846750820, guid: b9953c359d1ad6e40bec8caabaddc03f, type: 3}
+  m_PrefabInstance: {fileID: 129060413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1789641631
 GameObject:
   m_ObjectHideFlags: 11
@@ -453,6 +468,16 @@ MonoBehaviour:
   _scenePrefabInstances:
   - _gameObject: {fileID: 129060414}
     _prefab: Assets/Main/3DIconUI/Icons.prefab
+  - _gameObject: {fileID: 2670658180518952519}
+    _prefab: Assets/Main/Textures/Shelf.obj
+  - _gameObject: {fileID: 1795777332367280378}
+    _prefab: Assets/Main/Textures/Shelf.obj
+  - _gameObject: {fileID: 582146277}
+    _prefab: Assets/People's/Anthony/Items/Scroll.prefab
+  - _gameObject: {fileID: 1599318505}
+    _prefab: Assets/People's/Anthony/Items/Crystal 2.prefab
+  - _gameObject: {fileID: 1422095351}
+    _prefab: Assets/People's/Anthony/Items/Bottle 2.prefab
 --- !u!4 &1789641633
 Transform:
   m_ObjectHideFlags: 11
@@ -468,6 +493,16 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1795777332367280378 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6406025626345182708, guid: b9953c359d1ad6e40bec8caabaddc03f, type: 3}
+  m_PrefabInstance: {fileID: 129060413}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2670658180518952519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 140919977738402351, guid: b9953c359d1ad6e40bec8caabaddc03f, type: 3}
+  m_PrefabInstance: {fileID: 129060413}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

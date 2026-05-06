@@ -566,7 +566,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   holdPoint: {fileID: 2106933195762162267}
-  interactDistance: 3
   ItemAndCountText: {fileID: 0}
   heldBox: {fileID: 0}
 --- !u!143 &1208670544494615808
@@ -624,6 +623,7 @@ MonoBehaviour:
   ShelfParent: {fileID: 0}
   navMeshSurface: {fileID: 0}
   enterExitKey: 101
+  NPCFolder: {fileID: 0}
   allowedCollisionObjects:
   - {fileID: 0}
   - {fileID: 3968215767256214959, guid: 736e5653a33211d4f83f21e67afc07d3, type: 3}

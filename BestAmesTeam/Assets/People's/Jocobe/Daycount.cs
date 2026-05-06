@@ -121,6 +121,7 @@ public class Daycount : MonoBehaviour
     {
         if(TaskDisplayer.instance.CheckForCompleteQuota())
         {
+            TaskDisplayer.instance.Tasks[9].completed = true;
             time = 0;
             day++;
             daycount.text = "Day: " + day;

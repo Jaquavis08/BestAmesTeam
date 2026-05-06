@@ -76,11 +76,11 @@ public class TaskDisplayer : MonoBehaviour
             $"Day: {Daycount.instance.day}/5";
 
         quotaTab.transform.GetChild(0).GetChild(1).GetComponent<TMP_Text>().text =
-            $"Quota: ${currentQuotaMoneyCount}/${currentQuotaForDay}";
+            $"Quota: ${Mathf.Round(currentQuotaMoneyCount)}/${currentQuotaForDay}";
 
         if (currentQuotaForDay > 0)
         {
-            quotaValue.GetComponent<Image>().fillAmount = (float)currentQuotaMoneyCount / currentQuotaForDay;
+            quotaValue.GetComponent<Image>().fillAmount = (float)Mathf.Round(currentQuotaMoneyCount) / currentQuotaForDay;
         }
         else
         {

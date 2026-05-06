@@ -18,6 +18,8 @@ public class CarEnterExit : MonoBehaviour
     // Track dirt colliders separately to avoid flipping isOffroad incorrectly.
     private readonly HashSet<Collider> _dirtColliders = new HashSet<Collider>();
 
+    [Header("Enter Settings")]
+    public Transform enterPoint;
 
     [Header("Exhaust")]
     [Tooltip("A GameObject you can attach exhaust visuals/particles to. Toggles on when entering the car.")]
@@ -58,9 +60,19 @@ public class CarEnterExit : MonoBehaviour
     private Coroutine _moveCoroutine;
 
 
+    public Renderer carRenderer;
+    public Material[] carMaterial;
+
 
     private void Start()
     {
+
+        if (carMaterial != null && carMaterial.Length > 0 && carRenderer != null)
+        {
+            int randomIndex = Random.Range(0, carMaterial.Length);
+            carRenderer.material = carMaterial[randomIndex];
+        }
+
         if (exhaustHolder != null)
         {
             exhaustHolder.SetActive(inCar);
@@ -114,9 +126,12 @@ public class CarEnterExit : MonoBehaviour
         {
 
             float sqrAllowed = interactionDistance * interactionDistance;
-            float sqrActual = (player.transform.position - transform.position).sqrMagnitude;
+            float sqrActual = (player.transform.position - enterPoint.position).sqrMagnitude;
 
-            if (!inCar && sqrActual <= sqrAllowed)
+            Vector3 directionToCar = (enterPoint.position - player.transform.position).normalized;
+            float dot = Vector3.Dot(player.transform.forward, directionToCar);
+
+            if (!inCar && sqrActual <= sqrAllowed && dot > 0.5f)
             {
                 EnterCar();
                 return;

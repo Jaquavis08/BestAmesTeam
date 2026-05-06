@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class Task1 : MonoBehaviour
+public class Task2 : MonoBehaviour
 {
     public int QuestNumber;
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.name.Contains("Box"))
         {
             TaskDisplayer.instance.Tasks[QuestNumber].completed = true;
             Destroy(gameObject);

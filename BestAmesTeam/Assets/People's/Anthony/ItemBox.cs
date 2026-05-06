@@ -54,6 +54,11 @@ public class ItemBox : MonoBehaviour
 
     public void GetVisualItems()
     {
+        if (itemType.itemName == "Shelf")
+        {
+            return;
+        }
+
         Transform parent = this.gameObject != null ? this.transform : transform;
 
         // Clear existing spawned items
@@ -83,11 +88,6 @@ public class ItemBox : MonoBehaviour
 
         Vector3 size = prefab.transform.localScale;
         Vector3 position = new Vector3(0, -2.027f, 1);
-
-        if (itemType.itemName == "Shelf")
-        {
-            size = new Vector3(size.x * 0.1f, size.y * 0.1f, size.z * 0.1f);
-        }
 
         GameObject instance = Object.Instantiate(prefab, parent);
         instance.transform.localPosition = position;

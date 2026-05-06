@@ -73,6 +73,7 @@ public class NPCSpawner : MonoBehaviour
 
         GameObject npc = Instantiate(npcPrefab, spawnPoint.position, spawnPoint.rotation);
         npc.transform.parent = NPCFolder.transform;
+        npc.SetActive(true);
         currentCustomers++;
 
 

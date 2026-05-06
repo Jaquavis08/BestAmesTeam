@@ -6,7 +6,7 @@ RenderTexture:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ShelfIcon
+  m_Name: ScrollIcon
   m_ImageContentsHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
@@ -19,7 +19,7 @@ RenderTexture:
   m_DepthStencilFormat: 94
   m_ColorFormat: 52
   m_MipMap: 0
-  m_GenerateMips: 0
+  m_GenerateMips: 1
   m_SRGB: 0
   m_UseDynamicScale: 0
   m_UseDynamicScaleExplicit: 0

@@ -72,6 +72,8 @@ public class HomelessMan : MonoBehaviour
 
         if (isTheif)
             gameObject.GetComponent<NPCController>().ChooseItem();
+
+        TaskDisplayer.instance.Tasks[10].completed = true;
     }
 
     public void getType()

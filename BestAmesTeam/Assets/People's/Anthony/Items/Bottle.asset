@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8bd0cc576a9ffd4b9879a2819d862da, type: 3}
+  m_Name: Bottle
+  m_EditorClassIdentifier: 
+  itemName: Bottle
+  price: 50
+  Value: 12
+  prefab: {fileID: 7803208212912056305, guid: ff7a0f0107003b04cacec4ae32fb52f6, type: 3}
+  Icon: {fileID: 8400000, guid: dfb64bc9ba426f74e9403fa23d7f87a6, type: 2}
+  quanity: 10
+  objectDistance: 0.5
+  itemType: 0

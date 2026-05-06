@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 557077437880230615}
     m_Modifications:
+    - target: {fileID: 1453123542282444617, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1478661527933995777, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -16,10 +20,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shelves
       objectReference: {fileID: 0}
+    - target: {fileID: 3013326680939915764, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4088402906675616605, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 7243b5fdef07b60468b699f668773d48, type: 2}
+    - target: {fileID: 4513668246009545493, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5651669498842729029, guid: fb213a3ae3d0e2149823427eff758802, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 

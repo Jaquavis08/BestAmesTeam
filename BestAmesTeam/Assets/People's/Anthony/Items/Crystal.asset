@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8bd0cc576a9ffd4b9879a2819d862da, type: 3}
-  m_Name: Eye
+  m_Name: Crystal
   m_EditorClassIdentifier: 
-  itemName: Eye
-  price: 50
-  Value: 8
-  prefab: {fileID: 3133710728903757675, guid: 1c907c1ab31192a448ff0b903303d8d7, type: 3}
-  Icon: {fileID: 0}
+  itemName: Crystal
+  price: 300
+  Value: 50
+  prefab: {fileID: 182374082056685532, guid: 2e21e96721030764d9b8f519a133743d, type: 3}
+  Icon: {fileID: 8400000, guid: 262d4f8666961a54d82f38b6e03cb8da, type: 2}
   quanity: 10
-  objectDistance: 0.75
+  objectDistance: 0.5
   itemType: 0
