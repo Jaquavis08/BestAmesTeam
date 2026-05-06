@@ -2,7 +2,7 @@
 - Project name: BestAmesTeam
 - Unity version: Unity 6000.0.27f1
 - Active game object:
-  - Name: MainMenuNPC
-  - Tag: NPC
-  - Layer: NPC
+  - Name: CreditsMenu
+  - Tag: Untagged
+  - Layer: UI
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
