@@ -54,6 +54,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
+        print(cursorLock);
         if (cursorLock)
         {
             Cursor.lockState = CursorLockMode.Locked;

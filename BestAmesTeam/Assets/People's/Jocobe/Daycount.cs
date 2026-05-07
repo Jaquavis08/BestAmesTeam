@@ -48,6 +48,12 @@ public class Daycount : MonoBehaviour
     {
         ProccesTime();
         UpdateClock();
+
+        if (DeathEnabled)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     void UpdateClock()
