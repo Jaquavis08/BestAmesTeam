@@ -2,7 +2,7 @@
 - Project name: BestAmesTeam
 - Unity version: Unity 6000.0.27f1
 - Active game object:
-  - Name: BF_Gnome (4)
+  - Name: DayCountManager
   - Tag: Untagged
   - Layer: Default
 <!-- UNITY CODE ASSIST INSTRUCTIONS END -->
