@@ -9,6 +9,7 @@ public class ItemBox : MonoBehaviour
     public int itemCount = 10;
     public Animator animator;
     public KeyCode openKey = KeyCode.E;
+    public Vector3 boxScale;
 
     private static readonly int OpenTriggerHash = Animator.StringToHash("OpenTrigger");
     private static readonly int CloseTriggerHash = Animator.StringToHash("CloseTrigger");
@@ -23,8 +24,18 @@ public class ItemBox : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        boxScale = transform.localScale;
+    }
+
     private void Update()
     {
+        if (transform.localScale != boxScale)
+        {
+            transform.localScale = boxScale;
+        }
+
         if (Input.GetKeyDown(openKey) || Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (PlayerPickup.Instance.heldBox == this && boxOpened != true)
@@ -54,10 +65,6 @@ public class ItemBox : MonoBehaviour
 
     public void GetVisualItems()
     {
-        if (itemType.itemName == "Shelf")
-        {
-            return;
-        }
 
         Transform parent = this.gameObject != null ? this.transform : transform;
 
@@ -87,13 +94,28 @@ public class ItemBox : MonoBehaviour
         if (prefab == null) return;
 
         Vector3 size = prefab.transform.localScale;
-        Vector3 position = new Vector3(0, -2.027f, 1);
+        Vector3 position = new Vector3(0, -2f, 1);
 
-        GameObject instance = Object.Instantiate(prefab, parent);
+        // Shelf adjustments
+        if (itemType.itemName == "Shelf")
+        {
+            size = new Vector3(0.1f, 0.1f, 0.1f);
+            position = new Vector3(0f, -1.5f, 1f);
+        }
+            GameObject instance = Object.Instantiate(prefab, parent);
         instance.transform.localPosition = position;
         instance.transform.localRotation = Quaternion.identity;
         instance.transform.localScale = size;
         instance.name = $"{prefab.name}";
+
+        if (itemType.itemName == "Shelf")
+        {
+            foreach (MeshCollider child in instance.GetComponentsInChildren<MeshCollider>())
+            {
+                Debug.LogError("Found child: " + child.name);
+                child.GetComponent<MeshCollider>().enabled = false;
+            }
+        }
 
 
 

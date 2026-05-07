@@ -18,8 +18,8 @@ public class Daycount : MonoBehaviour
     public Button NextDayButton;
 
     public Transform SunTransform;
-    public Vector3 sunMinRotation = new Vector3(0f, 0f, 0f);
-    public Vector3 sunMaxRotation = new Vector3(-180f, 0f, 0f);
+    private Vector3 sunMinRotation = new Vector3(0f, -30f, 0f);
+    private Vector3 sunMaxRotation = new Vector3(-220f, -30f, 0f);
 
     public GameObject DeathUI;
     public bool DeathEnabled = false;
@@ -114,7 +114,8 @@ public class Daycount : MonoBehaviour
         Quaternion minQ = Quaternion.Euler(sunMinRotation);
         Quaternion maxQ = Quaternion.Euler(sunMaxRotation);
 
-        SunTransform.rotation = Quaternion.Lerp(minQ, maxQ, t);
+        //SunTransform.rotation = Quaternion.Lerp(minQ, maxQ, t);
+        SunTransform.rotation = Quaternion.Lerp(maxQ, minQ, t);
     }
 
     public void NextDay()

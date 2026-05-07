@@ -7,7 +7,7 @@ public class PlayerPickup : MonoBehaviour
 {
     public static PlayerPickup Instance;
     public Transform holdPoint;
-    private float interactDistance = 4f;
+    private float interactDistance = 8f;
 
     public TMP_Text ItemAndCountText;
 

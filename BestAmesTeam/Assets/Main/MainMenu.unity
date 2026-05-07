@@ -1565,6 +1565,7 @@ GameObject:
   m_Component:
   - component: {fileID: 151563453}
   - component: {fileID: 151563454}
+  - component: {fileID: 151563455}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -1620,6 +1621,18 @@ MonoBehaviour:
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: f5eb07c0956545e40997bb09e4fa00b5, type: 2}
   m_BuildHeightMesh: 0
+--- !u!114 &151563455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 151563452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f642ba82e90fcd48840d9d73e6239d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &152140269
 GameObject:
   m_ObjectHideFlags: 0
